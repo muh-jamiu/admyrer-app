@@ -21,11 +21,11 @@ class _TabScreenState extends State<TabScreen> {
 
   int _currentIndex = 0;
   final List<Widget> _pages = [
-    const Center(child: Locations()),
-    const Center(child: Hot()),
-    const Center(child: Notifications()),
-    const Center(child: Chat()),
-    const Center(child: Profile()),
+    const Locations(),
+    const Hot(),
+    const Notifications(),
+    const Chat(),
+    const Profile(),
   ];
 
   final _pageController = PageController();
@@ -50,7 +50,7 @@ class _TabScreenState extends State<TabScreen> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        // backgroundColor: Colors.pink[50],
+        backgroundColor: Colors.pink[50],
         body: PageView(
           controller: _pageController,
           onPageChanged: _onPageChanged,

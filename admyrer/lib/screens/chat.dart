@@ -21,11 +21,106 @@ class _ChatState extends State<Chat> {
         body: Stack(
           // padding: const EdgeInsets.all(15.0),
           children: [
-            Backgrounds(),
-            Center(child: Text("Chat"),)
+            const Backgrounds(),
+            Padding(
+              padding: EdgeInsets.all(15.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text('Chat List', style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),),
+                  SizedBox(height: 10,),
+                  Users(),
+                  SizedBox(height: 10,),
+                  Divider(
+                    color: Color.fromARGB(255, 215, 215, 215),
+                    thickness: 1.0,
+                  ),
+                  Expanded(child: ChatList())
+                ],
+              ),
+            )
           ],
         ),
       ),
+    );
+  }
+}
+
+class Users extends StatefulWidget {
+  const Users({super.key});
+
+  @override
+  State<Users> createState() => _UsersState();
+}
+
+class _UsersState extends State<Users> {
+  @override
+  Widget build(BuildContext context) {
+    return  SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          
+          children: List.generate(10, (index) {
+            return const Column(
+              children: [
+                Row(
+                  children: [
+                  SizedBox(width: 20, height: 10,),
+                    CircleAvatar(
+                      radius: 40,
+                      backgroundImage: AssetImage("images/drawable/icon.png"),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 10,),
+                Row(
+                  children: [
+                    SizedBox(width: 20),
+                    Text("Larvish007", style: TextStyle(fontSize: 12, fontWeight: FontWeight.w100, color: Colors.grey),),
+                  ],
+                ),
+              ],
+            );
+          }),
+        ),
+      );
+  }
+}
+
+
+class ChatList extends StatefulWidget {
+  const ChatList({super.key});
+
+  @override
+  State<ChatList> createState() => _ChatListState();
+}
+
+class _ChatListState extends State<ChatList> {
+   final items = List<String>.generate(5, (index) => 'Item $index');
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+        itemCount: items.length,
+        itemBuilder: (context, index) {
+          return ListTile(
+            title: Row(
+              children: [
+                const CircleAvatar(
+                  radius: 40,
+                  backgroundImage: AssetImage("images/drawable/icon.png"),
+                ),
+                const SizedBox(width: 20,),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(items[index], style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w400),textAlign: TextAlign.start,),
+                    const Text("Messaga Notifications", style: TextStyle(fontSize: 15, fontWeight: FontWeight.w100, color: Colors.grey),),
+                  ],
+                ),
+              ],
+            ),
+          );
+        },
     );
   }
 }
