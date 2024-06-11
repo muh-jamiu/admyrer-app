@@ -1,8 +1,4 @@
 import 'package:admyrer/widget/backgrounds.dart';
-import 'package:admyrer/widget/gradient_button.dart';
-import 'package:admyrer/widget/bootstrap_textfield.dart';
-import 'package:admyrer/widget/google_login.dart';
-import 'package:admyrer/widget/facebook.dart';
 import 'package:flutter/material.dart';
 
 class Notifications extends StatefulWidget {
@@ -18,12 +14,7 @@ class _NotificationsState extends State<Notifications> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        body: Stack(
-          children: [
-            Backgrounds(),
-            _Tabs(),
-          ],
-        ),
+        body:_Tabs(),
       ),
     );
   }
@@ -49,16 +40,132 @@ class _Tabs extends StatelessWidget {
             ],
           ),
         ),
-        body: const TabBarView(
+        body: const Stack(
           children: [
-            Center(child: Text('All')),
-            Center(child: Text('Visits')),
-            Center(child: Text('Likes')),
-            Center(child: Text('Friends')),
-          ],
+            Backgrounds(),
+            TabBarView(
+            children: [
+              All(),
+              Visits(),
+              Likes(),
+              Friends(),
+            ],
+          )],
         ),
       ),
     );
   }
 }
 
+
+//visits
+class Visits extends StatefulWidget {
+  const Visits({super.key});
+
+  @override
+  State<Visits> createState() => _VisitsState();
+}
+
+class _VisitsState extends State<Visits> {
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: Column(
+        children: [
+          SizedBox(height: 80,),
+          Text("Empty!", style: TextStyle(fontSize: 25, fontWeight:FontWeight.bold),),
+          SizedBox(height: 20,),
+          Text("You don't have any visits at the moment"),
+        ],
+      ),
+    );
+  }
+}
+
+// all
+class All extends StatefulWidget {
+  const All({super.key});
+
+  @override
+  State<All> createState() => _AllState();
+}
+
+class _AllState extends State<All> {
+  final items = List<String>.generate(5, (index) => 'Item $index');
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+        itemCount: items.length,
+        itemBuilder: (context, index) {
+          return ListTile(
+            title: Row(
+              children: [
+                const CircleAvatar(
+                  radius: 40,
+                  backgroundImage: AssetImage("images/drawable/icon.png"),
+                ),
+                const SizedBox(width: 20,),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(items[index], style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w400),textAlign: TextAlign.start,),
+                    const Text("Messaga Notifications", style: TextStyle(fontSize: 15, fontWeight: FontWeight.w100, color: Colors.grey),),
+                  ],
+                ),
+              ],
+            ),
+          );
+        },
+    );
+  }
+}
+
+
+// likes
+class Likes extends StatefulWidget {
+  const Likes({super.key});
+
+  @override
+  State<Likes> createState() => _LikesState();
+}
+
+class _LikesState extends State<Likes> {
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: Column(
+        children: [
+          SizedBox(height: 80,),
+          Text("Empty!", style: TextStyle(fontSize: 25, fontWeight:FontWeight.bold),),
+          SizedBox(height: 20,),
+          Text("You don't have any likes at the moment"),
+        ],
+      ),
+    );
+  }
+}
+
+
+//friends
+class Friends extends StatefulWidget {
+  const Friends({super.key});
+
+  @override
+  State<Friends> createState() => _FriendsState();
+}
+
+class _FriendsState extends State<Friends> {
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: Column(
+        children: [
+          SizedBox(height: 80,),
+          Text("Empty!", style: TextStyle(fontSize: 25, fontWeight:FontWeight.bold),),
+          SizedBox(height: 20,),
+          Text("You don't have any friend request at the moment"),
+        ],
+      ),
+    );
+  }
+}
