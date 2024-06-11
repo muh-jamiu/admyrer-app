@@ -1,3 +1,8 @@
+import 'package:admyrer/screens/chat.dart';
+import 'package:admyrer/screens/hot.dart';
+import 'package:admyrer/screens/locations.dart';
+import 'package:admyrer/screens/notifications.dart';
+import 'package:admyrer/screens/profile.dart';
 import 'package:admyrer/widget/backgrounds.dart';
 import 'package:admyrer/widget/gradient_button.dart';
 import 'package:flutter/material.dart';
@@ -16,10 +21,11 @@ class _TabScreenState extends State<TabScreen> {
 
   int _currentIndex = 0;
   final List<Widget> _pages = [
-    const Center(child: Text('Location')),
-    const Center(child: Text('notifications')),
-    const Center(child: Text('chats Page')),
-    const Center(child: Text('Profile Page')),
+    const Center(child: Locations()),
+    const Center(child: Hot()),
+    const Center(child: Notifications()),
+    const Center(child: Chat()),
+    const Center(child: Profile()),
   ];
 
   final _pageController = PageController();
@@ -28,7 +34,7 @@ class _TabScreenState extends State<TabScreen> {
       _currentIndex = index;
       _pageController.animateToPage(
         index,
-        duration: Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 500),
         curve: Curves.easeInOut,
       );
     });
@@ -44,7 +50,7 @@ class _TabScreenState extends State<TabScreen> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        backgroundColor: Colors.pink[50],
+        // backgroundColor: Colors.pink[50],
         body: PageView(
           controller: _pageController,
           onPageChanged: _onPageChanged,
@@ -72,6 +78,10 @@ class _TabScreenState extends State<TabScreen> {
                 BottomNavigationBarItem(
                   icon: Icon(Icons.location_on_outlined),
                   label: 'Location',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.fire_hydrant_alt_outlined),
+                  label: 'Hot',
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(Icons.notification_important_outlined),

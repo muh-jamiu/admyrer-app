@@ -19,7 +19,8 @@ class OnboardingScreen extends StatelessWidget {
         ),
         floatingActionButton: FloatingActionButton(
         onPressed: () => {
-          Navigator.pushNamed(context, "/step")
+          // Navigator.pushNamed(context, "/step")
+          Navigator.pushNamed(context, "/tab")
         },
         backgroundColor: Colors.pink[400],
         child: const Icon(Icons.arrow_forward, color: Colors.white,),
