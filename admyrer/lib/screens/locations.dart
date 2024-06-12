@@ -97,7 +97,7 @@ class _UserState extends State<User> {
               borderRadius: BorderRadius.circular(20),
               child: Image.asset(
                 "assets/images/icon.png",
-                height: 450,
+                height: 400,
                 fit: BoxFit.cover,
                 width: double.infinity,
               ),
