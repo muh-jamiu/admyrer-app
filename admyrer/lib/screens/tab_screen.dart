@@ -3,8 +3,6 @@ import 'package:admyrer/screens/hot.dart';
 import 'package:admyrer/screens/locations.dart';
 import 'package:admyrer/screens/notifications.dart';
 import 'package:admyrer/screens/profile.dart';
-import 'package:admyrer/widget/backgrounds.dart';
-import 'package:admyrer/widget/gradient_button.dart';
 import 'package:flutter/material.dart';
 
 class TabScreen extends StatefulWidget {
