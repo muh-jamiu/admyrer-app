@@ -27,6 +27,7 @@ class _ChatState extends State<Chat> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  SizedBox(height: 10,),
                   const Text('Chat List', style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),),
                   SizedBox(height: 10,),
                   Users(),
@@ -61,19 +62,31 @@ class _UsersState extends State<Users> {
         child: Row(
           
           children: List.generate(10, (index) {
-            return const Column(
+            return Column(
               children: [
                 Row(
                   children: [
-                  SizedBox(width: 20, height: 10,),
-                    CircleAvatar(
-                      radius: 40,
-                      backgroundImage: AssetImage("images/icon.png"),
+                  const SizedBox(width: 20, height: 10,),
+                    Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: Color.fromARGB(255, 207, 37, 212),
+                          width: 3.0
+                        )
+                      ),
+                      child: const Padding(
+                        padding: EdgeInsets.all(2.0),
+                        child: CircleAvatar(
+                          radius: 25,
+                          backgroundImage: AssetImage("images/icon.png"),
+                        ),
+                      ),
                     ),
                   ],
                 ),
-                SizedBox(height: 10,),
-                Row(
+                const SizedBox(height: 10,),
+                const Row(
                   children: [
                     SizedBox(width: 20),
                     Text("Larvish007", style: TextStyle(fontSize: 12, fontWeight: FontWeight.w100, color: Colors.grey),),
@@ -106,7 +119,7 @@ class _ChatListState extends State<ChatList> {
             title: Row(
               children: [
                 const CircleAvatar(
-                  radius: 40,
+                  radius: 25,
                   backgroundImage: AssetImage("images/icon.png"),
                 ),
                 const SizedBox(width: 20,),
