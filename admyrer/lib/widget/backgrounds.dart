@@ -9,7 +9,7 @@ class Backgrounds extends StatelessWidget {
     return Container(
       decoration: const BoxDecoration(
         image: DecorationImage(
-          image: AssetImage('images/drawable/firstbackgroundeffects.png'),
+          image: AssetImage('images/firstbackgroundeffects.png'),
           fit: BoxFit.cover,
         ),
       ),

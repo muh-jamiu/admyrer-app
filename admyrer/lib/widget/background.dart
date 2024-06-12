@@ -9,14 +9,14 @@ class Background extends StatelessWidget {
     return Container(
       decoration: const BoxDecoration(
         image: DecorationImage(
-          image: AssetImage('images/drawable/firstbackgroundeffects.png'),
+          image: AssetImage('images/firstbackgroundeffects.png'),
           fit: BoxFit.cover,
         ),
       ),
       child:  Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children:  [
-          Image.asset("images/drawable/icon_splash.png", width: 200, height: 200,),
+          Image.asset("images/icon_splash.png", width: 200, height: 200,),
           const Center(
             // child: Text(
             //   'ADMYRER',

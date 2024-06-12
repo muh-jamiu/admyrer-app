@@ -68,7 +68,7 @@ class _UsersState extends State<Users> {
                   SizedBox(width: 20, height: 10,),
                     CircleAvatar(
                       radius: 40,
-                      backgroundImage: AssetImage("images/drawable/icon.png"),
+                      backgroundImage: AssetImage("images/icon.png"),
                     ),
                   ],
                 ),
@@ -107,7 +107,7 @@ class _ChatListState extends State<ChatList> {
               children: [
                 const CircleAvatar(
                   radius: 40,
-                  backgroundImage: AssetImage("images/drawable/icon.png"),
+                  backgroundImage: AssetImage("images/icon.png"),
                 ),
                 const SizedBox(width: 20,),
                 Column(
