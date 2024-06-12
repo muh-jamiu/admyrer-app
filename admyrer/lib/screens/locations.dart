@@ -11,24 +11,24 @@ class Locations extends StatefulWidget {
 class _LocationsState extends State<Locations> {
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       home: Scaffold(
-        body: const Stack(
+        body: Stack(
           // padding: const EdgeInsets.all(15.0),
           children: [
-            Backgrounds(),
+            const Backgrounds(),
             Padding(
-              padding: EdgeInsets.all(15.0),
+              padding: const EdgeInsets.all(15.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(
+                  const SizedBox(
                     height: 30,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Column(
+                     const  Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text(
@@ -54,18 +54,18 @@ class _LocationsState extends State<Locations> {
                         children: [
                           Icon(
                             Icons.more,
-                            color: Colors.pink,
+                            color: Colors.pink[300],
                           ),
-                          SizedBox(width: 15),
-                          Icon(Icons.lock_clock_outlined),
+                          const SizedBox(width: 15),
+                          Icon(Icons.compass_calibration, color: Colors.purple[300]),
                         ],
                       ),
                     ],
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
-                  User(),
+                  const Expanded(child: User()),
                 ],
               ),
             )
@@ -86,44 +86,97 @@ class User extends StatefulWidget {
 class _UserState extends State<User> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20)
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(20),
-            child: Image.network(
-              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlURaEXw8yHRfSZOUq-_itLj9rIMMCaTFhFQ&s",
-              height: 500,
-              fit: BoxFit.cover,
-              width: double.infinity,
+    return ListView(
+      children: [Container(
+        decoration: BoxDecoration(
+            color: Colors.white, borderRadius: BorderRadius.circular(20)),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: Image.asset(
+                "assets/images/icon.png",
+                height: 450,
+                fit: BoxFit.cover,
+                width: double.infinity,
+              ),
             ),
-          ),
-          const SizedBox(height: 10,),
-          Container(
-            padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
-            child: const Text(
-              'Muhammad Jamiu',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            const SizedBox(
+              height: 10,
             ),
-          ),
-          Container(
-            padding: const EdgeInsets.only(left: 10, right: 10, bottom: 30),
-            child: const Row(children: [
-              Icon(Icons.location_on_outlined, color: Colors.pink,),
-              SizedBox(width: 2,),
-              Text(
-              'Lagos, Nigeria',
-              style: TextStyle(fontSize: 20),
+            Container(
+              padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
+              child: const Text(
+                'Muhammad Jamiu',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
             ),
-            ],),
-          )
-        ],
-      ),
+            Container(
+              padding: const EdgeInsets.only(left: 10, right: 10, bottom: 20),
+              child:  Row(
+                children: [
+                  Icon(
+                    Icons.location_on_outlined,
+                    color: Colors.pink[300],
+                  ),
+                  const SizedBox(
+                    width: 2,
+                  ),
+                  const Text(
+                    'Lagos, Nigeria',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 10, right: 10, bottom: 30),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  InkWell(                    
+                    onTap: () => {},
+                    child: Container(
+                      width: 60,
+                      height: 60,
+                      decoration: BoxDecoration(
+                        color: Color.fromARGB(26, 233, 30, 98),
+                        borderRadius: BorderRadius.circular(50)
+                      ),
+                      child: Icon(Icons.cancel_outlined, color: Colors.pink[300], size: 25,),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () => {},
+                    child: Container(
+                      width: 60,
+                      height: 60,
+                      decoration: BoxDecoration(
+                        color: Color.fromARGB(35, 155, 39, 176),
+                        borderRadius: BorderRadius.circular(50)
+                      ),
+                      child: const Icon(Icons.replay_outlined, color: Colors.purple, size: 25,),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () => {},
+                    child: Container(
+                      width: 60,
+                      height: 60,
+                      decoration: BoxDecoration(
+                        color: Colors.pink[300],
+                        borderRadius: BorderRadius.circular(50)
+                      ),
+                      child: const Icon(Icons.heart_broken, color: Colors.white, size: 25,),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      )],
     );
   }
 }
