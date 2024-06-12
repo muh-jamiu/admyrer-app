@@ -1,9 +1,27 @@
 import 'package:admyrer/widget/background.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'dart:async';
 
-class OnboardingScreen extends StatelessWidget {
+class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
+
+  @override
+  State<OnboardingScreen> createState() => _OnboardingScreenState();
+}
+
+class _OnboardingScreenState extends State<OnboardingScreen> {
+  // void initState(){
+  //   Timer(
+  //     const Duration(
+  //       seconds: 5
+  //     ),
+  //     (){
+  //        Navigator.pushNamed(context, "/step");
+  //     }
+  //   );
+  // }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
