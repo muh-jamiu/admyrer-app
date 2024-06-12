@@ -27,7 +27,7 @@ class GoogleLogin extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Image.asset(
-              'images/download.png', // Make sure the Google logo image is in your assets folder
+              'assets/images/download.png', // Make sure the Google logo image is in your assets folder
               height: 24.0,
               width: 24.0,
             ),

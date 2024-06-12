@@ -27,11 +27,10 @@ class _ChatState extends State<Chat> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: 10,),
+                  SizedBox(height: 30,),
                   const Text('Chat List', style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),),
                   SizedBox(height: 10,),
                   Users(),
-                  SizedBox(height: 10,),
                   Divider(
                     color: Color.fromARGB(255, 215, 215, 215),
                     thickness: 1.0,
@@ -71,15 +70,15 @@ class _UsersState extends State<Users> {
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         border: Border.all(
-                          color: Color.fromARGB(255, 207, 37, 212),
-                          width: 3.0
+                          color: const Color.fromARGB(255, 207, 37, 212),
+                          width: 2.0
                         )
                       ),
                       child: const Padding(
                         padding: EdgeInsets.all(2.0),
                         child: CircleAvatar(
                           radius: 25,
-                          backgroundImage: AssetImage("images/icon.png"),
+                          backgroundImage: AssetImage("assets/images/icon.png"),
                         ),
                       ),
                     ),
@@ -89,7 +88,7 @@ class _UsersState extends State<Users> {
                 const Row(
                   children: [
                     SizedBox(width: 20),
-                    Text("Larvish007", style: TextStyle(fontSize: 12, fontWeight: FontWeight.w100, color: Colors.grey),),
+                    Text("Larvish007", style: TextStyle(fontSize: 12, fontWeight: FontWeight.w100, color: Color.fromARGB(255, 40, 40, 40)),),
                   ],
                 ),
               ],
@@ -109,7 +108,7 @@ class ChatList extends StatefulWidget {
 }
 
 class _ChatListState extends State<ChatList> {
-   final items = List<String>.generate(5, (index) => 'Item $index');
+   final items = List<String>.generate(25, (index) => 'Item $index');
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
@@ -120,14 +119,14 @@ class _ChatListState extends State<ChatList> {
               children: [
                 const CircleAvatar(
                   radius: 25,
-                  backgroundImage: AssetImage("images/icon.png"),
+                  backgroundImage: AssetImage("assets/images/icon.png"),
                 ),
                 const SizedBox(width: 20,),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(items[index], style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w400),textAlign: TextAlign.start,),
-                    const Text("Messaga Notifications", style: TextStyle(fontSize: 15, fontWeight: FontWeight.w100, color: Colors.grey),),
+                    const Text("Messaga Notifications", style: TextStyle(fontSize: 15, fontWeight: FontWeight.w100, color: Color.fromARGB(255, 35, 35, 35)),),
                   ],
                 ),
               ],

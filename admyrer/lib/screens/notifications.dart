@@ -102,14 +102,14 @@ class _AllState extends State<All> {
               children: [
                 const CircleAvatar(
                   radius: 25,
-                  backgroundImage: AssetImage("images/icon.png"),
+                  backgroundImage: AssetImage("assets/images/icon.png"),
                 ),
                 const SizedBox(width: 20,),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(items[index], style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w400),textAlign: TextAlign.start,),
-                    const Text("Messaga Notifications", style: TextStyle(fontSize: 15, fontWeight: FontWeight.w100, color: Colors.grey),),
+                    const Text("Messaga Notifications", style: TextStyle(fontSize: 15, fontWeight: FontWeight.w100, color: Color.fromARGB(255, 70, 70, 70)),),
                   ],
                 ),
               ],

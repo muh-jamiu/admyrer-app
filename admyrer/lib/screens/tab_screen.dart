@@ -50,7 +50,7 @@ class _TabScreenState extends State<TabScreen> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        backgroundColor: Colors.pink[50],
+        backgroundColor: Colors.pink[400],
         body: PageView(
           controller: _pageController,
           onPageChanged: _onPageChanged,
@@ -80,7 +80,7 @@ class _TabScreenState extends State<TabScreen> {
                   label: 'Location',
                 ),
                 BottomNavigationBarItem(
-                  icon: Icon(Icons.fire_hydrant_alt_outlined),
+                  icon: Icon(Icons.fireplace_outlined),
                   label: 'Hot',
                 ),
                 BottomNavigationBarItem(
