@@ -53,11 +53,11 @@ class _LocationsState extends State<Locations> {
                       Row(
                         children: [
                           Icon(
-                            Icons.more,
-                            color: Colors.pink[300],
+                            Icons.more_vert_outlined,
+                            color: Colors.pink[300]
                           ),
                           const SizedBox(width: 15),
-                          Icon(Icons.compass_calibration, color: Colors.purple[300]),
+                          Icon(Icons.diamond_rounded, color: Colors.blue[300]),
                         ],
                       ),
                     ],

@@ -159,7 +159,7 @@ class _UsersState extends State<Users> {
                       padding: EdgeInsets.all(2.0),
                       child: CircleAvatar(
                         radius: 25,
-                        backgroundImage: AssetImage("/images/placeholder1.jpeg"),
+                        backgroundImage: AssetImage("assets/images/download.png"),
                       ),
                     ),
                   ),
@@ -209,7 +209,7 @@ class _FirstSectionState extends State<FirstSection> {
               ClipRRect(
                 borderRadius: BorderRadius.circular(20),
                 child: Image.asset(
-                  "/images/placeholder1.jpeg",
+                  "assets/images/placeholder1.jpeg",
                   height: 200,
                   fit: BoxFit.cover,
                   width: double.infinity,
@@ -315,7 +315,7 @@ class _AllUSersState extends State<AllUSers> {
             height: 150,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10)),
-            child: Image.asset("/images/placeholder1.jpeg", fit: BoxFit.cover),
+            child: Image.asset("assets/images/placeholder1.jpeg", fit: BoxFit.cover),
           ),
         ),
         InkWell(
@@ -325,7 +325,7 @@ class _AllUSersState extends State<AllUSers> {
             height: 150,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10)),
-            child: Image.asset("/images/placeholder1.jpeg", fit: BoxFit.cover),
+            child: Image.asset("assets/images/placeholder1.jpeg", fit: BoxFit.cover),
           ),
         ),
         InkWell(
@@ -335,7 +335,7 @@ class _AllUSersState extends State<AllUSers> {
             height: 150,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10)),
-            child: Image.asset("/images/placeholder1.jpeg", fit: BoxFit.cover),
+            child: Image.asset("assets/images/placeholder1.jpeg", fit: BoxFit.cover),
           ),
         ),
         InkWell(
@@ -345,7 +345,7 @@ class _AllUSersState extends State<AllUSers> {
             height: 150,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10)),
-            child: Image.asset("images/placeholder1.jpeg", fit: BoxFit.cover),
+            child: Image.asset("assets/images/placeholder1.jpeg", fit: BoxFit.cover),
           ),
         ),
       ],
