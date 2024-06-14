@@ -23,7 +23,7 @@ dependencies:
 flutter_icons:
   android: true
   ios: true
-  image_path: "assets/images/drawable/icon.png"
+  image_path: "assets/images/icon.png"
   adaptive_icon_background: "black"
 
 dev_dependencies:
