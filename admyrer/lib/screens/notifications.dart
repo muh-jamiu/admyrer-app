@@ -102,7 +102,7 @@ class _AllState extends State<All> {
               children: [
                 const CircleAvatar(
                   radius: 25,
-                  backgroundImage: AssetImage("assets/images/icon.png"),
+                  backgroundImage: AssetImage("/images/placeholder1.jpeg"),
                 ),
                 const SizedBox(width: 20,),
                 Column(

@@ -33,7 +33,7 @@ class _StepSceenState extends State<StepSceen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Image.asset(
-                    "assets/images/Titileimages.png",
+                    "images/Titileimages.png",
                     width: 300,
                     height: 300,
                   ),

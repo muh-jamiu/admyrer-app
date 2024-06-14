@@ -96,7 +96,7 @@ class _UserState extends State<User> {
             ClipRRect(
               borderRadius: BorderRadius.circular(20),
               child: Image.asset(
-                "assets/images/icon.png",
+                "/images/placeholder1.jpeg",
                 height: 400,
                 fit: BoxFit.cover,
                 width: double.infinity,
