@@ -4,6 +4,7 @@ import 'package:admyrer/widget/bootstrap_textfield.dart';
 import 'package:admyrer/widget/google_login.dart';
 import 'package:admyrer/widget/facebook.dart';
 import 'package:flutter/material.dart';
+// import "package:Admyrer/widget/background.dart";
 
 class Hot extends StatefulWidget {
   const Hot({super.key});
@@ -159,7 +160,7 @@ class _UsersState extends State<Users> {
                       padding: EdgeInsets.all(2.0),
                       child: CircleAvatar(
                         radius: 25,
-                        backgroundImage: AssetImage("assets/images/download.png"),
+                        backgroundImage: AssetImage("assets/images/placeholder1.jpeg"),
                       ),
                     ),
                   ),

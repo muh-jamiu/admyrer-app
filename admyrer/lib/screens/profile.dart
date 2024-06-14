@@ -92,7 +92,7 @@ class _SettingsState extends State<Settings> {
               padding: EdgeInsets.all(5.0),
               child: CircleAvatar(
                 radius: 70,
-                backgroundImage: AssetImage("/images/placeholder1.jpeg"),
+                backgroundImage: AssetImage("assets/images/placeholder1.jpeg"),
               ),
             ),
           ),
