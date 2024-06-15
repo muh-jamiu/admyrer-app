@@ -30,10 +30,31 @@ class _LoginState extends State<Login> {
     data = _apiService.getRequest("test");
   }
 
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          icon: Icon(Icons.mark_chat_read_rounded, color: Colors.green[300],),
+          title: Text('Success'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pushNamed(context, "/verify");
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void verify() {
       if (_formKey.currentState!.validate()) {
         data = _apiService.getRequest("test");
-        Navigator.pushNamed(context, "/verify");
+        _showErrorDialog("Success");
+        // Navigator.pushNamed(context, "/verify");
       }
   }
 
