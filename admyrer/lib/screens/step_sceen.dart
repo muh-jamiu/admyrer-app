@@ -1,3 +1,4 @@
+import 'package:admyrer/services/api_service.dart';
 import 'package:admyrer/widget/backgrounds.dart';
 import 'package:admyrer/widget/gradient_button.dart';
 import 'package:admyrer/widget/normal_button.dart';
@@ -11,8 +12,12 @@ class StepSceen extends StatefulWidget {
 }
 
 class _StepSceenState extends State<StepSceen> {
+  late Future<dynamic> data;
+  final ApiService _apiService = ApiService();
+
   void login() {
-    Navigator.pushNamed(context, "/login");
+    // Navigator.pushNamed(context, "/login");
+    data = _apiService.getRequest("test");
   }
 
   void register() {
@@ -33,7 +38,7 @@ class _StepSceenState extends State<StepSceen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Image.asset(
-                    "assets/images/swipe_right.png",
+                    "assets/images/TitileImages.png",
                     width: 300,
                     height: 300,
                   ),

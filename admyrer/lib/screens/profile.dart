@@ -57,7 +57,7 @@ class _ProfileState extends State<Profile> {
                     height: 20,
                   ),
                   const Settings(),
-                  const SizedBox(height: 20,),
+                  const SizedBox(height: 10,),
                   const Expanded(child: MyGridList())
                 ],
               ),

@@ -65,7 +65,7 @@ class _HotState extends State<Hot> {
                     ],
                   ),
                   const SizedBox(
-                    height: 10,
+                    height: 1,
                   ),
                   Expanded(
                     child: ListView(
@@ -147,7 +147,6 @@ class _UsersState extends State<Users> {
               Row(
                 children: [
                   const SizedBox(
-                    width: 20,
                     height: 10,
                   ),
                   Container(
@@ -164,6 +163,7 @@ class _UsersState extends State<Users> {
                       ),
                     ),
                   ),
+                  const SizedBox(width: 20,)
                 ],
               ),
               const SizedBox(
@@ -171,7 +171,6 @@ class _UsersState extends State<Users> {
               ),
               const Row(
                 children: [
-                  SizedBox(width: 20),
                   Text(
                     "Larvish007",
                     style: TextStyle(
@@ -179,6 +178,7 @@ class _UsersState extends State<Users> {
                         fontWeight: FontWeight.w100,
                         color: Color.fromARGB(255, 40, 40, 40)),
                   ),
+                  SizedBox(width: 20),
                 ],
               ),
             ],

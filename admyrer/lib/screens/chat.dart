@@ -19,12 +19,15 @@ class _ChatState extends State<Chat> {
           children: [
             const Backgrounds(),
             Padding(
-              padding: EdgeInsets.all(15.0),
+              padding: EdgeInsets.all(0.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(height: 30,),
-                  const Text('Chat List', style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),),
+                  Padding(
+                    padding: EdgeInsets.only(left: 10),
+                    child: const Text('Chat List', style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),),
+                  ),
                   SizedBox(height: 10,),
                   Users(),
                   Divider(
@@ -61,7 +64,7 @@ class _UsersState extends State<Users> {
               children: [
                 Row(
                   children: [
-                  const SizedBox(width: 20, height: 10,),
+                    const SizedBox(width: 10),
                     Container(
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
@@ -71,20 +74,22 @@ class _UsersState extends State<Users> {
                         )
                       ),
                       child: const Padding(
-                        padding: EdgeInsets.all(2.0),
+                        padding: EdgeInsets.all(0.0),
                         child: CircleAvatar(
                           radius: 25,
                           backgroundImage: AssetImage("assets/images/placeholder1.jpeg"),
                         ),
                       ),
                     ),
+                  const SizedBox(width: 10, height: 10,),
                   ],
                 ),
                 const SizedBox(height: 10,),
                 const Row(
                   children: [
-                    SizedBox(width: 20),
+                    SizedBox(width: 10),
                     Text("Larvish007", style: TextStyle(fontSize: 12, fontWeight: FontWeight.w100, color: Color.fromARGB(255, 40, 40, 40)),),
+                    SizedBox(width: 10),
                   ],
                 ),
               ],

@@ -63,7 +63,7 @@ class _LocationsState extends State<Locations> {
                     ],
                   ),
                   const SizedBox(
-                    height: 10,
+                    height: 1,
                   ),
                   const Expanded(child: User()),
                 ],
