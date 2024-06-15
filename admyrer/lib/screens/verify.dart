@@ -11,7 +11,7 @@ class Verify extends StatefulWidget {
 
 class _VerifyState extends State<Verify> {
   void home() {
-    Navigator.pushNamed(context, "/home");
+    Navigator.pushNamed(context, "/tab");
   }
 
   final _codeControllers = List<TextEditingController>.generate(6, (index) => TextEditingController());
@@ -103,7 +103,7 @@ class _VerifyState extends State<Verify> {
                       const SizedBox(
                         height: 80,
                       ),
-                      GradientButton(text: "Verify Code", onPressed: () => {}),
+                      GradientButton(text: "Verify Code", onPressed: home),
                     ],
                   ),
                   Column(

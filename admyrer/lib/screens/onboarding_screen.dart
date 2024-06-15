@@ -11,16 +11,16 @@ class OnboardingScreen extends StatefulWidget {
 }
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
-  // void initState(){
-  //   Timer(
-  //     const Duration(
-  //       seconds: 5
-  //     ),
-  //     (){
-  //        Navigator.pushNamed(context, "/step");
-  //     }
-  //   );
-  // }
+  void initState(){
+    Timer(
+      const Duration(
+        seconds: 5
+      ),
+      (){
+         Navigator.pushNamed(context, "/step");
+      }
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,14 +35,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             ),
           ],
         ),
-        floatingActionButton: FloatingActionButton(
-        onPressed: () => {
-          // Navigator.pushNamed(context, "/step")
-          Navigator.pushNamed(context, "/step")
-        },
-        backgroundColor: Colors.pink[400],
-        child: const Icon(Icons.arrow_forward, color: Colors.white,),
-      ),
+      //   floatingActionButton: FloatingActionButton(
+      //   onPressed: () => {
+      //     // Navigator.pushNamed(context, "/step")
+      //     Navigator.pushNamed(context, "/step")
+      //   },
+      //   backgroundColor: Colors.pink[400],
+      //   child: const Icon(Icons.arrow_forward, color: Colors.white,),
+      // ),
       // back
       ),
     );

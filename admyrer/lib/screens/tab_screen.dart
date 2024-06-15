@@ -32,7 +32,7 @@ class _TabScreenState extends State<TabScreen> {
       _currentIndex = index;
       _pageController.animateToPage(
         index,
-        duration: const Duration(milliseconds: 500),
+        duration: const Duration(milliseconds: 200),
         curve: Curves.easeInOut,
       );
     });

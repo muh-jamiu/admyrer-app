@@ -12,12 +12,9 @@ class StepSceen extends StatefulWidget {
 }
 
 class _StepSceenState extends State<StepSceen> {
-  late Future<dynamic> data;
-  final ApiService _apiService = ApiService();
 
   void login() {
-    // Navigator.pushNamed(context, "/login");
-    data = _apiService.getRequest("test");
+    Navigator.pushNamed(context, "/login");
   }
 
   void register() {

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class BootstrapTextField extends StatelessWidget {
+class PasswordText extends StatelessWidget {
   final String labelText;
   final IconData? icon;
   final TextEditingController controller;
 
-  BootstrapTextField({
+  PasswordText({
     required this.labelText,
     this.icon,
     required this.controller,
@@ -41,6 +41,7 @@ class BootstrapTextField extends StatelessWidget {
                   }
                   return null;
                 },
+                obscureText: true,
                 controller: controller,
                 decoration: InputDecoration(
                   border: InputBorder.none,
