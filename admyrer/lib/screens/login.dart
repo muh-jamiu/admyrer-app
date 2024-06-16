@@ -27,7 +27,6 @@ class _LoginState extends State<Login> {
 
   void forgot() {
     Navigator.pushNamed(context, "/forgot");
-    data = _apiService.getRequest("test");
   }
 
   void _showErrorDialog(String message) {
@@ -52,7 +51,7 @@ class _LoginState extends State<Login> {
 
   void verify() {
       if (_formKey.currentState!.validate()) {
-        data = _apiService.getRequest("test");
+        data = _apiService.postRequest("login", {});
         _showErrorDialog("Success");
         // Navigator.pushNamed(context, "/verify");
       }

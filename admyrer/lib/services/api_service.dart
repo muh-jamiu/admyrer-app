@@ -21,8 +21,9 @@ class ApiService {
       headers: {'Content-Type': 'application/json'},
       body: json.encode(data),
     );
+    print(json.decode(response.body));
 
-    if (response.statusCode == 201) {
+    if (response.statusCode == 200) {
       return json.decode(response.body);
     } else {
       throw Exception('Failed to post data');
