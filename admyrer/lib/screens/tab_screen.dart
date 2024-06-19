@@ -4,6 +4,9 @@ import 'package:admyrer/screens/locations.dart';
 import 'package:admyrer/screens/notifications.dart';
 import 'package:admyrer/screens/profile.dart';
 import 'package:flutter/material.dart';
+import 'package:admyrer/services/api_service.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'dart:convert';
 
 class TabScreen extends StatefulWidget {
   const TabScreen({super.key});
@@ -13,18 +16,58 @@ class TabScreen extends StatefulWidget {
 }
 
 class _TabScreenState extends State<TabScreen> {
-  void home() {
-    Navigator.pushNamed(context, "/home");
+  final ApiService _apiService = ApiService();
+  bool isLoading = true;
+  late List<Widget> _pages; 
+
+  void showErrorToast(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_LONG,
+      gravity: ToastGravity.CENTER,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+      fontSize: 20.0,
+    );
   }
 
-  int _currentIndex = 0;
-  final List<Widget> _pages = [
-    const Locations(),
+  Future<void> _handleSignIn() async {
+    final user = await _apiService.postRequest("buildPage", {
+      "id": 10,
+    });
+    setState((){
+      isLoading = false;
+    });
+    final data = json.decode(user.body);
+    print(data["data"]["user"]);
+    
+    if (user.statusCode != 200) {
+      showErrorToast(user.body);
+      return;
+    }
+  }
+
+  @override
+  void initState() { 
+    super.initState();
+    _handleSignIn(); 
+
+    _pages = [
+    Locations(isLoading: isLoading,),
     const Hot(),
     const Notifications(),
     const Chat(),
     const Profile(),
   ];
+  }
+
+  void home() {
+    Navigator.pushNamed(context, "/home");
+  }
+
+  int _currentIndex = 0;
+  
 
   final _pageController = PageController();
   void _onTabTapped(int index) {
@@ -57,21 +100,19 @@ class _TabScreenState extends State<TabScreen> {
         bottomNavigationBar: Padding(
           padding: const EdgeInsets.all(15.0),
           child: Container(
-            decoration: BoxDecoration(
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.white.withOpacity(0.1),
-                  spreadRadius: 1,
-                  blurRadius: 3,
-                )
-              ]
-            ),
+            decoration: BoxDecoration(boxShadow: [
+              BoxShadow(
+                color: Colors.white.withOpacity(0.1),
+                spreadRadius: 1,
+                blurRadius: 3,
+              )
+            ]),
             child: BottomNavigationBar(
               currentIndex: _currentIndex,
               onTap: _onTabTapped,
               selectedItemColor: Colors.pink[300],
               unselectedItemColor: Colors.grey[600],
-              type:  BottomNavigationBarType.shifting,
+              type: BottomNavigationBarType.shifting,
               items: const [
                 BottomNavigationBarItem(
                   icon: Icon(Icons.location_on_outlined),

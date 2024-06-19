@@ -1,14 +1,33 @@
 import 'package:admyrer/widget/backgrounds.dart';
 import 'package:flutter/material.dart';
+import 'package:admyrer/services/api_service.dart';
 
 class Locations extends StatefulWidget {
-  const Locations({super.key});
+  bool isLoading;
+
+  Locations({Key? key, required this.isLoading}) : super(key: key);
 
   @override
   State<Locations> createState() => _LocationsState();
 }
 
 class _LocationsState extends State<Locations> {
+  final ApiService _apiService = ApiService();
+  Future<void> _handleSignIn() async {
+    final user = await _apiService.postRequest("buildPage", {
+      "id": 10,
+    });
+    setState(() {
+      widget.isLoading = false;
+    });
+  }
+
+  @override
+  void initState() { 
+  super.initState();
+  _handleSignIn();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -28,7 +47,7 @@ class _LocationsState extends State<Locations> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                     const  Column(
+                      const Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text(
@@ -52,10 +71,8 @@ class _LocationsState extends State<Locations> {
                       ),
                       Row(
                         children: [
-                          Icon(
-                            Icons.more_vert_outlined,
-                            color: Colors.pink[300]
-                          ),
+                          Icon(Icons.more_vert_outlined,
+                              color: Colors.pink[300]),
                           const SizedBox(width: 15),
                           Icon(Icons.diamond_rounded, color: Colors.blue[300]),
                         ],
@@ -65,7 +82,27 @@ class _LocationsState extends State<Locations> {
                   const SizedBox(
                     height: 1,
                   ),
-                  const Expanded(child: User()),
+                  widget.isLoading
+                      ? const Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              SizedBox(height: 120),
+                              CircularProgressIndicator(
+                                valueColor:
+                                    AlwaysStoppedAnimation<Color>(Colors.pink),
+                                strokeWidth: 6.0,
+                              ),
+                              SizedBox(height: 20),
+                              Text(
+                                'Loading, please wait...',
+                                style: TextStyle(fontSize: 16),
+                              ),
+                            ],
+                          ),
+                        )
+                      : const Expanded(child: User()),
                 ],
               ),
             )
@@ -87,96 +124,107 @@ class _UserState extends State<User> {
   @override
   Widget build(BuildContext context) {
     return ListView(
-      children: [Container(
-        decoration: BoxDecoration(
-            color: Colors.white, borderRadius: BorderRadius.circular(20)),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(20),
-              child: Image.asset(
-                "assets/images/placeholder1.jpeg",
-                height: 400,
-                fit: BoxFit.cover,
-                width: double.infinity,
+      children: [
+        Container(
+          decoration: BoxDecoration(
+              color: Colors.white, borderRadius: BorderRadius.circular(20)),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: Image.asset(
+                  "assets/images/placeholder1.jpeg",
+                  height: 400,
+                  fit: BoxFit.cover,
+                  width: double.infinity,
+                ),
               ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Container(
-              padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
-              child: const Text(
-                'Muhammad Jamiu',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              const SizedBox(
+                height: 10,
               ),
-            ),
-            Container(
-              padding: const EdgeInsets.only(left: 10, right: 10, bottom: 20),
-              child:  Row(
-                children: [
-                  Icon(
-                    Icons.location_on_outlined,
-                    color: Colors.pink[300],
-                  ),
-                  const SizedBox(
-                    width: 2,
-                  ),
-                  const Text(
-                    'Lagos, Nigeria',
-                    style: TextStyle(fontSize: 20),
-                  ),
-                ],
+              Container(
+                padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
+                child: const Text(
+                  'Muhammad Jamiu',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 10, right: 10, bottom: 30),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  InkWell(                    
-                    onTap: () => {},
-                    child: Container(
-                      width: 60,
-                      height: 60,
-                      decoration: BoxDecoration(
-                        color: Color.fromARGB(26, 233, 30, 98),
-                        borderRadius: BorderRadius.circular(50)
-                      ),
-                      child: Icon(Icons.cancel_outlined, color: Colors.pink[300], size: 25,),
+              Container(
+                padding: const EdgeInsets.only(left: 10, right: 10, bottom: 20),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.location_on_outlined,
+                      color: Colors.pink[300],
                     ),
-                  ),
-                  InkWell(
-                    onTap: () => {},
-                    child: Container(
-                      width: 60,
-                      height: 60,
-                      decoration: BoxDecoration(
-                        color: Color.fromARGB(35, 155, 39, 176),
-                        borderRadius: BorderRadius.circular(50)
-                      ),
-                      child: const Icon(Icons.replay_outlined, color: Colors.purple, size: 25,),
+                    const SizedBox(
+                      width: 2,
                     ),
-                  ),
-                  InkWell(
-                    onTap: () => {},
-                    child: Container(
-                      width: 60,
-                      height: 60,
-                      decoration: BoxDecoration(
-                        color: Colors.pink[300],
-                        borderRadius: BorderRadius.circular(50)
-                      ),
-                      child: const Icon(Icons.heart_broken, color: Colors.white, size: 25,),
+                    const Text(
+                      'Lagos, Nigeria',
+                      style: TextStyle(fontSize: 20),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
-        ),
-      )],
+              Padding(
+                padding: const EdgeInsets.only(left: 10, right: 10, bottom: 30),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    InkWell(
+                      onTap: () => {},
+                      child: Container(
+                        width: 60,
+                        height: 60,
+                        decoration: BoxDecoration(
+                            color: Color.fromARGB(26, 233, 30, 98),
+                            borderRadius: BorderRadius.circular(50)),
+                        child: Icon(
+                          Icons.cancel_outlined,
+                          color: Colors.pink[300],
+                          size: 25,
+                        ),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () => {},
+                      child: Container(
+                        width: 60,
+                        height: 60,
+                        decoration: BoxDecoration(
+                            color: Color.fromARGB(35, 155, 39, 176),
+                            borderRadius: BorderRadius.circular(50)),
+                        child: const Icon(
+                          Icons.replay_outlined,
+                          color: Colors.purple,
+                          size: 25,
+                        ),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () => {},
+                      child: Container(
+                        width: 60,
+                        height: 60,
+                        decoration: BoxDecoration(
+                            color: Colors.pink[300],
+                            borderRadius: BorderRadius.circular(50)),
+                        child: const Icon(
+                          Icons.heart_broken,
+                          color: Colors.white,
+                          size: 25,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        )
+      ],
     );
   }
 }
