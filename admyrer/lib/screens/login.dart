@@ -7,6 +7,7 @@ import 'package:admyrer/widget/facebook.dart';
 import 'package:admyrer/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 class Login extends StatefulWidget {
@@ -74,6 +75,8 @@ class _LoginState extends State<Login> {
            return;
         }else{
           showErrorToast("Account login successfully");
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          await prefs.setString('authToken', "token");
           Future.delayed(Duration(seconds:2), () {
             Navigator.pushReplacementNamed(context, "/tab");
           });

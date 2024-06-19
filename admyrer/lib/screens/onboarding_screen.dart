@@ -2,6 +2,7 @@ import 'package:admyrer/widget/background.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'dart:async';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -11,15 +12,32 @@ class OnboardingScreen extends StatefulWidget {
 }
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
-  void initState(){
-    Timer(
+  Future<void> _checkOnboardingAndTokenStatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('authToken');
+    if (token != null) {
+      Timer(
       const Duration(
         seconds: 5
       ),
       (){
-         Navigator.pushNamed(context, "/step");
-      }
-    );
+         Navigator.pushReplacementNamed(context, "/tab");
+      });
+    }else{
+      Timer(
+      const Duration(
+        seconds: 5
+      ),
+      (){
+         Navigator.pushReplacementNamed(context, "/step");
+      });
+    }
+  }
+
+  @override
+  void initState() { 
+    super.initState();
+    _checkOnboardingAndTokenStatus(); 
   }
 
   @override
