@@ -15,13 +15,18 @@ class ApiService {
     }
   }
 
-  Future<dynamic> postRequest(String endpoint, Map<String, dynamic> data) async {
+  Future<http.Response> postRequest(String endpoint, Map<String, dynamic> data) async {
     final response = await http.post(
       Uri.parse('$baseUrl/$endpoint'),
       headers: {'Content-Type': 'application/json'},
       body: json.encode(data),
     );
-    print(json.decode(response.body));
+
+    print(data);
+
+    return response;
+    
+    // print(json.decode(response.body));
 
     if (response.statusCode == 200) {
       return json.decode(response.body);

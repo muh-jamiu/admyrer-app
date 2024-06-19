@@ -6,6 +6,8 @@ import 'package:admyrer/widget/google_login.dart';
 import 'package:admyrer/widget/facebook.dart';
 import 'package:admyrer/services/api_service.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -20,6 +22,7 @@ class _LoginState extends State<Login> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  bool isLoading = false;
 
   void register() {
     Navigator.pushNamed(context, "/register");
@@ -29,19 +32,31 @@ class _LoginState extends State<Login> {
     Navigator.pushNamed(context, "/forgot");
   }
 
+  void showErrorToast(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+      fontSize: 16.0
+    );
+  }
+
   void _showErrorDialog(String message) {
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
           icon: Icon(Icons.mark_chat_read_rounded, color: Colors.green[300],),
-          title: Text('Success'),
+          title: Text(message),
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.pushNamed(context, "/verify");
+                // Navigator.pushNamed(context, "/verify");
               },
-              child: Text('OK'),
+              child: Text('Close'),
             ),
           ],
         );
@@ -49,10 +64,26 @@ class _LoginState extends State<Login> {
     );
   }
 
-  void verify() {
+  void verify() async {
       if (_formKey.currentState!.validate()) {
-        data = _apiService.postRequest("login", {});
-        _showErrorDialog("Success");
+        setState(() {
+          isLoading = true;
+        });
+
+        final user = await _apiService.postRequest("login", {
+          "username": _emailController.text,
+          "password": _passwordController.text
+        });
+        
+        if(user.statusCode != 200){
+           showErrorToast(user.body);
+           setState(() {
+            isLoading = false;
+          });
+           return;
+        }
+        print(user.body);     
+
         // Navigator.pushNamed(context, "/verify");
       }
   }
@@ -128,7 +159,7 @@ class _LoginState extends State<Login> {
                         const SizedBox(
                           height: 50,
                         ),
-                        GradientButton(text: "Login", onPressed: verify),
+                        GradientButton(text: "Login", onPressed: verify, isLoading: isLoading),
                       ],
                     ),
                   ),

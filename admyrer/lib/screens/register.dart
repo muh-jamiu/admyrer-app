@@ -14,6 +14,7 @@ class Register extends StatefulWidget {
 }
 
 class _LoginState extends State<Register> {
+  bool isLoading = false;
   void login() {
     Navigator.pushNamed(context, "/login");
   }
@@ -90,7 +91,7 @@ class _LoginState extends State<Register> {
                         controller: TextEditingController(),
                       ),
                       const SizedBox(height: 50,),
-                      GradientButton(text: "Sign up", onPressed:  () => {}),
+                      GradientButton(text: "Sign up", onPressed:  () => {}, isLoading: isLoading),
                     ],
                   ),
                   

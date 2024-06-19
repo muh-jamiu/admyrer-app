@@ -10,6 +10,7 @@ class Verify extends StatefulWidget {
 }
 
 class _VerifyState extends State<Verify> {
+  bool isLoading = false;
   void home() {
     Navigator.pushNamed(context, "/tab");
   }
@@ -103,7 +104,7 @@ class _VerifyState extends State<Verify> {
                       const SizedBox(
                         height: 80,
                       ),
-                      GradientButton(text: "Verify Code", onPressed: home),
+                      GradientButton(text: "Verify Code", onPressed: home, isLoading:isLoading),
                     ],
                   ),
                   Column(

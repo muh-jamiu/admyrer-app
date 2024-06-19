@@ -12,6 +12,7 @@ class StepSceen extends StatefulWidget {
 }
 
 class _StepSceenState extends State<StepSceen> {
+  bool isLoading = false;
 
   void login() {
     Navigator.pushNamed(context, "/login");
@@ -51,7 +52,7 @@ class _StepSceenState extends State<StepSceen> {
                         style: TextStyle()),
                   ),
                   const SizedBox(height: 50,),
-                  GradientButton(text: "Login", onPressed:  login),
+                  GradientButton(text: "Login", onPressed:  login, isLoading:isLoading),
                   const SizedBox(height: 30,),
                   NormalButton(text: "Register", onPressed:  register),
                 ],
