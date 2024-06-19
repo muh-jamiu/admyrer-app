@@ -55,26 +55,6 @@ class _LoginState extends State<Login> {
     }
   }
 
-  void _showErrorDialog(String message) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          icon: Icon(Icons.mark_chat_read_rounded, color: Colors.green[300],),
-          title: Text(message),
-          actions: [
-            TextButton(
-              onPressed: () {
-                // Navigator.pushNamed(context, "/verify");
-              },
-              child: Text('Close'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   void verify() async {
       if (_formKey.currentState!.validate()) {
         setState(() {
@@ -92,10 +72,13 @@ class _LoginState extends State<Login> {
             isLoading = false;
           });
            return;
+        }else{
+          showErrorToast("Account login successfully");
+          Future.delayed(Duration(seconds:2), () {
+            Navigator.pushReplacementNamed(context, "/tab");
+          });
         }
-        print(user.body);     
-
-        // Navigator.pushNamed(context, "/verify");
+ 
       }
   }
 

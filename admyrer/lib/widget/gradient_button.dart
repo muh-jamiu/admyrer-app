@@ -31,7 +31,7 @@ class GradientButton extends StatelessWidget {
           child: isLoading
               ? const SpinKitThreeBounce(
                   color: Colors.white,
-                  size: 22.0,
+                  size: 25.0,
                 )
               : Text(
                   text,
