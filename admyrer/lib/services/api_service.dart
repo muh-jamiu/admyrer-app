@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:google_sign_in/google_sign_in.dart';
 
 class ApiService {
   static const String baseUrl = 'https://admyrer.com/api';
@@ -25,13 +26,26 @@ class ApiService {
     print(data);
 
     return response;
-    
-    // print(json.decode(response.body));
+  }
 
-    if (response.statusCode == 200) {
-      return json.decode(response.body);
-    } else {
-      throw Exception('Failed to post data');
+  final GoogleSignIn _googleSignIn = GoogleSignIn(
+    clientId: "498456014285-i05m3err99em4a272ptk98gq54l09gh7.apps.googleusercontent.com",
+    scopes: [
+      'email',
+      'https://www.googleapis.com/auth/contacts.readonly',
+    ],
+  );
+
+  Future<GoogleSignInAccount?> signInWithGoogle() async {
+    try {
+      return await _googleSignIn.signIn();
+    } catch (error) {
+      print('Google Sign-In error: $error');
+      return null;
     }
+  }
+
+  Future<void> signOut() async {
+    await _googleSignIn.signOut();
   }
 }

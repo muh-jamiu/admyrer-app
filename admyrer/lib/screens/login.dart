@@ -44,6 +44,17 @@ class _LoginState extends State<Login> {
     );
   }
 
+  Future<void> _handleSignIn() async {
+    final user = await _apiService.signInWithGoogle();
+    print(user);
+
+    if (user != null) {
+      // Obtain the user's ID token
+      final authHeaders = await user.authHeaders;
+      final idToken = authHeaders['Authorization']?.split(' ')[1];
+    }
+  }
+
   void _showErrorDialog(String message) {
     showDialog(
       context: context,
@@ -175,7 +186,7 @@ class _LoginState extends State<Login> {
                       Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            GoogleLogin(onPressed: () => {}),
+                            GoogleLogin(onPressed: _handleSignIn),
                             Facebook(onPressed: () => {}),
                             Facebook(onPressed: () => {}),
                           ]),
