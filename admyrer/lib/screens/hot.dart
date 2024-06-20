@@ -3,6 +3,7 @@ import 'package:admyrer/widget/gradient_button.dart';
 import 'package:admyrer/widget/bootstrap_textfield.dart';
 import 'package:admyrer/widget/google_login.dart';
 import 'package:admyrer/widget/facebook.dart';
+import 'package:admyrer/widget/image_my_placeholder.dart';
 import 'package:admyrer/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -138,11 +139,15 @@ class _HotState extends State<Hot> {
                       : Expanded(
                           child: ListView(
                             children: [
-                              Users(users: users,),
+                              Users(
+                                users: users,
+                              ),
                               const SizedBox(
                                 height: 15,
                               ),
-                              FirstSection(users: users,),
+                              FirstSection(
+                                users: users,
+                              ),
                               const SizedBox(
                                 height: 35,
                               ),
@@ -165,7 +170,11 @@ class _HotState extends State<Hot> {
                               const SizedBox(
                                 height: 5,
                               ),
-                              Container(height: 400, child: AllUSers()),
+                              Container(
+                                  height: 400,
+                                  child: AllUSers(
+                                    users: users,
+                                  )),
                               const SizedBox(
                                 height: 15,
                               ),
@@ -188,7 +197,11 @@ class _HotState extends State<Hot> {
                               const SizedBox(
                                 height: 5,
                               ),
-                              Container(height: 500, child: AllUSers())
+                              Container(
+                                  height: 500,
+                                  child: AllUSers(
+                                    users: users,
+                                  ))
                             ],
                           ),
                         ),
@@ -204,7 +217,7 @@ class _HotState extends State<Hot> {
 
 class Users extends StatefulWidget {
   final List<UserModel> users;
-  const Users({super.key,  required this.users});
+  const Users({super.key, required this.users});
 
   @override
   State<Users> createState() => _UsersState();
@@ -219,50 +232,49 @@ class _UsersState extends State<Users> {
         children: [
           Wrap(
             children: widget.users.map((user) {
-                 return Column(
-            children: [
-              Row(
+              return Column(
                 children: [
+                  Row(
+                    children: [
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                                color: const Color.fromARGB(255, 207, 37, 212),
+                                width: 2.0)),
+                        child: Padding(
+                          padding: EdgeInsets.all(2.0),
+                          child: CircleAvatar(
+                            radius: 25,
+                            backgroundImage: NetworkImage(user.avatar),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 20,
+                      )
+                    ],
+                  ),
                   const SizedBox(
                     height: 10,
                   ),
-                  Container(
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                            color: const Color.fromARGB(255, 207, 37, 212),
-                            width: 2.0)),
-                    child:  Padding(
-                      padding: EdgeInsets.all(2.0),
-                      child: CircleAvatar(
-                        radius: 25,
-                        backgroundImage:
-                            NetworkImage(user.avatar),
+                  Row(
+                    children: [
+                      Text(
+                        user.username,
+                        style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w100,
+                            color: Color.fromARGB(255, 40, 40, 40)),
                       ),
-                    ),
+                      SizedBox(width: 20),
+                    ],
                   ),
-                  const SizedBox(
-                    width: 20,
-                  )
                 ],
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-               Row(
-                children: [
-                  Text(
-                    user.username,
-                    style: const TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w100,
-                        color: Color.fromARGB(255, 40, 40, 40)),
-                  ),
-                  SizedBox(width: 20),
-                ],
-              ),
-            ],
-          );
+              );
             }).toList(),
           ),
         ],
@@ -273,7 +285,7 @@ class _UsersState extends State<Users> {
 
 class FirstSection extends StatefulWidget {
   final List<UserModel> users;
-  const FirstSection({super.key,  required this.users});
+  const FirstSection({super.key, required this.users});
 
   @override
   State<FirstSection> createState() => _FirstSectionState();
@@ -282,10 +294,11 @@ class FirstSection extends StatefulWidget {
 class _FirstSectionState extends State<FirstSection> {
   @override
   Widget build(BuildContext context) {
-  var firstName = widget.users[0].firstName;
-  var lastName = widget.users[0].lastName;
-  var country = widget.users[0].country;
-  var state = widget.users[0].state;
+    var firstName = widget.users[0].firstName;
+    var lastName = widget.users[0].lastName;
+    var country = widget.users[0].country;
+    var state = widget.users[0].state ?? "N/A";
+    var avatar = widget.users[0].avatar;
     return Column(
       children: [
         Container(
@@ -295,14 +308,37 @@ class _FirstSectionState extends State<FirstSection> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: Image.asset(
-                  "assets/images/placeholder1.jpeg",
-                  height: 200,
-                  fit: BoxFit.cover,
-                  width: double.infinity,
-                ),
-              ),
+                  borderRadius: BorderRadius.circular(20),
+                  child: Image.network(
+                    avatar,
+                    height: 200,
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                    loadingBuilder: (BuildContext context, Widget child,
+                        ImageChunkEvent? loadingProgress) {
+                      if (loadingProgress == null) {
+                        return child; // Image is fully loaded
+                      } else {
+                        return Center(
+                          child: CircularProgressIndicator(
+                            color: Colors.pink,
+                            value: loadingProgress.expectedTotalBytes != null
+                                ? loadingProgress.cumulativeBytesLoaded /
+                                    (loadingProgress.expectedTotalBytes ?? 1)
+                                : null,
+                          ),
+                        );
+                      }
+                    },
+                    errorBuilder: (BuildContext context, Object error,
+                        StackTrace? stackTrace) {
+                      return Image.asset(
+                          'assets/images/icon.png', height: 200,
+                    fit: BoxFit.cover,
+                    width: double.infinity,); // Path to your error image
+                    },
+                  )
+                  ),
               const SizedBox(
                 height: 10,
               ),
@@ -310,7 +346,8 @@ class _FirstSectionState extends State<FirstSection> {
                 padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
                 child: Text(
                   '$firstName $lastName',
-                  style: const  TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                      fontSize: 20, fontWeight: FontWeight.bold),
                 ),
               ),
               Container(
@@ -380,7 +417,8 @@ class _FirstSectionState extends State<FirstSection> {
 }
 
 class AllUSers extends StatefulWidget {
-  const AllUSers({super.key});
+  final List<UserModel> users;
+  const AllUSers({super.key, required this.users});
 
   @override
   State<AllUSers> createState() => _AllUSersState();
@@ -402,8 +440,7 @@ class _AllUSersState extends State<AllUSers> {
             width: 100,
             height: 150,
             decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
-            child: Image.asset("assets/images/placeholder1.jpeg",
-                fit: BoxFit.cover),
+            child: MyImageWidget(image: widget.users[0].avatar),
           ),
         ),
         InkWell(
@@ -412,8 +449,7 @@ class _AllUSersState extends State<AllUSers> {
             width: 100,
             height: 150,
             decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
-            child: Image.asset("assets/images/placeholder1.jpeg",
-                fit: BoxFit.cover),
+            child: MyImageWidget(image: widget.users[1].avatar),
           ),
         ),
         InkWell(
@@ -422,8 +458,7 @@ class _AllUSersState extends State<AllUSers> {
             width: 100,
             height: 150,
             decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
-            child: Image.asset("assets/images/placeholder1.jpeg",
-                fit: BoxFit.cover),
+            child: MyImageWidget(image: widget.users[2].avatar),
           ),
         ),
         InkWell(
@@ -432,8 +467,7 @@ class _AllUSersState extends State<AllUSers> {
             width: 100,
             height: 150,
             decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
-            child: Image.asset("assets/images/placeholder1.jpeg",
-                fit: BoxFit.cover),
+            child: MyImageWidget(image: widget.users[3].avatar),
           ),
         ),
       ],
