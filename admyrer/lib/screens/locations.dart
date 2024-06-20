@@ -180,35 +180,20 @@ class _UserState extends State<User> {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(20),
-                child: Image.network(
-                    avatar,
-                    height: 400,
-                    fit: BoxFit.cover,
-                    width: double.infinity,
-                    loadingBuilder: (BuildContext context, Widget child,
-                        ImageChunkEvent? loadingProgress) {
-                      if (loadingProgress == null) {
-                        return child; // Image is fully loaded
-                      } else {
-                        return Center(
-                          child: CircularProgressIndicator(
-                            color: Colors.pink,
-                            value: loadingProgress.expectedTotalBytes != null
-                                ? loadingProgress.cumulativeBytesLoaded /
-                                    (loadingProgress.expectedTotalBytes ?? 1)
-                                : null,
-                          ),
-                        );
-                      }
-                    },
-                    errorBuilder: (BuildContext context, Object error,
+                child:  FadeInImage.assetNetwork(
+                  placeholder: "assets/images/no_profile_image.webp",
+                  image:avatar,
+                  height: 400,
+                  fit: BoxFit.cover,
+                  width: double.infinity,
+                  imageErrorBuilder: (BuildContext context, Object error,
                         StackTrace? stackTrace) {
                       return Image.asset(
-                          'assets/images/icon.png', height: 400,
+                          'assets/images/no_profile_image.webp', height: 400,
                     fit: BoxFit.cover,
-                    width: double.infinity,); // Path to your error image
-                    },
-                  )
+                    width: double.infinity,);}
+                  ),               
+              
               ),
               const SizedBox(
                 height: 10,

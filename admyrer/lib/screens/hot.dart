@@ -309,36 +309,21 @@ class _FirstSectionState extends State<FirstSection> {
             children: [
               ClipRRect(
                   borderRadius: BorderRadius.circular(20),
-                  child: Image.network(
-                    avatar,
-                    height: 200,
-                    fit: BoxFit.cover,
-                    width: double.infinity,
-                    loadingBuilder: (BuildContext context, Widget child,
-                        ImageChunkEvent? loadingProgress) {
-                      if (loadingProgress == null) {
-                        return child; // Image is fully loaded
-                      } else {
-                        return Center(
-                          child: CircularProgressIndicator(
-                            color: Colors.pink,
-                            value: loadingProgress.expectedTotalBytes != null
-                                ? loadingProgress.cumulativeBytesLoaded /
-                                    (loadingProgress.expectedTotalBytes ?? 1)
-                                : null,
-                          ),
+                  child: FadeInImage.assetNetwork(
+                      placeholder: "assets/images/no_profile_image.webp",
+                      image: avatar,
+                      height: 200,
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                      imageErrorBuilder: (BuildContext context, Object error,
+                          StackTrace? stackTrace) {
+                        return Image.asset(
+                          'assets/images/no_profile_image.webp',
+                          height: 400,
+                          fit: BoxFit.cover,
+                          width: double.infinity,
                         );
-                      }
-                    },
-                    errorBuilder: (BuildContext context, Object error,
-                        StackTrace? stackTrace) {
-                      return Image.asset(
-                          'assets/images/icon.png', height: 200,
-                    fit: BoxFit.cover,
-                    width: double.infinity,); // Path to your error image
-                    },
-                  )
-                  ),
+                      })),
               const SizedBox(
                 height: 10,
               ),
