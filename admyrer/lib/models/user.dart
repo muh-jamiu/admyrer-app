@@ -2,11 +2,11 @@ import 'dart:convert';
 
 class UserModel {
   final int id;
-  final String? username;
+  final String username;
   final String? email;
-  final String? firstName;
-  final String? lastName;
-  final String? avatar;
+  final String firstName;
+  final String lastName;
+  final String avatar;
   final String? photos;
   final String? address;
   final String? gender;
@@ -49,11 +49,11 @@ class UserModel {
 
   UserModel({
     required this.id,
-    this.username,
+    required this.username,
     this.email,
-    this.firstName,
-    this.lastName,
-    this.avatar,
+    required this.firstName,
+    required this.lastName,
+    required this.avatar,
     this.photos,
     this.address,
     this.gender,

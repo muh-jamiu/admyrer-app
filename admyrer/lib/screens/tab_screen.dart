@@ -72,7 +72,7 @@ class _TabScreenState extends State<TabScreen> {
   @override
   void initState() { 
     super.initState();
-    _handleSignIn(); 
+    // _handleSignIn(); 
 
     _pages = [
     Locations(isLoading: isLoading,),

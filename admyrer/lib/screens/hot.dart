@@ -5,6 +5,9 @@ import 'package:admyrer/widget/google_login.dart';
 import 'package:admyrer/widget/facebook.dart';
 import 'package:admyrer/models/user.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:admyrer/services/api_service.dart';
+import 'dart:convert';
 // import "package:Admyrer/widget/background.dart";
 
 class Hot extends StatefulWidget {
@@ -15,17 +18,56 @@ class Hot extends StatefulWidget {
 }
 
 class _HotState extends State<Hot> {
-  void register() {
-    Navigator.pushNamed(context, "/register");
+  final ApiService _apiService = ApiService();
+  List<UserModel> users = [];
+  bool isLoading = true;
+
+  void showErrorToast(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_LONG,
+      gravity: ToastGravity.TOP_RIGHT,
+      timeInSecForIosWeb: 5,
+      textColor: Colors.white,
+      fontSize: 20.0,
+    );
   }
 
-  void forgot() {
-    Navigator.pushNamed(context, "/forgot");
+  Future<void> getUsers() async {
+    try {
+      final response = await _apiService.postRequest("buildPage", {
+        "id": 10,
+      });
+
+      var data = json.decode(response.body);
+
+      if (data["data"] == null || data["data"]["random"] == null) {
+        showErrorToast('Invalid response data');
+        return;
+      }
+
+      List<dynamic> userList = data["data"]["random"];
+      List<UserModel> users =
+          userList.map((user) => UserModel.fromJson(user)).toList();
+
+      setState(() {
+        this.users = users;
+        isLoading = false;
+      });
+
+      print(users);
+    } catch (e) {
+      showErrorToast('An error occurred: $e');
+      print(e);
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   @override
-  void initState(){
-    print("hot");
+  void initState() {
+    getUsers();
   }
 
   void verify() {
@@ -73,57 +115,83 @@ class _HotState extends State<Hot> {
                   const SizedBox(
                     height: 1,
                   ),
-                  Expanded(
-                    child: ListView(
-                      children: [
-                        const Users(),
-                        const SizedBox(
-                          height: 15,
+                  isLoading
+                      ? const Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              SizedBox(height: 120),
+                              CircularProgressIndicator(
+                                valueColor:
+                                    AlwaysStoppedAnimation<Color>(Colors.pink),
+                                strokeWidth: 6.0,
+                              ),
+                              SizedBox(height: 20),
+                              Text(
+                                'Loading, please wait...',
+                                style: TextStyle(fontSize: 16),
+                              ),
+                            ],
+                          ),
+                        )
+                      : Expanded(
+                          child: ListView(
+                            children: [
+                              Users(users: users,),
+                              const SizedBox(
+                                height: 15,
+                              ),
+                              FirstSection(users: users,),
+                              const SizedBox(
+                                height: 35,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const Text("Popular Matches",
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w600)),
+                                  Text(
+                                    "See All",
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        color: Colors.purple[300]),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 5,
+                              ),
+                              Container(height: 400, child: AllUSers()),
+                              const SizedBox(
+                                height: 15,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const Text("Other Users",
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w600)),
+                                  Text(
+                                    "See All",
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        color: Colors.purple[300]),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 5,
+                              ),
+                              Container(height: 500, child: AllUSers())
+                            ],
+                          ),
                         ),
-                        FirstSection(),
-                        const SizedBox(
-                          height: 35,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text("Popular Matches",
-                                style: TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.w600)),
-                            Text(
-                              "See All",
-                              style: TextStyle(
-                                  fontSize: 15, color: Colors.purple[300]),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        Container(height: 400, child: AllUSers()),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text("Other Users",
-                                style: TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.w600)),
-                            Text(
-                              "See All",
-                              style: TextStyle(
-                                  fontSize: 15, color: Colors.purple[300]),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        Container(height: 500, child: AllUSers())
-                      ],
-                    ),
-                  ),
                 ],
               ),
             )
@@ -135,7 +203,8 @@ class _HotState extends State<Hot> {
 }
 
 class Users extends StatefulWidget {
-  const Users({super.key});
+  final List<UserModel> users;
+  const Users({super.key,  required this.users});
 
   @override
   State<Users> createState() => _UsersState();
@@ -147,8 +216,10 @@ class _UsersState extends State<Users> {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
-        children: List.generate(10, (index) {
-          return Column(
+        children: [
+          Wrap(
+            children: widget.users.map((user) {
+                 return Column(
             children: [
               Row(
                 children: [
@@ -161,25 +232,28 @@ class _UsersState extends State<Users> {
                         border: Border.all(
                             color: const Color.fromARGB(255, 207, 37, 212),
                             width: 2.0)),
-                    child: const Padding(
+                    child:  Padding(
                       padding: EdgeInsets.all(2.0),
                       child: CircleAvatar(
                         radius: 25,
-                        backgroundImage: AssetImage("assets/images/placeholder1.jpeg"),
+                        backgroundImage:
+                            NetworkImage(user.avatar),
                       ),
                     ),
                   ),
-                  const SizedBox(width: 20,)
+                  const SizedBox(
+                    width: 20,
+                  )
                 ],
               ),
               const SizedBox(
                 height: 10,
               ),
-              const Row(
+               Row(
                 children: [
                   Text(
-                    "Larvish007",
-                    style: TextStyle(
+                    user.username,
+                    style: const TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w100,
                         color: Color.fromARGB(255, 40, 40, 40)),
@@ -189,14 +263,17 @@ class _UsersState extends State<Users> {
               ),
             ],
           );
-        }),
+            }).toList(),
+          ),
+        ],
       ),
     );
   }
 }
 
 class FirstSection extends StatefulWidget {
-  const FirstSection({super.key});
+  final List<UserModel> users;
+  const FirstSection({super.key,  required this.users});
 
   @override
   State<FirstSection> createState() => _FirstSectionState();
@@ -205,6 +282,10 @@ class FirstSection extends StatefulWidget {
 class _FirstSectionState extends State<FirstSection> {
   @override
   Widget build(BuildContext context) {
+  var firstName = widget.users[0].firstName;
+  var lastName = widget.users[0].lastName;
+  var country = widget.users[0].country;
+  var state = widget.users[0].state;
     return Column(
       children: [
         Container(
@@ -227,9 +308,9 @@ class _FirstSectionState extends State<FirstSection> {
               ),
               Container(
                 padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
-                child: const Text(
-                  'Muhammad Jamiu',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                child: Text(
+                  '$firstName $lastName',
+                  style: const  TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
               ),
               Container(
@@ -243,9 +324,9 @@ class _FirstSectionState extends State<FirstSection> {
                     const SizedBox(
                       width: 2,
                     ),
-                    const Text(
-                      'Lagos, Nigeria',
-                      style: TextStyle(fontSize: 20),
+                    Text(
+                      '$state, $country',
+                      style: const TextStyle(fontSize: 20),
                     ),
                   ],
                 ),
@@ -320,9 +401,9 @@ class _AllUSersState extends State<AllUSers> {
           child: Container(
             width: 100,
             height: 150,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10)),
-            child: Image.asset("assets/images/placeholder1.jpeg", fit: BoxFit.cover),
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
+            child: Image.asset("assets/images/placeholder1.jpeg",
+                fit: BoxFit.cover),
           ),
         ),
         InkWell(
@@ -330,9 +411,9 @@ class _AllUSersState extends State<AllUSers> {
           child: Container(
             width: 100,
             height: 150,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10)),
-            child: Image.asset("assets/images/placeholder1.jpeg", fit: BoxFit.cover),
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
+            child: Image.asset("assets/images/placeholder1.jpeg",
+                fit: BoxFit.cover),
           ),
         ),
         InkWell(
@@ -340,9 +421,9 @@ class _AllUSersState extends State<AllUSers> {
           child: Container(
             width: 100,
             height: 150,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10)),
-            child: Image.asset("assets/images/placeholder1.jpeg", fit: BoxFit.cover),
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
+            child: Image.asset("assets/images/placeholder1.jpeg",
+                fit: BoxFit.cover),
           ),
         ),
         InkWell(
@@ -350,9 +431,9 @@ class _AllUSersState extends State<AllUSers> {
           child: Container(
             width: 100,
             height: 150,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10)),
-            child: Image.asset("assets/images/placeholder1.jpeg", fit: BoxFit.cover),
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
+            child: Image.asset("assets/images/placeholder1.jpeg",
+                fit: BoxFit.cover),
           ),
         ),
       ],
