@@ -1,5 +1,9 @@
 import 'package:admyrer/widget/backgrounds.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:admyrer/services/api_service.dart';
+import 'dart:convert';
+import 'package:admyrer/models/user.dart';
 
 class Chat extends StatefulWidget {
   const Chat({super.key});
@@ -9,10 +13,62 @@ class Chat extends StatefulWidget {
 }
 
 class _ChatState extends State<Chat> {
+  final ApiService _apiService = ApiService();
+  List<UserModel> users = [];
+  bool isLoading = true;
+
+  void showErrorToast(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_LONG,
+      gravity: ToastGravity.TOP_RIGHT,
+      timeInSecForIosWeb: 5,
+      textColor: Colors.white,
+      fontSize: 20.0,
+    );
+  }
+
+  Future<void> getUsers() async {
+    try {
+      final response = await _apiService.postRequest("buildPage", {
+        "id": 10,
+      });
+
+      var data = json.decode(response.body);
+
+      if (data["data"] == null || data["data"]["random"] == null) {
+        showErrorToast('Invalid response data');
+        return;
+      }
+
+      List<dynamic> userList = data["data"]["random"];
+      List<UserModel> users =
+          userList.map((user) => UserModel.fromJson(user)).toList();
+
+      setState(() {
+        this.users = users;
+        isLoading = false;
+      });
+
+      print(users);
+    } catch (e) {
+      showErrorToast('An error occurred: $e');
+      print(e);
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    getUsers();
+  }
+
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       home: Scaffold(
         body: Stack(
           // padding: const EdgeInsets.all(15.0),
@@ -23,18 +79,39 @@ class _ChatState extends State<Chat> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: 30,),
-                  Padding(
+                  const SizedBox(height: 30,),
+                  const Padding(
                     padding: EdgeInsets.only(left: 10),
                     child: const Text('Chat List', style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),),
                   ),
-                  SizedBox(height: 10,),
-                  Users(),
-                  Divider(
+                  const SizedBox(height: 10,),
+                  Users(users: users),
+                  const Divider(
                     color: Color.fromARGB(255, 215, 215, 215),
                     thickness: 1.0,
                   ),
-                  Expanded(child: ChatList())
+                   isLoading
+                      ?  const Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              SizedBox(height: 120),
+                              CircularProgressIndicator(
+                                valueColor:
+                                    AlwaysStoppedAnimation<Color>(Colors.pink),
+                                strokeWidth: 6.0,
+                              ),
+                              SizedBox(height: 20),
+                              Text(
+                                'Loading, please wait...',
+                                style: TextStyle(fontSize: 16),
+                              ),
+                            ],
+                          ),
+                        )
+                      : 
+                  Expanded(child: ChatList(users: users))
                 ],
               ),
             )
@@ -46,7 +123,8 @@ class _ChatState extends State<Chat> {
 }
 
 class Users extends StatefulWidget {
-  const Users({super.key});
+  final List<UserModel> users;
+  const Users({super.key, required this.users});
 
   @override
   State<Users> createState() => _UsersState();
@@ -58,43 +136,55 @@ class _UsersState extends State<Users> {
     return  SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
-          
-          children: List.generate(10, (index) {
-            return Column(
-              children: [
-                Row(
-                  children: [
-                    const SizedBox(width: 10),
-                    Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: const Color.fromARGB(255, 207, 37, 212),
-                          width: 2.0
-                        )
+          children: [
+           Wrap(
+            children: widget.users.map((user) {
+              return Column(
+                children: [
+                  Row(
+                    children: [
+                      const SizedBox(
+                        height: 10,
                       ),
-                      child: const Padding(
-                        padding: EdgeInsets.all(0.0),
-                        child: CircleAvatar(
-                          radius: 25,
-                          backgroundImage: AssetImage("assets/images/placeholder1.jpeg"),
+                      Container(
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                                color: const Color.fromARGB(255, 207, 37, 212),
+                                width: 2.0)),
+                        child: Padding(
+                          padding: EdgeInsets.all(2.0),
+                          child: CircleAvatar(
+                            radius: 25,
+                            backgroundImage: NetworkImage(user.avatar),
+                          ),
                         ),
                       ),
-                    ),
-                  const SizedBox(width: 10, height: 10,),
-                  ],
-                ),
-                const SizedBox(height: 10,),
-                const Row(
-                  children: [
-                    SizedBox(width: 10),
-                    Text("Larvish007", style: TextStyle(fontSize: 12, fontWeight: FontWeight.w100, color: Color.fromARGB(255, 40, 40, 40)),),
-                    SizedBox(width: 10),
-                  ],
-                ),
-              ],
-            );
-          }),
+                      const SizedBox(
+                        width: 20,
+                      )
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        user.username,
+                        style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w100,
+                            color: Color.fromARGB(255, 40, 40, 40)),
+                      ),
+                      SizedBox(width: 20),
+                    ],
+                  ),
+                ],
+              );
+            }).toList(),
+          ),
+          ]
         ),
       );
   }
@@ -102,32 +192,34 @@ class _UsersState extends State<Users> {
 
 
 class ChatList extends StatefulWidget {
-  const ChatList({super.key});
+  final List<UserModel> users;
+  const ChatList({super.key, required this.users});
 
   @override
   State<ChatList> createState() => _ChatListState();
 }
 
 class _ChatListState extends State<ChatList> {
-   final items = List<String>.generate(25, (index) => 'Item $index');
+  final items = List<String>.generate(25, (index) => 'Item $index');
   @override
   Widget build(BuildContext context) {
+   var users = widget.users;
     return ListView.builder(
-        itemCount: items.length,
+        itemCount: users.length,
         itemBuilder: (context, index) {
           return ListTile(
             title: Row(
               children: [
-                const CircleAvatar(
+                CircleAvatar(
                   radius: 25,
-                  backgroundImage: AssetImage("assets/images/placeholder1.jpeg"),
+                  backgroundImage: NetworkImage(users[index].avatar),
                 ),
                 const SizedBox(width: 20,),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(items[index], style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w400),textAlign: TextAlign.start,),
-                    const Text("Messaga Notifications", style: TextStyle(fontSize: 15, fontWeight: FontWeight.w100, color: Color.fromARGB(255, 35, 35, 35)),),
+                    Text(users[index].firstName, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w400),textAlign: TextAlign.start,),
+                    const Text("Last Message Notifications", style: TextStyle(fontSize: 15, fontWeight: FontWeight.w100, color: Color.fromARGB(255, 35, 35, 35)),),
                   ],
                 ),
               ],
