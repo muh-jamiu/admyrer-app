@@ -28,7 +28,8 @@ class _ProfileState extends State<Profile> {
       gravity: ToastGravity.TOP_RIGHT,
       timeInSecForIosWeb: 5,
       textColor: Colors.white,
-      fontSize: 20.0,
+      backgroundColor: Colors.pink[300],
+      fontSize: 15.0,
     );
   }
 

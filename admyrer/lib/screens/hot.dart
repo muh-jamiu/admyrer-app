@@ -30,7 +30,8 @@ class _HotState extends State<Hot> {
       gravity: ToastGravity.TOP_RIGHT,
       timeInSecForIosWeb: 5,
       textColor: Colors.white,
-      fontSize: 20.0,
+      backgroundColor: Colors.pink[300],
+      fontSize: 15.0,
     );
   }
 
@@ -247,9 +248,30 @@ class _UsersState extends State<Users> {
                                 width: 2.0)),
                         child: Padding(
                           padding: EdgeInsets.all(2.0),
-                          child: CircleAvatar(
-                            radius: 25,
-                            backgroundImage: NetworkImage(user.avatar),
+                          child: Container(
+                            height: 55,
+                            width: 55,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10)),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(50),
+                              child: FadeInImage.assetNetwork(
+                                  placeholder:
+                                      "assets/images/no_profile_image.webp",
+                                  image: user.avatar,
+                                  height: 55,
+                                  fit: BoxFit.cover,
+                                  width: double.infinity,
+                                  imageErrorBuilder: (BuildContext context,
+                                      Object error, StackTrace? stackTrace) {
+                                    return Image.asset(
+                                      'assets/images/no_profile_image.webp',
+                                      height: 55,
+                                      fit: BoxFit.cover,
+                                      width: double.infinity,
+                                    );
+                                  }),
+                            ),
                           ),
                         ),
                       ),
@@ -293,7 +315,7 @@ class FirstSection extends StatefulWidget {
 
 class _FirstSectionState extends State<FirstSection> {
   var index = 0;
-  void nextUser(){
+  void nextUser() {
     setState(() {
       index += 1;
     });
@@ -366,7 +388,7 @@ class _FirstSectionState extends State<FirstSection> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     InkWell(
-                      onTap:nextUser,
+                      onTap: nextUser,
                       child: Container(
                         width: 60,
                         height: 60,
@@ -382,7 +404,7 @@ class _FirstSectionState extends State<FirstSection> {
                     ),
                     const SizedBox(width: 10),
                     InkWell(
-                      onTap:nextUser,
+                      onTap: nextUser,
                       child: Container(
                         width: 60,
                         height: 60,

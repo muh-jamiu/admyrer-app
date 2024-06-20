@@ -37,11 +37,11 @@ class _LoginState extends State<Login> {
     Fluttertoast.showToast(
       msg: message,
       toastLength: Toast.LENGTH_LONG,
-      gravity: ToastGravity.CENTER,
-      timeInSecForIosWeb: 1,
-      backgroundColor: Colors.red,
+      gravity: ToastGravity.TOP,
+      timeInSecForIosWeb: 5,
+      backgroundColor: Colors.pink[300],
       textColor: Colors.white,
-      fontSize: 20.0
+      fontSize: 15.0
     );
   }
 

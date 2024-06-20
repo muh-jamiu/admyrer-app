@@ -17,63 +17,12 @@ class TabScreen extends StatefulWidget {
 }
 
 class _TabScreenState extends State<TabScreen> {
-  final ApiService _apiService = ApiService();
-  late Future<List<UserModel>> futureUsers;
-  List<UserModel> users = [];
   bool isLoading = true;
   late List<Widget> _pages; 
-
-  void showErrorToast(String message) {
-    Fluttertoast.showToast(
-      msg: message,
-      toastLength: Toast.LENGTH_LONG,
-      gravity: ToastGravity.TOP_RIGHT,
-      timeInSecForIosWeb: 5,
-      textColor: Colors.white,
-      fontSize: 20.0,
-    );
-  }
-
-  Future<void> _handleSignIn() async {
-    setState((){
-      isLoading = false;
-    });
-
-    try {
-      final response = await _apiService.postRequest("buildPage", {
-        "id": 10,
-      });
-
-      var data = json.decode(response.body);
-
-      if (data["data"] == null || data["data"]["random"] == null) {
-        showErrorToast('Invalid response data');
-        return;
-      }
-
-      List<dynamic> userList = data["data"]["random"];
-      List<UserModel> users = userList.map((user) => UserModel.fromJson(user)).toList();
-
-      setState(() {
-        this.users = users;
-        isLoading = false;
-      });
-
-      print(users);
-    } catch (e) {
-      showErrorToast('An error occurred: $e');
-      print(e);
-      setState(() {
-        isLoading = false;
-      });
-    }
-  }
 
   @override
   void initState() { 
     super.initState();
-    // _handleSignIn(); 
-
     _pages = [
     Locations(isLoading: isLoading,),
     Hot(),
@@ -83,12 +32,7 @@ class _TabScreenState extends State<TabScreen> {
   ];
   }
 
-  void home() {
-    Navigator.pushNamed(context, "/home");
-  }
-
-  int _currentIndex = 0;
-  
+  int _currentIndex = 0;  
 
   final _pageController = PageController();
   void _onTabTapped(int index) {
