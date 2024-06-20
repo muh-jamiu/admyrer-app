@@ -198,7 +198,7 @@ class _SettingsState extends State<Settings> {
             onTap: () => {},
             child: Container(
               padding: const EdgeInsets.all(10),
-              width: 130,
+              width: 190,
               decoration: BoxDecoration(
                   color: Color.fromARGB(23, 233, 30, 98),
                   borderRadius: BorderRadius.circular(5)),
@@ -319,30 +319,6 @@ class _MyGridListState extends State<MyGridList> {
           ),
         ),
 
-        InkWell(
-          onTap: () => {},
-          child: Container(
-            width: 100,
-            height: 150,
-            decoration: BoxDecoration(
-                color: Color.fromARGB(35, 155, 39, 176),
-                borderRadius: BorderRadius.circular(10)),
-            child: const Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(
-                  Icons.replay_outlined,
-                  color: Colors.purple,
-                  size: 25,
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Text("Live")
-              ],
-            ),
-          ),
-        ),
         InkWell(
           onTap: () => {},
           child: Container(

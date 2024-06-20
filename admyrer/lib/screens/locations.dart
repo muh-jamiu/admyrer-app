@@ -113,8 +113,26 @@ class _LocationsState extends State<Locations> {
                       ),
                       Row(
                         children: [
-                          Icon(Icons.more_vert_outlined,
-                              color: Colors.pink[300]),
+                          InkWell(
+                            onTap: () {
+            Scaffold.of(context).showBottomSheet(
+              (BuildContext context) {
+                return Container(
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+                  color: Colors.pink[400],
+                  ),
+                  height: 500,
+                  child: const Center(
+                    child: Text('This is a persistent bottom sheet'),
+                  ),
+                );
+              },
+            );
+          },
+                            child: Icon(Icons.more_vert_outlined,
+                                color: Colors.pink[300]),
+                          ),
                           const SizedBox(width: 15),
                           Icon(Icons.diamond_rounded, color: Colors.blue[300]),
                         ],
