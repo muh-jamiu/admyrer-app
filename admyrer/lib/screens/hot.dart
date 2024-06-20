@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:admyrer/services/api_service.dart';
 import 'dart:convert';
+import 'package:admyrer/screens/allUsers.dart';
 // import "package:Admyrer/widget/background.dart";
 
 class Hot extends StatefulWidget {
@@ -73,8 +74,7 @@ class _HotState extends State<Hot> {
   }
 
   void goAll() {
-    print("wowo");
-    Navigator.pushNamed(context, "/all");
+    Navigator.push(context, MaterialPageRoute(builder: (context) => AllUsers(users: users)));
   }
 
   @override

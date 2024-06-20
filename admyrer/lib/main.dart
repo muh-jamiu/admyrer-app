@@ -39,8 +39,6 @@ class MyApp extends StatelessWidget {
             return _createRoute(const Verify());
           case '/tab':
             return _createRoute(const TabScreen());
-          case '/all':
-            return _createRoute(const AllUsers());
           // Add more cases for additional pages
           default:
             return null;

@@ -12,14 +12,14 @@ import 'dart:convert';
 // import "package:Admyrer/widget/background.dart";
 
 class AllUsers extends StatefulWidget {
-  const AllUsers({Key? key}) : super(key: key);
+  final List<UserModel> users;
+  const AllUsers({super.key, required this.users});
 
   @override
   State<AllUsers> createState() => _AllUsersState();
 }
 
 class _AllUsersState extends State<AllUsers> {
-  final ApiService _apiService = ApiService();
   List<UserModel> users = [];
 
   void showErrorToast(String message) {
@@ -36,6 +36,9 @@ class _AllUsersState extends State<AllUsers> {
 
   @override
   void initState() {
+    setState(() {
+      users = widget.users;
+    });
   }
 
   @override
@@ -56,12 +59,23 @@ class _AllUsersState extends State<AllUsers> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
-                        'All',
-                        style: TextStyle(
-                            fontSize: 25,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black),
+                      Row(
+                        children: [
+                          InkWell(
+                            onTap: () => {
+                               Navigator.pop(context)
+                            },
+                            child: Icon(Icons.arrow_back, size: 25)
+                            ),
+                            const SizedBox(width: 15),
+                          const Text(
+                            'All',
+                            style: TextStyle(
+                                fontSize: 25,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black),
+                          ),
+                        ],
                       ),
                       Row(
                         children: [
@@ -76,13 +90,123 @@ class _AllUsersState extends State<AllUsers> {
                     ],
                   ),
                   const SizedBox(
-                    height: 1,
+                    height: 10,
                   ),
-                  ],
+                  Container(
+                      height: 780,
+                      child: ListUser(
+                        users: users,
+                      ))
+                ],
               ),
             )
           ],
         ),
+      ),
+    );
+  }
+}
+
+class ListUser extends StatefulWidget {
+  final List<UserModel> users;
+  const ListUser({super.key, required this.users});
+
+  @override
+  State<ListUser> createState() => _ListUserState();
+}
+
+class _ListUserState extends State<ListUser> {
+  @override
+  Widget build(BuildContext context) {
+    return GridView.count(
+      crossAxisCount: 2,
+      crossAxisSpacing: 20,
+      childAspectRatio: 3 / 3,
+      mainAxisSpacing: 15,
+      children: 
+        List.generate(widget.users.length, (index){
+          return  InkWell(
+          onTap: () => {},
+            child: ImageWithTextAndIcon(
+                name: widget.users[index].firstName,
+                image: widget.users[index].avatar,
+                icon: Icons.heart_broken),
+          );
+        })
+    );
+  }
+}
+
+class ImageWithTextAndIcon extends StatefulWidget {
+  final String name;
+  final String image;
+  final IconData icon;
+  const ImageWithTextAndIcon(
+      {super.key, required this.name, required this.icon, required this.image});
+  @override
+  State<ImageWithTextAndIcon> createState() => _ImageWithTextAndIconState();
+}
+
+class _ImageWithTextAndIconState extends State<ImageWithTextAndIcon> {
+  @override
+  Widget build(BuildContext context) {
+    var name = widget.name;
+    var image = widget.image;
+    var icon = widget.icon;
+    return Container(
+      width: 100,
+      height: 250,
+      child: Stack(
+        children: [
+          // Image with rounded corners
+          ClipRRect(
+              borderRadius: BorderRadius.circular(20.0),
+              child: FadeInImage.assetNetwork(
+                  placeholder: "assets/images/no_profile_image.webp",
+                  image: image,
+                  height: 250,
+                  fit: BoxFit.cover,
+                  width: double.infinity,
+                  imageErrorBuilder: (BuildContext context, Object error,
+                      StackTrace? stackTrace) {
+                    return Image.asset(
+                      'assets/images/no_profile_image.webp',
+                      height: 250,
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                    );
+                  })),
+          // Positioned icon at the top
+          Positioned(
+            top: 10,
+            right: 10,
+            child: Icon(
+              icon,
+              color: Colors.red,
+              size: 30,
+            ),
+          ),
+          // Positioned text at the bottom
+          Positioned(
+            bottom: 20,
+            left: 10,
+            child: Text(
+              name,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.w100,
+                shadows: [
+                  Shadow(
+                    blurRadius: 10.0,
+                    color: Colors.black,
+                    offset: Offset(2.0, 2.0),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
