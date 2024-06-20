@@ -72,8 +72,9 @@ class _HotState extends State<Hot> {
     getUsers();
   }
 
-  void verify() {
-    Navigator.pushNamed(context, "/tab");
+  void goAll() {
+    print("wowo");
+    Navigator.pushNamed(context, "/all");
   }
 
   @override
@@ -160,11 +161,14 @@ class _HotState extends State<Hot> {
                                       style: TextStyle(
                                           fontSize: 20,
                                           fontWeight: FontWeight.w600)),
-                                  Text(
-                                    "See All",
-                                    style: TextStyle(
-                                        fontSize: 15,
-                                        color: Colors.purple[300]),
+                                  InkWell(
+                                    onTap: goAll,
+                                    child: Text(
+                                      "See All",
+                                      style: TextStyle(
+                                          fontSize: 15,
+                                          color: Colors.purple[300]),
+                                    ),
                                   ),
                                 ],
                               ),
@@ -172,7 +176,7 @@ class _HotState extends State<Hot> {
                                 height: 5,
                               ),
                               Container(
-                                  height: 400,
+                                  height: 600,
                                   child: AllUSers(
                                     users: users,
                                   )),
@@ -199,7 +203,7 @@ class _HotState extends State<Hot> {
                                 height: 5,
                               ),
                               Container(
-                                  height: 500,
+                                  height: 620,
                                   child: AllUSers(
                                     users: users,
                                   ))
@@ -450,41 +454,110 @@ class _AllUSersState extends State<AllUSers> {
       children: [
         InkWell(
           onTap: () => {},
-          child: Container(
-            width: 100,
-            height: 150,
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
-            child: MyImageWidget(image: widget.users[0].avatar),
-          ),
+          child: ImageWithTextAndIcon(
+              name: widget.users[0].firstName, image: widget.users[0].avatar, icon: Icons.heart_broken),
         ),
         InkWell(
           onTap: () => {},
-          child: Container(
-            width: 100,
-            height: 150,
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
-            child: MyImageWidget(image: widget.users[1].avatar),
-          ),
+          child: ImageWithTextAndIcon(
+              name: widget.users[1].firstName, image: widget.users[1].avatar, icon: Icons.heart_broken),
         ),
         InkWell(
           onTap: () => {},
-          child: Container(
-            width: 100,
-            height: 150,
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
-            child: MyImageWidget(image: widget.users[2].avatar),
-          ),
+          child: ImageWithTextAndIcon(
+              name: widget.users[2].firstName, image: widget.users[2].avatar, icon: Icons.heart_broken),
         ),
         InkWell(
           onTap: () => {},
-          child: Container(
-            width: 100,
-            height: 150,
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
-            child: MyImageWidget(image: widget.users[3].avatar),
-          ),
+          child: ImageWithTextAndIcon(
+              name: widget.users[3].firstName, image: widget.users[3].avatar, icon: Icons.heart_broken),
+        ),
+        InkWell(
+          onTap: () => {},
+          child: ImageWithTextAndIcon(
+              name: widget.users[4].firstName, image: widget.users[4].avatar, icon: Icons.heart_broken),
+        ),
+        InkWell(
+          onTap: () => {},
+          child: ImageWithTextAndIcon(
+              name: widget.users[5].firstName, image: widget.users[5].avatar, icon: Icons.heart_broken),
         ),
       ],
+    );
+  }
+}
+
+class ImageWithTextAndIcon extends StatefulWidget {
+  final String name;
+  final String image;
+  final IconData icon;
+  const ImageWithTextAndIcon(
+      {super.key, required this.name, required this.icon, required this.image});
+  @override
+  State<ImageWithTextAndIcon> createState() => _ImageWithTextAndIconState();
+}
+
+class _ImageWithTextAndIconState extends State<ImageWithTextAndIcon> {
+  @override
+  Widget build(BuildContext context) {
+    var name = widget.name;
+    var image = widget.image;
+    var icon = widget.icon;
+    return Container(
+      width: 100,
+      height: 250,
+      child: Stack(
+        children: [
+          // Image with rounded corners
+          ClipRRect(
+              borderRadius: BorderRadius.circular(20.0),
+              child: FadeInImage.assetNetwork(
+                  placeholder: "assets/images/no_profile_image.webp",
+                  image: image,
+                  height: 250,
+                  fit: BoxFit.cover,
+                  width: double.infinity,
+                  imageErrorBuilder: (BuildContext context, Object error,
+                      StackTrace? stackTrace) {
+                    return Image.asset(
+                      'assets/images/no_profile_image.webp',
+                      height: 250,
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                    );
+                  })),
+          // Positioned icon at the top
+          Positioned(
+            top: 10,
+            right: 10,
+            child: Icon(
+              icon,
+              color: Colors.red,
+              size: 30,
+            ),
+          ),
+          // Positioned text at the bottom
+          Positioned(
+            bottom: 20,
+            left: 10,
+            child: Text(
+              name,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.w100,
+                shadows: [
+                  Shadow(
+                    blurRadius: 10.0,
+                    color: Colors.black,
+                    offset: Offset(2.0, 2.0),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

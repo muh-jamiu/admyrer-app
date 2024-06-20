@@ -5,6 +5,7 @@ import 'package:admyrer/screens/tab_screen.dart';
 import 'package:admyrer/screens/verify.dart';
 import 'package:flutter/material.dart';
 import './screens/onboarding_screen.dart';
+import './screens/allUsers.dart';
 import './screens/home.dart';
 import './screens/step_Sceen.dart';
 
@@ -38,6 +39,8 @@ class MyApp extends StatelessWidget {
             return _createRoute(const Verify());
           case '/tab':
             return _createRoute(const TabScreen());
+          case '/all':
+            return _createRoute(const AllUsers());
           // Add more cases for additional pages
           default:
             return null;
