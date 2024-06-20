@@ -10,6 +10,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:admyrer/services/api_service.dart';
 import 'dart:convert';
 import 'package:admyrer/screens/allUsers.dart';
+import 'package:admyrer/screens/single.dart';
 // import "package:Admyrer/widget/background.dart";
 
 class Hot extends StatefulWidget {
@@ -229,8 +230,14 @@ class Users extends StatefulWidget {
 }
 
 class _UsersState extends State<Users> {
+
   @override
   Widget build(BuildContext context) {
+    
+  void goSingle(user) {
+    Navigator.push(context, MaterialPageRoute(builder: (context) => Single(users: user)));
+  }
+
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
@@ -244,37 +251,40 @@ class _UsersState extends State<Users> {
                       const SizedBox(
                         height: 10,
                       ),
-                      Container(
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                                color: const Color.fromARGB(255, 207, 37, 212),
-                                width: 2.0)),
-                        child: Padding(
-                          padding: EdgeInsets.all(2.0),
-                          child: Container(
-                            height: 55,
-                            width: 55,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10)),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(50),
-                              child: FadeInImage.assetNetwork(
-                                  placeholder:
-                                      "assets/images/no_profile_image.webp",
-                                  image: user.avatar,
-                                  height: 55,
-                                  fit: BoxFit.cover,
-                                  width: double.infinity,
-                                  imageErrorBuilder: (BuildContext context,
-                                      Object error, StackTrace? stackTrace) {
-                                    return Image.asset(
-                                      'assets/images/no_profile_image.webp',
-                                      height: 55,
-                                      fit: BoxFit.cover,
-                                      width: double.infinity,
-                                    );
-                                  }),
+                      InkWell(
+                        onTap: () => goSingle(user),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                  color: const Color.fromARGB(255, 207, 37, 212),
+                                  width: 2.0)),
+                          child: Padding(
+                            padding: EdgeInsets.all(2.0),
+                            child: Container(
+                              height: 55,
+                              width: 55,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(50),
+                                child: FadeInImage.assetNetwork(
+                                    placeholder:
+                                        "assets/images/no_profile_image.webp",
+                                    image: user.avatar,
+                                    height: 55,
+                                    fit: BoxFit.cover,
+                                    width: double.infinity,
+                                    imageErrorBuilder: (BuildContext context,
+                                        Object error, StackTrace? stackTrace) {
+                                      return Image.asset(
+                                        'assets/images/no_profile_image.webp',
+                                        height: 55,
+                                        fit: BoxFit.cover,
+                                        width: double.infinity,
+                                      );
+                                    }),
+                              ),
                             ),
                           ),
                         ),
