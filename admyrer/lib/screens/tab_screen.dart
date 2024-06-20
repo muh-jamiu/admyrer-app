@@ -3,6 +3,7 @@ import 'package:admyrer/screens/hot.dart';
 import 'package:admyrer/screens/locations.dart';
 import 'package:admyrer/screens/notifications.dart';
 import 'package:admyrer/screens/profile.dart';
+import 'package:admyrer/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:admyrer/services/api_service.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -17,6 +18,8 @@ class TabScreen extends StatefulWidget {
 
 class _TabScreenState extends State<TabScreen> {
   final ApiService _apiService = ApiService();
+  late Future<List<UserModel>> futureUsers;
+  List<UserModel> users = [];
   bool isLoading = true;
   late List<Widget> _pages; 
 
@@ -24,27 +27,44 @@ class _TabScreenState extends State<TabScreen> {
     Fluttertoast.showToast(
       msg: message,
       toastLength: Toast.LENGTH_LONG,
-      gravity: ToastGravity.CENTER,
-      timeInSecForIosWeb: 1,
-      backgroundColor: Colors.red,
+      gravity: ToastGravity.TOP_RIGHT,
+      timeInSecForIosWeb: 5,
       textColor: Colors.white,
       fontSize: 20.0,
     );
   }
 
   Future<void> _handleSignIn() async {
-    final user = await _apiService.postRequest("buildPage", {
-      "id": 10,
-    });
     setState((){
       isLoading = false;
     });
-    final data = json.decode(user.body);
-    print(data["data"]["user"]);
-    
-    if (user.statusCode != 200) {
-      showErrorToast(user.body);
-      return;
+
+    try {
+      final response = await _apiService.postRequest("buildPage", {
+        "id": 10,
+      });
+
+      var data = json.decode(response.body);
+
+      if (data["data"] == null || data["data"]["random"] == null) {
+        showErrorToast('Invalid response data');
+        return;
+      }
+
+      List<dynamic> userList = data["data"]["random"];
+      List<UserModel> users = userList.map((user) => UserModel.fromJson(user)).toList();
+
+      setState(() {
+        this.users = users;
+        isLoading = false;
+      });
+
+      print(users);
+    } catch (e) {
+      showErrorToast('An error occurred: $e');
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
