@@ -202,9 +202,9 @@ class _SettingsState extends State<Settings> {
               decoration: BoxDecoration(
                   color: Color.fromARGB(23, 233, 30, 98),
                   borderRadius: BorderRadius.circular(5)),
-              child: const Row(
+              child: Row(
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.edit_note_outlined,
                     color: Colors.pink,
                     size: 25,
@@ -213,7 +213,7 @@ class _SettingsState extends State<Settings> {
                     width: 10,
                   ),
                   Text(
-                    "Edit Profile",
+                    "Chat with $firstName",
                     style: TextStyle(color: Colors.pink),
                   )
                 ],
@@ -319,30 +319,6 @@ class _MyGridListState extends State<MyGridList> {
           ),
         ),
 
-        InkWell(
-          onTap: () => {},
-          child: Container(
-            width: 100,
-            height: 150,
-            decoration: BoxDecoration(
-                color: Color.fromARGB(35, 155, 39, 176),
-                borderRadius: BorderRadius.circular(10)),
-            child: const Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(
-                  Icons.replay_outlined,
-                  color: Colors.purple,
-                  size: 25,
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Text("Live")
-              ],
-            ),
-          ),
-        ),
         InkWell(
           onTap: () => {},
           child: Container(
