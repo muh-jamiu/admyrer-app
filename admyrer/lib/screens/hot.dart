@@ -292,13 +292,20 @@ class FirstSection extends StatefulWidget {
 }
 
 class _FirstSectionState extends State<FirstSection> {
+  var index = 0;
+  void nextUser(){
+    setState(() {
+      index += 1;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    var firstName = widget.users[0].firstName;
-    var lastName = widget.users[0].lastName;
-    var country = widget.users[0].country;
-    var state = widget.users[0].state ?? "N/A";
-    var avatar = widget.users[0].avatar;
+    var firstName = widget.users[index].firstName;
+    var lastName = widget.users[index].lastName;
+    var country = widget.users[index].country;
+    var state = widget.users[index].state ?? "N/A";
+    var avatar = widget.users[index].avatar;
     return Column(
       children: [
         Container(
@@ -359,7 +366,7 @@ class _FirstSectionState extends State<FirstSection> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     InkWell(
-                      onTap: () => {},
+                      onTap:nextUser,
                       child: Container(
                         width: 60,
                         height: 60,
@@ -375,7 +382,7 @@ class _FirstSectionState extends State<FirstSection> {
                     ),
                     const SizedBox(width: 10),
                     InkWell(
-                      onTap: () => {},
+                      onTap:nextUser,
                       child: Container(
                         width: 60,
                         height: 60,

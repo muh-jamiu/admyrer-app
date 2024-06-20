@@ -163,13 +163,20 @@ class User extends StatefulWidget {
 }
 
 class _UserState extends State<User> {
+  var index = 0;
+  void nextUser(){
+     setState(() {
+        index += 1;
+      });
+  }
+
   @override
   Widget build(BuildContext context) {
-    var firstName = widget.users[0].firstName;
-    var lastName = widget.users[0].lastName;
-    var country = widget.users[0].country;
-    var state = widget.users[0].state ?? "N/A";
-    var avatar = widget.users[0].avatar;
+    var firstName = widget.users[index].firstName;
+    var lastName = widget.users[index].lastName;
+    var country = widget.users[index].country;
+    var state = widget.users[index].state ?? "N/A";
+    var avatar = widget.users[index].avatar;
     return ListView(
       children: [
         Container(
@@ -229,7 +236,7 @@ class _UserState extends State<User> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     InkWell(
-                      onTap: () => {},
+                      onTap: nextUser,
                       child: Container(
                         width: 60,
                         height: 60,
@@ -244,7 +251,7 @@ class _UserState extends State<User> {
                       ),
                     ),
                     InkWell(
-                      onTap: () => {},
+                      onTap: nextUser,
                       child: Container(
                         width: 60,
                         height: 60,
@@ -259,7 +266,7 @@ class _UserState extends State<User> {
                       ),
                     ),
                     InkWell(
-                      onTap: () => {},
+                      onTap: nextUser,
                       child: Container(
                         width: 60,
                         height: 60,
