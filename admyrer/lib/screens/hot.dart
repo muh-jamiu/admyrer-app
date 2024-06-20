@@ -3,11 +3,12 @@ import 'package:admyrer/widget/gradient_button.dart';
 import 'package:admyrer/widget/bootstrap_textfield.dart';
 import 'package:admyrer/widget/google_login.dart';
 import 'package:admyrer/widget/facebook.dart';
+import 'package:admyrer/models/user.dart';
 import 'package:flutter/material.dart';
 // import "package:Admyrer/widget/background.dart";
 
 class Hot extends StatefulWidget {
-  const Hot({super.key});
+  Hot({Key? key}) : super(key: key);
 
   @override
   State<Hot> createState() => _HotState();
@@ -20,6 +21,11 @@ class _HotState extends State<Hot> {
 
   void forgot() {
     Navigator.pushNamed(context, "/forgot");
+  }
+
+  @override
+  void initState(){
+    print("hot");
   }
 
   void verify() {

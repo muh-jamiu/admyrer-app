@@ -62,6 +62,7 @@ class _TabScreenState extends State<TabScreen> {
       print(users);
     } catch (e) {
       showErrorToast('An error occurred: $e');
+      print(e);
       setState(() {
         isLoading = false;
       });
@@ -75,7 +76,7 @@ class _TabScreenState extends State<TabScreen> {
 
     _pages = [
     Locations(isLoading: isLoading,),
-    const Hot(),
+    Hot(),
     const Notifications(),
     const Chat(),
     const Profile(),
