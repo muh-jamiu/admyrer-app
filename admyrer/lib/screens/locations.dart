@@ -1,6 +1,9 @@
 import 'package:admyrer/widget/backgrounds.dart';
 import 'package:flutter/material.dart';
 import 'package:admyrer/services/api_service.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'dart:convert';
+import 'package:admyrer/models/user.dart';
 
 class Locations extends StatefulWidget {
   bool isLoading;
@@ -13,19 +16,57 @@ class Locations extends StatefulWidget {
 
 class _LocationsState extends State<Locations> {
   final ApiService _apiService = ApiService();
-  Future<void> _handleSignIn() async {
-    final user = await _apiService.postRequest("buildPage", {
-      "id": 10,
-    });
-    setState(() {
-      widget.isLoading = false;
-    });
+  List<UserModel> users = [];
+  bool isLoading = true;
+
+  void showErrorToast(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_LONG,
+      gravity: ToastGravity.TOP_RIGHT,
+      timeInSecForIosWeb: 5,
+      textColor: Colors.white,
+      fontSize: 20.0,
+    );
+  }
+
+
+  Future<void> getUsers() async {
+    try {
+      final response = await _apiService.postRequest("buildPage", {
+        "id": 10,
+      });
+
+      var data = json.decode(response.body);
+
+      if (data["data"] == null || data["data"]["random"] == null) {
+        showErrorToast('Invalid response data');
+        return;
+      }
+
+      List<dynamic> userList = data["data"]["random"];
+      List<UserModel> users =
+          userList.map((user) => UserModel.fromJson(user)).toList();
+
+      setState(() {
+        this.users = users;
+        isLoading = false;
+      });
+
+      print(users);
+    } catch (e) {
+      showErrorToast('An error occurred: $e');
+      print(e);
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   @override
   void initState() { 
-  super.initState();
-  _handleSignIn();
+    super.initState();
+    getUsers();
   }
 
   @override
@@ -82,7 +123,7 @@ class _LocationsState extends State<Locations> {
                   const SizedBox(
                     height: 1,
                   ),
-                  widget.isLoading
+                  isLoading
                       ? const Center(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -102,7 +143,7 @@ class _LocationsState extends State<Locations> {
                             ],
                           ),
                         )
-                      : const Expanded(child: User()),
+                      : Expanded(child: User(users: users)),
                 ],
               ),
             )
@@ -114,7 +155,8 @@ class _LocationsState extends State<Locations> {
 }
 
 class User extends StatefulWidget {
-  const User({super.key});
+  final List<UserModel> users;
+  const User({super.key, required this.users});
 
   @override
   State<User> createState() => _UserState();
@@ -123,6 +165,11 @@ class User extends StatefulWidget {
 class _UserState extends State<User> {
   @override
   Widget build(BuildContext context) {
+    var firstName = widget.users[0].firstName;
+    var lastName = widget.users[0].lastName;
+    var country = widget.users[0].country;
+    var state = widget.users[0].state ?? "N/A";
+    var avatar = widget.users[0].avatar;
     return ListView(
       children: [
         Container(
@@ -133,21 +180,44 @@ class _UserState extends State<User> {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(20),
-                child: Image.asset(
-                  "assets/images/placeholder1.jpeg",
-                  height: 400,
-                  fit: BoxFit.cover,
-                  width: double.infinity,
-                ),
+                child: Image.network(
+                    avatar,
+                    height: 400,
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                    loadingBuilder: (BuildContext context, Widget child,
+                        ImageChunkEvent? loadingProgress) {
+                      if (loadingProgress == null) {
+                        return child; // Image is fully loaded
+                      } else {
+                        return Center(
+                          child: CircularProgressIndicator(
+                            color: Colors.pink,
+                            value: loadingProgress.expectedTotalBytes != null
+                                ? loadingProgress.cumulativeBytesLoaded /
+                                    (loadingProgress.expectedTotalBytes ?? 1)
+                                : null,
+                          ),
+                        );
+                      }
+                    },
+                    errorBuilder: (BuildContext context, Object error,
+                        StackTrace? stackTrace) {
+                      return Image.asset(
+                          'assets/images/icon.png', height: 400,
+                    fit: BoxFit.cover,
+                    width: double.infinity,); // Path to your error image
+                    },
+                  )
               ),
               const SizedBox(
                 height: 10,
               ),
               Container(
                 padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
-                child: const Text(
-                  'Muhammad Jamiu',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                child: Text(
+                  '$firstName $lastName',
+                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
               ),
               Container(
@@ -161,9 +231,9 @@ class _UserState extends State<User> {
                     const SizedBox(
                       width: 2,
                     ),
-                    const Text(
-                      'Lagos, Nigeria',
-                      style: TextStyle(fontSize: 20),
+                    Text(
+                      '$state, $country',
+                      style: const TextStyle(fontSize: 20),
                     ),
                   ],
                 ),
