@@ -111,7 +111,7 @@ class _ProfileState extends State<Profile> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              SizedBox(height: 120),
+                              SizedBox(height: 100),
                               CircularProgressIndicator(
                                 valueColor:
                                     AlwaysStoppedAnimation<Color>(Colors.pink),
@@ -122,6 +122,7 @@ class _ProfileState extends State<Profile> {
                                 'Loading, please wait...',
                                 style: TextStyle(fontSize: 16),
                               ),
+                              SizedBox(height: 20),
                             ],
                           ),
                         )
@@ -167,9 +168,29 @@ class _SettingsState extends State<Settings> {
                     width: 2.0)),
             child: Padding(
               padding: const EdgeInsets.all(5.0),
-              child: CircleAvatar(
-                radius: 70,
-                backgroundImage: AssetImage(avatar),
+              child: Container(
+                height: 115,
+                width: 115,
+                decoration:
+                    BoxDecoration(borderRadius: BorderRadius.circular(10)),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(50),
+                  child: FadeInImage.assetNetwork(
+                      placeholder: "assets/images/no_profile_image.webp",
+                      image: avatar,
+                      height: 115,
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                      imageErrorBuilder: (BuildContext context, Object error,
+                          StackTrace? stackTrace) {
+                        return Image.asset(
+                          'assets/images/no_profile_image.webp',
+                          height: 115,
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                        );
+                      }),
+                ),
               ),
             ),
           ),
@@ -194,7 +215,7 @@ class _SettingsState extends State<Settings> {
             ),
             Text(
               '$state, $country',
-              style:const  TextStyle(
+              style: const TextStyle(
                   fontSize: 15, color: Color.fromARGB(255, 63, 63, 63)),
             ),
           ],

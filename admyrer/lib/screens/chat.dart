@@ -65,7 +65,6 @@ class _ChatState extends State<Chat> {
     getUsers();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -79,19 +78,27 @@ class _ChatState extends State<Chat> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 30,),
+                  const SizedBox(
+                    height: 30,
+                  ),
                   const Padding(
                     padding: EdgeInsets.only(left: 10),
-                    child: const Text('Chat List', style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),),
+                    child: const Text(
+                      'Chat List',
+                      style:
+                          TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                    ),
                   ),
-                  const SizedBox(height: 10,),
+                  const SizedBox(
+                    height: 10,
+                  ),
                   Users(users: users),
                   const Divider(
                     color: Color.fromARGB(255, 215, 215, 215),
                     thickness: 1.0,
                   ),
-                   isLoading
-                      ?  const Center(
+                  isLoading
+                      ? const Center(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -110,8 +117,7 @@ class _ChatState extends State<Chat> {
                             ],
                           ),
                         )
-                      : 
-                  Expanded(child: ChatList(users: users))
+                      : Expanded(child: ChatList(users: users))
                 ],
               ),
             )
@@ -133,63 +139,81 @@ class Users extends StatefulWidget {
 class _UsersState extends State<Users> {
   @override
   Widget build(BuildContext context) {
-    return  SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: [
-           Wrap(
-            children: widget.users.map((user) {
-              return Column(
-                children: [
-                  Row(
-                    children: [
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                                color: const Color.fromARGB(255, 207, 37, 212),
-                                width: 2.0)),
-                        child: Padding(
-                          padding: EdgeInsets.all(2.0),
-                          child: CircleAvatar(
-                            radius: 25,
-                            backgroundImage: NetworkImage(user.avatar),
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(children: [
+        Wrap(
+          children: widget.users.map((user) {
+            return Column(
+              children: [
+                Row(
+                  children: [
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                              color: const Color.fromARGB(255, 207, 37, 212),
+                              width: 2.0)),
+                      child: Padding(
+                        padding: EdgeInsets.all(2.0),
+                        child: Container(
+                          height: 55,
+                          width: 55,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10)),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(50),
+                            child: FadeInImage.assetNetwork(
+                                placeholder:
+                                    "assets/images/no_profile_image.webp",
+                                image: user.avatar,
+                                height: 55,
+                                fit: BoxFit.cover,
+                                width: double.infinity,
+                                imageErrorBuilder: (BuildContext context,
+                                    Object error, StackTrace? stackTrace) {
+                                  return Image.asset(
+                                    'assets/images/no_profile_image.webp',
+                                    height: 55,
+                                    fit: BoxFit.cover,
+                                    width: double.infinity,
+                                  );
+                                }),
                           ),
                         ),
                       ),
-                      const SizedBox(
-                        width: 20,
-                      )
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        user.username,
-                        style: const TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w100,
-                            color: Color.fromARGB(255, 40, 40, 40)),
-                      ),
-                      SizedBox(width: 20),
-                    ],
-                  ),
-                ],
-              );
-            }).toList(),
-          ),
-          ]
+                    ),
+                    const SizedBox(
+                      width: 20,
+                    )
+                  ],
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  children: [
+                    Text(
+                      user.username,
+                      style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w100,
+                          color: Color.fromARGB(255, 40, 40, 40)),
+                    ),
+                    const SizedBox(width: 20),
+                  ],
+                ),
+              ],
+            );
+          }).toList(),
         ),
-      );
+      ]),
+    );
   }
 }
-
 
 class ChatList extends StatefulWidget {
   final List<UserModel> users;
@@ -203,29 +227,62 @@ class _ChatListState extends State<ChatList> {
   final items = List<String>.generate(25, (index) => 'Item $index');
   @override
   Widget build(BuildContext context) {
-   var users = widget.users;
+    var users = widget.users;
     return ListView.builder(
-        itemCount: users.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            title: Row(
-              children: [
-                CircleAvatar(
-                  radius: 25,
-                  backgroundImage: NetworkImage(users[index].avatar),
+      itemCount: users.length,
+      itemBuilder: (context, index) {
+        return ListTile(
+          title: Row(
+            children: [
+              Container(
+                height: 45,
+                width: 45,
+                decoration:
+                    BoxDecoration(borderRadius: BorderRadius.circular(10)),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(50),
+                  child: FadeInImage.assetNetwork(
+                      placeholder: "assets/images/no_profile_image.webp",
+                      image: users[index].avatar,
+                      height: 45,
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                      imageErrorBuilder: (BuildContext context, Object error,
+                          StackTrace? stackTrace) {
+                        return Image.asset(
+                          'assets/images/no_profile_image.webp',
+                          height: 45,
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                        );
+                      }),
                 ),
-                const SizedBox(width: 20,),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(users[index].firstName, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w400),textAlign: TextAlign.start,),
-                    const Text("Last Message Notifications", style: TextStyle(fontSize: 15, fontWeight: FontWeight.w100, color: Color.fromARGB(255, 35, 35, 35)),),
-                  ],
-                ),
-              ],
-            ),
-          );
-        },
+              ),
+              const SizedBox(
+                width: 20,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    users[index].firstName,
+                    style: const TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.w400),
+                    textAlign: TextAlign.start,
+                  ),
+                  const Text(
+                    "Last Message Notifications",
+                    style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w100,
+                        color: Color.fromARGB(255, 35, 35, 35)),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
