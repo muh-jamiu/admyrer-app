@@ -4,6 +4,10 @@ import 'package:admyrer/widget/bootstrap_textfield.dart';
 import 'package:admyrer/widget/google_login.dart';
 import 'package:admyrer/widget/facebook.dart';
 import 'package:flutter/material.dart';
+import 'package:admyrer/services/api_service.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'dart:convert';
+import 'package:admyrer/models/user.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -13,6 +17,50 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  final ApiService _apiService = ApiService();
+  late UserModel user;
+  bool isLoading = true;
+
+  void showErrorToast(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_LONG,
+      gravity: ToastGravity.TOP_RIGHT,
+      timeInSecForIosWeb: 5,
+      textColor: Colors.white,
+      fontSize: 20.0,
+    );
+  }
+
+  Future<void> getUsers() async {
+    try {
+      final response = await _apiService.postRequest("buildPage", {
+        "id": 10,
+      });
+
+      var data = json.decode(response.body);
+      var userList = data["data"]["user"];
+      UserModel user = UserModel.fromJson(userList);
+
+      setState(() {
+        this.user = user;
+        isLoading = false;
+      });
+    } catch (e) {
+      showErrorToast('An error occurred: $e');
+      print(e);
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getUsers();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -35,8 +83,9 @@ class _ProfileState extends State<Profile> {
                       const Text(
                         'My profile',
                         style: TextStyle(
-                            fontSize: 25,
-                            fontWeight: FontWeight.bold,),
+                          fontSize: 25,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       Row(
                         children: [
@@ -56,8 +105,30 @@ class _ProfileState extends State<Profile> {
                   const SizedBox(
                     height: 20,
                   ),
-                  const Settings(),
-                  const SizedBox(height: 10,),
+                  isLoading
+                      ? const Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              SizedBox(height: 120),
+                              CircularProgressIndicator(
+                                valueColor:
+                                    AlwaysStoppedAnimation<Color>(Colors.pink),
+                                strokeWidth: 6.0,
+                              ),
+                              SizedBox(height: 20),
+                              Text(
+                                'Loading, please wait...',
+                                style: TextStyle(fontSize: 16),
+                              ),
+                            ],
+                          ),
+                        )
+                      : Settings(user: user),
+                  const SizedBox(
+                    height: 10,
+                  ),
                   const Expanded(child: MyGridList())
                 ],
               ),
@@ -70,7 +141,8 @@ class _ProfileState extends State<Profile> {
 }
 
 class Settings extends StatefulWidget {
-  const Settings({super.key});
+  final UserModel user;
+  const Settings({super.key, required this.user});
 
   @override
   State<Settings> createState() => _SettingsState();
@@ -79,6 +151,11 @@ class Settings extends StatefulWidget {
 class _SettingsState extends State<Settings> {
   @override
   Widget build(BuildContext context) {
+    var firstName = widget.user.firstName;
+    var lastName = widget.user.lastName;
+    var country = widget.user.country;
+    var state = widget.user.state ?? "N/A";
+    var avatar = widget.user.avatar;
     return Column(
       children: [
         Center(
@@ -88,11 +165,11 @@ class _SettingsState extends State<Settings> {
                 border: Border.all(
                     color: const Color.fromARGB(255, 207, 37, 212),
                     width: 2.0)),
-            child: const Padding(
-              padding: EdgeInsets.all(5.0),
+            child: Padding(
+              padding: const EdgeInsets.all(5.0),
               child: CircleAvatar(
                 radius: 70,
-                backgroundImage: AssetImage("assets/images/placeholder1.jpeg"),
+                backgroundImage: AssetImage(avatar),
               ),
             ),
           ),
@@ -100,10 +177,10 @@ class _SettingsState extends State<Settings> {
         const SizedBox(
           height: 10,
         ),
-        const Center(
+        Center(
             child: Text(
-          "Ganiu Jamiu",
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+          '$firstName $lastName',
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
         )),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -115,9 +192,9 @@ class _SettingsState extends State<Settings> {
             const SizedBox(
               width: 2,
             ),
-            const Text(
-              'Lagos, Nigeria',
-              style: TextStyle(
+            Text(
+              '$state, $country',
+              style:const  TextStyle(
                   fontSize: 15, color: Color.fromARGB(255, 63, 63, 63)),
             ),
           ],
@@ -205,7 +282,6 @@ class _SettingsState extends State<Settings> {
             )
           ],
         ),
-        
       ],
     );
   }
@@ -222,203 +298,252 @@ class _MyGridListState extends State<MyGridList> {
   @override
   Widget build(BuildContext context) {
     return GridView.count(
-        crossAxisCount: 3,
-        crossAxisSpacing: 10,
-        childAspectRatio: 3/3,
-        mainAxisSpacing: 10,
-        children: [
-          InkWell(
-            onTap: () => {},
-            child: Container(
-              width: 100,
-              height: 150,
-              decoration: BoxDecoration(
+      crossAxisCount: 3,
+      crossAxisSpacing: 10,
+      childAspectRatio: 3 / 3,
+      mainAxisSpacing: 10,
+      children: [
+        InkWell(
+          onTap: () => {},
+          child: Container(
+            width: 100,
+            height: 150,
+            decoration: BoxDecoration(
                 color: Color.fromARGB(35, 155, 39, 176),
-                borderRadius: BorderRadius.circular(10)
-              ),
-              child: const Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.replay_outlined, color: Colors.purple, size: 25,),
-                  SizedBox(height: 10,),
-                  Text("Live")
-                ],
-              ),
+                borderRadius: BorderRadius.circular(10)),
+            child: const Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(
+                  Icons.replay_outlined,
+                  color: Colors.purple,
+                  size: 25,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Text("Live")
+              ],
             ),
           ),
-           InkWell(
-            onTap: () => {},
-            child: Container(
-              width: 100,
-              height: 150,
-              decoration: BoxDecoration(
+        ),
+        InkWell(
+          onTap: () => {},
+          child: Container(
+            width: 100,
+            height: 150,
+            decoration: BoxDecoration(
                 color: Color.fromARGB(35, 155, 39, 176),
-                borderRadius: BorderRadius.circular(10)
-              ),
-              child: const Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.replay_outlined, color: Colors.purple, size: 25,),
-                  SizedBox(height: 10,),
-                  Text("Live")
-                ],
-              ),
+                borderRadius: BorderRadius.circular(10)),
+            child: const Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(
+                  Icons.replay_outlined,
+                  color: Colors.purple,
+                  size: 25,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Text("Live")
+              ],
             ),
           ),
-         InkWell(
-            onTap: () => {},
-            child: Container(
-              width: 100,
-              height: 150,
-              decoration: BoxDecoration(
+        ),
+        InkWell(
+          onTap: () => {},
+          child: Container(
+            width: 100,
+            height: 150,
+            decoration: BoxDecoration(
                 color: Color.fromARGB(35, 155, 39, 176),
-                borderRadius: BorderRadius.circular(10)
-              ),
-              child: const Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.replay_outlined, color: Colors.purple, size: 25,),
-                  SizedBox(height: 10,),
-                  Text("Live")
-                ],
-              ),
+                borderRadius: BorderRadius.circular(10)),
+            child: const Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(
+                  Icons.replay_outlined,
+                  color: Colors.purple,
+                  size: 25,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Text("Live")
+              ],
             ),
           ),
-         InkWell(
-            onTap: () => {},
-            child: Container(
-              width: 100,
-              height: 150,
-              decoration: BoxDecoration(
+        ),
+        InkWell(
+          onTap: () => {},
+          child: Container(
+            width: 100,
+            height: 150,
+            decoration: BoxDecoration(
                 color: Color.fromARGB(35, 155, 39, 176),
-                borderRadius: BorderRadius.circular(10)
-              ),
-              child: const Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.replay_outlined, color: Colors.purple, size: 25,),
-                  SizedBox(height: 10,),
-                  Text("Live")
-                ],
-              ),
+                borderRadius: BorderRadius.circular(10)),
+            child: const Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(
+                  Icons.replay_outlined,
+                  color: Colors.purple,
+                  size: 25,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Text("Live")
+              ],
             ),
           ),
-         InkWell(
-            onTap: () => {},
-            child: Container(
-              width: 100,
-              height: 150,
-              decoration: BoxDecoration(
+        ),
+        InkWell(
+          onTap: () => {},
+          child: Container(
+            width: 100,
+            height: 150,
+            decoration: BoxDecoration(
                 color: Color.fromARGB(35, 155, 39, 176),
-                borderRadius: BorderRadius.circular(10)
-              ),
-              child: const Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.replay_outlined, color: Colors.purple, size: 25,),
-                  SizedBox(height: 10,),
-                  Text("Live")
-                ],
-              ),
+                borderRadius: BorderRadius.circular(10)),
+            child: const Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(
+                  Icons.replay_outlined,
+                  color: Colors.purple,
+                  size: 25,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Text("Live")
+              ],
             ),
           ),
-         InkWell(
-            onTap: () => {},
-            child: Container(
-              width: 100,
-              height: 150,
-              decoration: BoxDecoration(
+        ),
+        InkWell(
+          onTap: () => {},
+          child: Container(
+            width: 100,
+            height: 150,
+            decoration: BoxDecoration(
                 color: Color.fromARGB(35, 155, 39, 176),
-                borderRadius: BorderRadius.circular(10)
-              ),
-              child: const Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.replay_outlined, color: Colors.purple, size: 25,),
-                  SizedBox(height: 10,),
-                  Text("Live")
-                ],
-              ),
+                borderRadius: BorderRadius.circular(10)),
+            child: const Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(
+                  Icons.replay_outlined,
+                  color: Colors.purple,
+                  size: 25,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Text("Live")
+              ],
             ),
           ),
-         InkWell(
-            onTap: () => {},
-            child: Container(
-              width: 100,
-              height: 150,
-              decoration: BoxDecoration(
+        ),
+        InkWell(
+          onTap: () => {},
+          child: Container(
+            width: 100,
+            height: 150,
+            decoration: BoxDecoration(
                 color: Color.fromARGB(35, 155, 39, 176),
-                borderRadius: BorderRadius.circular(10)
-              ),
-              child: const Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.replay_outlined, color: Colors.purple, size: 25,),
-                  SizedBox(height: 10,),
-                  Text("Live")
-                ],
-              ),
+                borderRadius: BorderRadius.circular(10)),
+            child: const Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(
+                  Icons.replay_outlined,
+                  color: Colors.purple,
+                  size: 25,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Text("Live")
+              ],
             ),
           ),
-         InkWell(
-            onTap: () => {},
-            child: Container(
-              width: 100,
-              height: 150,
-              decoration: BoxDecoration(
+        ),
+        InkWell(
+          onTap: () => {},
+          child: Container(
+            width: 100,
+            height: 150,
+            decoration: BoxDecoration(
                 color: Color.fromARGB(35, 155, 39, 176),
-                borderRadius: BorderRadius.circular(10)
-              ),
-              child: const Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.replay_outlined, color: Colors.purple, size: 25,),
-                  SizedBox(height: 10,),
-                  Text("Live")
-                ],
-              ),
+                borderRadius: BorderRadius.circular(10)),
+            child: const Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(
+                  Icons.replay_outlined,
+                  color: Colors.purple,
+                  size: 25,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Text("Live")
+              ],
             ),
           ),
-         InkWell(
-            onTap: () => {},
-            child: Container(
-              width: 100,
-              height: 150,
-              decoration: BoxDecoration(
+        ),
+        InkWell(
+          onTap: () => {},
+          child: Container(
+            width: 100,
+            height: 150,
+            decoration: BoxDecoration(
                 color: Color.fromARGB(35, 155, 39, 176),
-                borderRadius: BorderRadius.circular(10)
-              ),
-              child: const Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.replay_outlined, color: Colors.purple, size: 25,),
-                  SizedBox(height: 10,),
-                  Text("Live")
-                ],
-              ),
+                borderRadius: BorderRadius.circular(10)),
+            child: const Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(
+                  Icons.replay_outlined,
+                  color: Colors.purple,
+                  size: 25,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Text("Live")
+              ],
             ),
           ),
-         InkWell(
-            onTap: () => {},
-            child: Container(
-              width: 100,
-              height: 150,
-              decoration: BoxDecoration(
+        ),
+        InkWell(
+          onTap: () => {},
+          child: Container(
+            width: 100,
+            height: 150,
+            decoration: BoxDecoration(
                 color: Color.fromARGB(35, 155, 39, 176),
-                borderRadius: BorderRadius.circular(10)
-              ),
-              child: const Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.replay_outlined, color: Colors.purple, size: 25,),
-                  SizedBox(height: 10,),
-                  Text("Live")
-                ],
-              ),
+                borderRadius: BorderRadius.circular(10)),
+            child: const Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(
+                  Icons.replay_outlined,
+                  color: Colors.purple,
+                  size: 25,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Text("Live")
+              ],
             ),
           ),
-        
-        ],
+        ),
+      ],
     );
   }
 }

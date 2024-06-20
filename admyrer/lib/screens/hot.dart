@@ -319,7 +319,7 @@ class _FirstSectionState extends State<FirstSection> {
                           StackTrace? stackTrace) {
                         return Image.asset(
                           'assets/images/no_profile_image.webp',
-                          height: 400,
+                          height: 200,
                           fit: BoxFit.cover,
                           width: double.infinity,
                         );
