@@ -9,7 +9,11 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:convert';
 import 'package:admyrer/models/user.dart';
 import 'package:admyrer/screens/login.dart';
+import 'package:admyrer/screens/Likes.dart';
+import 'package:admyrer/screens/disliked.dart';
 import 'package:admyrer/screens/visits.dart';
+import 'package:admyrer/screens/follows.dart';
+import 'package:admyrer/screens/liked.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -39,7 +43,7 @@ class _ProfileState extends State<Profile> {
 
   Future<void> getUsers() async {
     try {
-      final response = await _apiService.postRequest("buildPage", {
+      final response = await _apiService.postRequest("single-user", {
         "id": 10,
       });
 
@@ -362,6 +366,26 @@ class _MyGridListState extends State<MyGridList> {
         context, MaterialPageRoute(builder: (context) => Visits()));
   }
 
+  void goMyLikes() {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => Likes()));
+  }
+
+  void goDisLikes() {
+    Navigator.push(
+      context, MaterialPageRoute(builder: (context) => DislLike()));
+  }
+
+  void goLiked() {
+    Navigator.push(
+      context, MaterialPageRoute(builder: (context) => Liked()));
+  }
+
+  void goFollows() {
+    Navigator.push(
+      context, MaterialPageRoute(builder: (context) => Follows()));
+  }
+
   @override
   Widget build(BuildContext context) {
     return GridView.count(
@@ -395,7 +419,7 @@ class _MyGridListState extends State<MyGridList> {
           ),
         ),
         InkWell(
-          onTap: () => {},
+          onTap: goFollows,
           child: Container(
             width: 100,
             height: 150,
@@ -467,7 +491,7 @@ class _MyGridListState extends State<MyGridList> {
           ),
         ),
         InkWell(
-          onTap: () => {},
+          onTap: goLiked,
           child: Container(
             width: 100,
             height: 150,
@@ -491,7 +515,7 @@ class _MyGridListState extends State<MyGridList> {
           ),
         ),
         InkWell(
-          onTap: () => {},
+          onTap: goDisLikes,
           child: Container(
             width: 100,
             height: 150,
@@ -515,7 +539,7 @@ class _MyGridListState extends State<MyGridList> {
           ),
         ),
         InkWell(
-          onTap: () => {},
+          onTap: goMyLikes,
           child: Container(
             width: 100,
             height: 150,
