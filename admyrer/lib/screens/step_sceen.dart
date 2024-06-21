@@ -15,11 +15,11 @@ class _StepSceenState extends State<StepSceen> {
   bool isLoading = false;
 
   void login() {
-    Navigator.pushNamed(context, "/login");
+    Navigator.pushReplacementNamed(context, "/login");
   }
 
   void register() {
-    Navigator.pushNamed(context, "/register");
+    Navigator.pushReplacementNamed(context, "/register");
   }
 
   @override
