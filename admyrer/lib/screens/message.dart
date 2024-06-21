@@ -12,7 +12,7 @@ class Message extends StatefulWidget {
 class _MessageState extends State<Message> {
   final List<Map<String, dynamic>> _messages = [];
   final TextEditingController _controller = TextEditingController();
-  late UserModel user;
+  late UserModel user = widget.user;
 
   void _sendMessage() {
     if (_controller.text.isNotEmpty) {
