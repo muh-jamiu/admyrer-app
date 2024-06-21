@@ -68,8 +68,8 @@ class _MessageState extends State<Message> {
                       ),
                       const SizedBox(width: 10),
                       Container(
-                        height: 40,
-                        width: 40,
+                        height: 50,
+                        width: 50,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10)),
                         child: ClipRRect(

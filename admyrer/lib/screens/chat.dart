@@ -67,6 +67,11 @@ class _ChatState extends State<Chat> {
     getUsers();
   }
 
+  void goMessage(user) {
+    Navigator.push(
+      context, MaterialPageRoute(builder: (context) => Message(user: user)));
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -94,7 +99,7 @@ class _ChatState extends State<Chat> {
                   const SizedBox(
                     height: 10,
                   ),
-                  Users(users: users),
+                  Users(users: users, goMessage: goMessage),
                   const Divider(
                     color: Color.fromARGB(255, 215, 215, 215),
                     thickness: 1.0,
@@ -132,17 +137,18 @@ class _ChatState extends State<Chat> {
 
 class Users extends StatefulWidget {
   final List<UserModel> users;
-  const Users({super.key, required this.users});
+  final void Function(UserModel)  goMessage;
+  const Users({super.key, required this.users, required this.goMessage});
 
   @override
   State<Users> createState() => _UsersState();
 }
 
 class _UsersState extends State<Users> {
-   void goMessage(user) {
-    Navigator.push(
-      context, MaterialPageRoute(builder: (context) => Message(user: user)));
-  }
+  //  void goMessage(user) {
+  //   Navigator.push(
+  //     context, MaterialPageRoute(builder: (context) => Message(user: user)));
+  // }
   @override
   Widget build(BuildContext context) {
 
@@ -159,7 +165,7 @@ class _UsersState extends State<Users> {
                       height: 10,
                     ),
                     InkWell(
-                      onTap: () => goMessage(user),
+                      onTap: () => widget.goMessage(user),
                       child: Container(
                         decoration: BoxDecoration(
                             shape: BoxShape.circle,

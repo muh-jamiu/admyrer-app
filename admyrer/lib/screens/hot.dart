@@ -476,7 +476,7 @@ class _AllUSersState extends State<AllUSers> {
       mainAxisSpacing: 15,
       children: [
         InkWell(
-          onTap: () => () => goSingle( widget.users[0]),
+          onTap: () => goSingle( widget.users[0]),
           child: ImageWithTextAndIcon(
               name: widget.users[0].firstName, image: widget.users[0].avatar, icon: Icons.heart_broken),
         ),
@@ -486,22 +486,22 @@ class _AllUSersState extends State<AllUSers> {
               name: widget.users[1].firstName, image: widget.users[1].avatar, icon: Icons.heart_broken),
         ),
         InkWell(
-          onTap: () => () => goSingle( widget.users[2]),
+          onTap: () => goSingle( widget.users[2]),
           child: ImageWithTextAndIcon(
               name: widget.users[2].firstName, image: widget.users[2].avatar, icon: Icons.heart_broken),
         ),
         InkWell(
-          onTap: () => () => goSingle( widget.users[3]),
+          onTap: () => goSingle( widget.users[3]),
           child: ImageWithTextAndIcon(
               name: widget.users[3].firstName, image: widget.users[3].avatar, icon: Icons.heart_broken),
         ),
         InkWell(
-          onTap: () => () => goSingle( widget.users[4]),
+          onTap: () => goSingle( widget.users[4]),
           child: ImageWithTextAndIcon(
               name: widget.users[4].firstName, image: widget.users[4].avatar, icon: Icons.heart_broken),
         ),
         InkWell(
-          onTap: () => () => goSingle( widget.users[5]),
+          onTap: () => goSingle( widget.users[5]),
           child: ImageWithTextAndIcon(
               name: widget.users[5].firstName, image: widget.users[5].avatar, icon: Icons.heart_broken),
         ),
