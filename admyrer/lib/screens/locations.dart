@@ -142,7 +142,7 @@ class _LocationsState extends State<Locations> {
                       Row(
                         children: [
                           InkWell(
-                            onTap: () {showCustomBottomSheet;},
+                            onTap: () {showCustomBottomSheet(context);},
                             child: Icon(Icons.more_vert_outlined,
                                 color: Colors.pink[300]),
                           ),

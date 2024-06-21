@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-void showCustomBottomSheet(BuildContext context, Widget content) {
+void showCustomBottomSheet(BuildContext context) {
   showModalBottomSheet<void>(
     context: context,
     builder: (BuildContext context) {
