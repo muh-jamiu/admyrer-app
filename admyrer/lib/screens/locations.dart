@@ -55,7 +55,6 @@ class _LocationsState extends State<Locations> {
         isLoading = false;
       });
 
-      print(users);
     } catch (e) {
       showErrorToast('An error occurred: $e');
       print(e);

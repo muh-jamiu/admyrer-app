@@ -14,16 +14,16 @@ import 'package:admyrer/screens/single.dart';
 // import "package:Admyrer/widget/background.dart";
 
 class Visits extends StatefulWidget {
-  final UserModel users;
-  const Visits({super.key, required this.users});
+  const Visits({super.key});
 
   @override
   State<Visits> createState() => _VisitsState();
 }
 
 class _VisitsState extends State<Visits> {
+  final ApiService _apiService = ApiService();
   List<UserModel> users = [];
-  UserModel? usersone;
+  bool isLoading = true;
 
   void showErrorToast(String message) {
     Fluttertoast.showToast(
@@ -37,11 +37,39 @@ class _VisitsState extends State<Visits> {
     );
   }
 
+  Future<void> getUsers() async {
+    try {
+      final response = await _apiService.postRequest("buildPage", {
+        "id": 10,
+      });
+
+      var data = json.decode(response.body);
+
+      if (data["data"] == null || data["data"]["random"] == null) {
+        showErrorToast('Invalid response data');
+        return;
+      }
+
+      List<dynamic> userList = data["data"]["random"];
+      List<UserModel> users =
+          userList.map((user) => UserModel.fromJson(user)).toList();
+
+      setState(() {
+        this.users = users;
+        isLoading = false;
+      });
+
+    } catch (e) {
+      showErrorToast('An error occurred: $e');
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
   @override
   void initState() {
-    setState(() {
-      usersone = widget.users;
-    });
+    getUsers();
   }
 
   @override
@@ -95,11 +123,42 @@ class _VisitsState extends State<Visits> {
                   const SizedBox(
                     height: 10,
                   ),
-                  // Container(
-                  //     height: 780,
-                  //     child: ListUser(
-                  //       users: users,
-                  //     ))
+                  isLoading
+                      ? const Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              SizedBox(height: 100),
+                              CircularProgressIndicator(
+                                valueColor:
+                                    AlwaysStoppedAnimation<Color>(Colors.pink),
+                                strokeWidth: 6.0,
+                              ),
+                              SizedBox(height: 20),
+                              Text(
+                                'Loading, please wait...',
+                                style: TextStyle(fontSize: 16),
+                              ),
+                              SizedBox(height: 20),
+                            ],
+                          ),
+                        )
+                      :
+                  Container(
+                      height: 720,
+                      child: 
+                    users.length == 0 ? 
+                    const Center(child: Column(
+                      children: [
+                        SizedBox(height: 80,),
+                        Text("Empty", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+                        Text("You don't have any visits at the moment"),
+                      ],
+                    ),)
+                    : ListUser(
+                        users: users,
+                      ))
                 ],
               ),
             )

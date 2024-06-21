@@ -357,9 +357,9 @@ class _MyGridListState extends State<MyGridList> {
     );
   }
 
-  void goVisists(user) {
+  void goVisists() {
     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => Visits(users: user)));
+        context, MaterialPageRoute(builder: (context) => Visits()));
   }
 
   @override
@@ -419,7 +419,7 @@ class _MyGridListState extends State<MyGridList> {
           ),
         ),
         InkWell(
-          onTap: () => goVisists(widget.user),
+          onTap: () => goVisists(),
           child: Container(
             width: 100,
             height: 150,

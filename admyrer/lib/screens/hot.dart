@@ -60,7 +60,6 @@ class _HotState extends State<Hot> {
         isLoading = false;
       });
 
-      print(users);
     } catch (e) {
       showErrorToast('An error occurred: $e');
       print(e);
