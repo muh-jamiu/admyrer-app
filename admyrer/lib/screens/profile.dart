@@ -28,6 +28,7 @@ class _ProfileState extends State<Profile> {
   final ApiService _apiService = ApiService();
   late UserModel user;
   bool isLoading = true;
+  late String _authToken;
 
   void showErrorToast(String message) {
     Fluttertoast.showToast(
@@ -42,9 +43,13 @@ class _ProfileState extends State<Profile> {
   }
 
   Future<void> getUsers() async {
+     SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _authToken = prefs.getString('authToken') ?? '';
+    });
     try {
       final response = await _apiService.postRequest("single-user", {
-        "id": 10,
+        "id": _authToken,
       });
 
       var data = json.decode(response.body);

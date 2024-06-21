@@ -1,4 +1,5 @@
 import 'package:admyrer/widget/backgrounds.dart';
+import 'package:admyrer/widget/bottom_open.dart';
 import 'package:flutter/material.dart';
 import 'package:admyrer/services/api_service.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -141,25 +142,7 @@ class _LocationsState extends State<Locations> {
                       Row(
                         children: [
                           InkWell(
-                            onTap: () {
-                              Scaffold.of(context).showBottomSheet(
-                                (BuildContext context) {
-                                  return Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: const BorderRadius.only(
-                                          topLeft: Radius.circular(30),
-                                          topRight: Radius.circular(30)),
-                                      color: Colors.pink[400],
-                                    ),
-                                    height: 500,
-                                    child: const Center(
-                                      child: Text(
-                                          'This is a persistent bottom sheet'),
-                                    ),
-                                  );
-                                },
-                              );
-                            },
+                            onTap: () {showCustomBottomSheet;},
                             child: Icon(Icons.more_vert_outlined,
                                 color: Colors.pink[300]),
                           ),

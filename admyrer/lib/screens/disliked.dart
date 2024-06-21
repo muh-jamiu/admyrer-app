@@ -11,6 +11,7 @@ import 'package:admyrer/services/api_service.dart';
 import 'dart:convert';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:admyrer/screens/single.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 // import "package:Admyrer/widget/background.dart";
 
 class DislLike extends StatefulWidget {
@@ -24,6 +25,7 @@ class _DislLikeState extends State<DislLike> {
   final ApiService _apiService = ApiService();
   List<UserModel> users = [];
   bool isLoading = true;
+  late String _authToken;
 
   void showErrorToast(String message) {
     Fluttertoast.showToast(
@@ -38,9 +40,13 @@ class _DislLikeState extends State<DislLike> {
   }
 
   Future<void> getUsers() async {
+     SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _authToken = prefs.getString('authToken') ?? '';
+    });
     try {
-      final response = await _apiService.postRequest("my-dislikes", {
-        "id": 10,
+      final response = await _apiService.postRequest("get-dislikes", {
+        "id": _authToken,
       });
 
       var data = json.decode(response.body);

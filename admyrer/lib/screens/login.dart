@@ -76,7 +76,7 @@ class _LoginState extends State<Login> {
         }else{
           showErrorToast("Account login successfully");
           SharedPreferences prefs = await SharedPreferences.getInstance();
-          await prefs.setString('authToken', "token");
+          await prefs.setString('authToken', user.body);
           Future.delayed(Duration(seconds:2), () {
             Navigator.pushReplacementNamed(context, "/tab");
           });
