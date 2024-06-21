@@ -16,6 +16,9 @@ import 'package:admyrer/screens/follows.dart';
 import 'package:admyrer/screens/liked.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:permission_handler/permission_handler.dart';
+// import 'package:agora_rtc_engine/agora_rtc_engine.dart';
+
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -571,3 +574,114 @@ class _MyGridListState extends State<MyGridList> {
     );
   }
 }
+
+
+// class MyApp extends StatefulWidget {
+//   @override
+//   _MyAppState createState() => _MyAppState();
+// }
+
+// class _MyAppState extends State<MyApp> {
+//   static final String appId = 'YOUR_AGORA_APP_ID';
+//   static final String token = 'YOUR_AGORA_TOKEN';
+//   static final String channelId = 'test';
+//   int _remoteUid = 0;
+//   bool _localUserJoined = false;
+
+//   @override
+//   void initState() {
+//     super.initState();
+//     _initAgora();
+//   }
+
+//   Future<void> _initAgora() async {
+//     // Request camera and microphone permissions
+//     await [Permission.camera, Permission.microphone].request();
+
+//     // Initialize Agora engine
+//     await AgoraRtcEngine.create(appId);
+//     await AgoraRtcEngine.enableVideo();
+
+//     // Set event handlers
+//     AgoraRtcEngine.onJoinChannelSuccess = (channel, uid, elapsed) {
+//       setState(() {
+//         _localUserJoined = true;
+//       });
+//     };
+
+//     AgoraRtcEngine.onUserJoined = (uid, elapsed) {
+//       setState(() {
+//         _remoteUid = uid;
+//       });
+//     };
+
+//     AgoraRtcEngine.onUserOffline = (uid, reason) {
+//       setState(() {
+//         _remoteUid = 0;
+//       });
+//     };
+
+//     // Join the channel
+//     await AgoraRtcEngine.joinChannel(token, channelId, null, 0);
+//   }
+
+//   @override
+//   void dispose() {
+//     super.dispose();
+//     AgoraRtcEngine.leaveChannel();
+//     AgoraRtcEngine.destroy();
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       home: Scaffold(
+//         appBar: AppBar(
+//           title: Text('Agora Video Call'),
+//         ),
+//         body: Stack(
+//           children: [
+//             _renderLocalVideo(),
+//             _renderRemoteVideo(),
+//             _toolbar(),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+
+//   Widget _renderLocalVideo() {
+//     if (_localUserJoined) {
+//       return AgoraRenderWidget(0, local: true);
+//     } else {
+//       return Center(child: CircularProgressIndicator());
+//     }
+//   }
+
+//   Widget _renderRemoteVideo() {
+//     if (_remoteUid != 0) {
+//       return AgoraRenderWidget(_remoteUid);
+//     } else {
+//       return Center(child: Text('Waiting for remote user to join...'));
+//     }
+//   }
+
+//   Widget _toolbar() {
+//     return Align(
+//       alignment: Alignment.bottomCenter,
+//       child: Row(
+//         mainAxisAlignment: MainAxisAlignment.center,
+//         children: [
+//           IconButton(
+//             icon: Icon(Icons.call_end),
+//             color: Colors.red,
+//             onPressed: () {
+//               AgoraRtcEngine.leaveChannel();
+//               Navigator.pop(context);
+//             },
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
