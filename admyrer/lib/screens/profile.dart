@@ -9,6 +9,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:convert';
 import 'package:admyrer/models/user.dart';
 import 'package:admyrer/screens/login.dart';
+import 'package:admyrer/screens/visits.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -134,7 +135,7 @@ class _ProfileState extends State<Profile> {
                   const SizedBox(
                     height: 10,
                   ),
-                  const Expanded(child: MyGridList())
+                  Expanded(child: MyGridList(user: user))
                 ],
               ),
             )
@@ -315,7 +316,8 @@ class _SettingsState extends State<Settings> {
 }
 
 class MyGridList extends StatefulWidget {
-  const MyGridList({super.key});
+  final UserModel user;
+  const MyGridList({super.key, required this.user});
 
   @override
   State<MyGridList> createState() => _MyGridListState();
@@ -353,6 +355,11 @@ class _MyGridListState extends State<MyGridList> {
         );
       },
     );
+  }
+
+  void goVisists(user) {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => Visits(users: user)));
   }
 
   @override
@@ -412,7 +419,7 @@ class _MyGridListState extends State<MyGridList> {
           ),
         ),
         InkWell(
-          onTap: () => {},
+          onTap: () => goVisists(widget.user),
           child: Container(
             width: 100,
             height: 150,

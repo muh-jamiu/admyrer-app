@@ -71,6 +71,21 @@ class _LocationsState extends State<Locations> {
     getUsers();
   }
 
+  String? _selectedCountry;
+
+  final List<String> _countries = [
+    'United States',
+    'Canada',
+    'Mexico',
+    'United Kingdom',
+    'Germany',
+    'France',
+    'India',
+    'China',
+    'Japan',
+    'Australia',
+  ];
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -90,7 +105,7 @@ class _LocationsState extends State<Locations> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Column(
+                      Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text(
@@ -100,13 +115,25 @@ class _LocationsState extends State<Locations> {
                           ),
                           Row(
                             children: [
-                              Icon(Icons.location_on_outlined),
-                              SizedBox(
+                              const Icon(Icons.location_on_outlined),
+                              const SizedBox(
                                 height: 10,
                               ),
-                              const Text(
-                                'Nigeria',
-                                style: TextStyle(fontSize: 15),
+                              DropdownButton<String>(
+                                hint: const Text('Select a country'),
+                                value: _selectedCountry,
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    _selectedCountry = newValue;
+                                  });
+                                },
+                                items: _countries.map<DropdownMenuItem<String>>(
+                                    (String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(value),
+                                  );
+                                }).toList(),
                               ),
                             ],
                           )
@@ -322,6 +349,82 @@ class _UserState extends State<User> {
           ),
         )
       ],
+    );
+  }
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Dropdown Menu Example',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: MyHomePage(),
+    );
+  }
+}
+
+class MyHomePage extends StatefulWidget {
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  String? _selectedCountry;
+
+  final List<String> _countries = [
+    'United States',
+    'Canada',
+    'Mexico',
+    'United Kingdom',
+    'Germany',
+    'France',
+    'India',
+    'China',
+    'Japan',
+    'Australia',
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Dropdown Menu Example'),
+      ),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              DropdownButton<String>(
+                hint: Text('Select a country'),
+                value: _selectedCountry,
+                onChanged: (String? newValue) {
+                  setState(() {
+                    _selectedCountry = newValue;
+                  });
+                },
+                items: _countries.map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+              ),
+              SizedBox(height: 20),
+              Text(
+                _selectedCountry != null
+                    ? 'Selected country: $_selectedCountry'
+                    : 'No country selected',
+                style: TextStyle(fontSize: 16),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
