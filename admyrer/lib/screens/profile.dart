@@ -26,7 +26,7 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
   final ApiService _apiService = ApiService();
-  late UserModel user;
+  UserModel user = UserModel(id: 0, firstName: "Guest", lastName: "Guest", username: "Guest", avatar: "null");
   bool isLoading = true;
   late String _authToken;
 
