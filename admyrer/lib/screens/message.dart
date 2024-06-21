@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:admyrer/models/user.dart';
 
 class Message extends StatefulWidget {
+  final UserModel user;
+  const Message({super.key, required this.user});
   @override
   _MessageState createState() => _MessageState();
 }
@@ -9,6 +12,7 @@ class Message extends StatefulWidget {
 class _MessageState extends State<Message> {
   final List<Map<String, dynamic>> _messages = [];
   final TextEditingController _controller = TextEditingController();
+  late UserModel user;
 
   void _sendMessage() {
     if (_controller.text.isNotEmpty) {
@@ -24,6 +28,15 @@ class _MessageState extends State<Message> {
 
   @override
   Widget build(BuildContext context) {
+     @override
+      void initState(){
+        user = widget.user;
+      }
+
+      var firstName = user.firstName;
+      var avatar = user.avatar;
+      var lastName = user.lastName;
+
     return Scaffold(
       backgroundColor: Colors.grey[200], // Chat background color
       body: SafeArea(
@@ -50,7 +63,7 @@ class _MessageState extends State<Message> {
                       IconButton(
                         icon: Icon(Icons.arrow_back, color: Colors.purple[400]),
                         onPressed: () {
-                          // Implement back button functionality
+                           Navigator.pop(context);
                         },
                       ),
                       const SizedBox(width: 10),
@@ -64,7 +77,7 @@ class _MessageState extends State<Message> {
                           child: FadeInImage.assetNetwork(
                               placeholder:
                                   "assets/images/no_profile_image.webp",
-                              image: "avatar",
+                              image: avatar,
                               height: 60,
                               fit: BoxFit.cover,
                               width: double.infinity,
@@ -81,7 +94,7 @@ class _MessageState extends State<Message> {
                       ),
                       const SizedBox(width: 10),
                       Text(
-                        'User Name',
+                        '$firstName $lastName',
                         style: TextStyle(color: Colors.black, fontSize: 20),
                       ),
                     ],
