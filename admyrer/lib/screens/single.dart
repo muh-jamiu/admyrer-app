@@ -8,6 +8,7 @@ import 'package:admyrer/services/api_service.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:convert';
 import 'package:admyrer/models/user.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class Single extends StatefulWidget {
   final UserModel users;
@@ -294,7 +295,7 @@ class _MyGridListState extends State<MyGridList> {
       childAspectRatio: 3 / 3,
       mainAxisSpacing: 10,
       children: [
-        InkWell(
+         InkWell(
           onTap: () => {},
           child: Container(
             width: 100,
@@ -305,40 +306,15 @@ class _MyGridListState extends State<MyGridList> {
             child: const Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(
-                  Icons.replay_outlined,
+                const FaIcon(
+                  FontAwesomeIcons.video,
                   color: Colors.purple,
                   size: 25,
                 ),
                 SizedBox(
                   height: 10,
                 ),
-                Text("Live")
-              ],
-            ),
-          ),
-        ),
-
-        InkWell(
-          onTap: () => {},
-          child: Container(
-            width: 100,
-            height: 150,
-            decoration: BoxDecoration(
-                color: Color.fromARGB(35, 155, 39, 176),
-                borderRadius: BorderRadius.circular(10)),
-            child: const Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(
-                  Icons.replay_outlined,
-                  color: Colors.purple,
-                  size: 25,
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Text("Live")
+                Text("Video Call")
               ],
             ),
           ),
@@ -349,20 +325,68 @@ class _MyGridListState extends State<MyGridList> {
             width: 100,
             height: 150,
             decoration: BoxDecoration(
-                color: Color.fromARGB(35, 155, 39, 176),
+                color: Color.fromARGB(34, 103, 176, 39),
                 borderRadius: BorderRadius.circular(10)),
             child: const Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(
-                  Icons.replay_outlined,
+                const FaIcon(
+                  FontAwesomeIcons.userGroup,
                   color: Colors.purple,
                   size: 25,
                 ),
                 SizedBox(
                   height: 10,
                 ),
-                Text("Live")
+                Text("Follow")
+              ],
+            ),
+          ),
+        ),
+        InkWell(
+          onTap: () => {},
+          child: Container(
+            width: 100,
+            height: 150,
+            decoration: BoxDecoration(
+                color: Color.fromARGB(34, 176, 48, 39),
+                borderRadius: BorderRadius.circular(10)),
+            child: const Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const FaIcon(
+                  FontAwesomeIcons.thumbsDown,
+                  color: Colors.purple,
+                  size: 25,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Text("Disliked")
+              ],
+            ),
+          ),
+        ),
+        InkWell(
+          onTap: () => {},
+          child: Container(
+            width: 100,
+            height: 150,
+            decoration: BoxDecoration(
+                color: Color.fromARGB(34, 39, 41, 176),
+                borderRadius: BorderRadius.circular(10)),
+            child: const Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const FaIcon(
+                  FontAwesomeIcons.thumbsUp,
+                  color: Colors.purple,
+                  size: 25,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Text("Like")
               ],
             ),
           ),

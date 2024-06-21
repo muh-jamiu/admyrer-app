@@ -9,6 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:admyrer/services/api_service.dart';
 import 'dart:convert';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:admyrer/screens/single.dart';
 // import "package:Admyrer/widget/background.dart";
 
 class AllUsers extends StatefulWidget {
@@ -116,6 +118,11 @@ class ListUser extends StatefulWidget {
 }
 
 class _ListUserState extends State<ListUser> {
+  void goSingle(user) {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => Single(users: user)));
+  }
+  
   @override
   Widget build(BuildContext context) {
     return GridView.count(
@@ -126,7 +133,7 @@ class _ListUserState extends State<ListUser> {
       children: 
         List.generate(widget.users.length, (index){
           return  InkWell(
-          onTap: () => {},
+          onTap: () => goSingle(widget.users[index]),
             child: ImageWithTextAndIcon(
                 name: widget.users[index].firstName,
                 image: widget.users[index].avatar,
@@ -180,11 +187,11 @@ class _ImageWithTextAndIconState extends State<ImageWithTextAndIcon> {
           Positioned(
             top: 10,
             right: 10,
-            child: Icon(
-              icon,
-              color: Colors.red,
-              size: 30,
-            ),
+            child:FaIcon(
+                            FontAwesomeIcons.heart,
+                            color: Colors.white,
+                            size: 30,
+                          ),
           ),
           // Positioned text at the bottom
           Positioned(

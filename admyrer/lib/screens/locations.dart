@@ -4,6 +4,8 @@ import 'package:admyrer/services/api_service.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:convert';
 import 'package:admyrer/models/user.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:admyrer/screens/single.dart';
 
 class Locations extends StatefulWidget {
   bool isLoading;
@@ -30,7 +32,6 @@ class _LocationsState extends State<Locations> {
       fontSize: 15.0,
     );
   }
-
 
   Future<void> getUsers() async {
     try {
@@ -65,7 +66,7 @@ class _LocationsState extends State<Locations> {
   }
 
   @override
-  void initState() { 
+  void initState() {
     super.initState();
     getUsers();
   }
@@ -115,21 +116,24 @@ class _LocationsState extends State<Locations> {
                         children: [
                           InkWell(
                             onTap: () {
-            Scaffold.of(context).showBottomSheet(
-              (BuildContext context) {
-                return Container(
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30)),
-                  color: Colors.pink[400],
-                  ),
-                  height: 500,
-                  child: const Center(
-                    child: Text('This is a persistent bottom sheet'),
-                  ),
-                );
-              },
-            );
-          },
+                              Scaffold.of(context).showBottomSheet(
+                                (BuildContext context) {
+                                  return Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: const BorderRadius.only(
+                                          topLeft: Radius.circular(30),
+                                          topRight: Radius.circular(30)),
+                                      color: Colors.pink[400],
+                                    ),
+                                    height: 500,
+                                    child: const Center(
+                                      child: Text(
+                                          'This is a persistent bottom sheet'),
+                                    ),
+                                  );
+                                },
+                              );
+                            },
                             child: Icon(Icons.more_vert_outlined,
                                 color: Colors.pink[300]),
                           ),
@@ -183,10 +187,15 @@ class User extends StatefulWidget {
 
 class _UserState extends State<User> {
   var index = 0;
-  void nextUser(){
-     setState(() {
-        index += 1;
-      });
+  void nextUser() {
+    setState(() {
+      index += 1;
+    });
+  }
+
+  void goSingle(user) {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => Single(users: user)));
   }
 
   @override
@@ -204,22 +213,26 @@ class _UserState extends State<User> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child:  FadeInImage.assetNetwork(
-                  placeholder: "assets/images/no_profile_image.webp",
-                  image:avatar,
-                  height: 400,
-                  fit: BoxFit.cover,
-                  width: double.infinity,
-                  imageErrorBuilder: (BuildContext context, Object error,
-                        StackTrace? stackTrace) {
-                      return Image.asset(
-                          'assets/images/no_profile_image.webp', height: 400,
-                    fit: BoxFit.cover,
-                    width: double.infinity,);}
-                  ),               
-              
+              InkWell(
+                onTap: () => goSingle(widget.users[index]),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: FadeInImage.assetNetwork(
+                      placeholder: "assets/images/no_profile_image.webp",
+                      image: avatar,
+                      height: 400,
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                      imageErrorBuilder: (BuildContext context, Object error,
+                          StackTrace? stackTrace) {
+                        return Image.asset(
+                          'assets/images/no_profile_image.webp',
+                          height: 400,
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                        );
+                      }),
+                ),
               ),
               const SizedBox(
                 height: 10,
@@ -228,7 +241,8 @@ class _UserState extends State<User> {
                 padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
                 child: Text(
                   '$firstName $lastName',
-                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                      fontSize: 20, fontWeight: FontWeight.bold),
                 ),
               ),
               Container(
@@ -292,10 +306,12 @@ class _UserState extends State<User> {
                         decoration: BoxDecoration(
                             color: Colors.pink[300],
                             borderRadius: BorderRadius.circular(50)),
-                        child: const Icon(
-                          Icons.heart_broken,
-                          color: Colors.white,
-                          size: 25,
+                        child: const Center(
+                          child: FaIcon(
+                            FontAwesomeIcons.heart,
+                            color: Colors.white,
+                            size: 25,
+                          ),
                         ),
                       ),
                     ),
