@@ -10,6 +10,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:admyrer/services/api_service.dart';
 import 'dart:convert';
 import 'package:admyrer/screens/allUsers.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:admyrer/screens/single.dart';
 // import "package:Admyrer/widget/background.dart";
 
@@ -334,6 +335,10 @@ class _FirstSectionState extends State<FirstSection> {
       index += 1;
     });
   }
+ 
+  void goSingle(user) {
+    Navigator.push(context, MaterialPageRoute(builder: (context) => Single(users: user)));
+  }  
 
   @override
   Widget build(BuildContext context) {
@@ -350,23 +355,26 @@ class _FirstSectionState extends State<FirstSection> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
-                  child: FadeInImage.assetNetwork(
-                      placeholder: "assets/images/no_profile_image.webp",
-                      image: avatar,
-                      height: 200,
-                      fit: BoxFit.cover,
-                      width: double.infinity,
-                      imageErrorBuilder: (BuildContext context, Object error,
-                          StackTrace? stackTrace) {
-                        return Image.asset(
-                          'assets/images/no_profile_image.webp',
-                          height: 200,
-                          fit: BoxFit.cover,
-                          width: double.infinity,
-                        );
-                      })),
+              InkWell(
+                onTap: () => goSingle(widget.users[index]),
+                child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: FadeInImage.assetNetwork(
+                        placeholder: "assets/images/no_profile_image.webp",
+                        image: avatar,
+                        height: 200,
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                        imageErrorBuilder: (BuildContext context, Object error,
+                            StackTrace? stackTrace) {
+                          return Image.asset(
+                            'assets/images/no_profile_image.webp',
+                            height: 200,
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                          );
+                        })),
+              ),
               const SizedBox(
                 height: 10,
               ),
@@ -425,11 +433,14 @@ class _FirstSectionState extends State<FirstSection> {
                         decoration: BoxDecoration(
                             color: Colors.pink[300],
                             borderRadius: BorderRadius.circular(50)),
-                        child: const Icon(
-                          Icons.heart_broken,
-                          color: Colors.white,
-                          size: 25,
-                        ),
+                        child:
+                Center(
+                  child: const FaIcon(
+                    FontAwesomeIcons.heart,
+                      color: Colors.white,
+                      size: 25,
+                  ),
+                ),
                       ),
                     ),
                   ],
@@ -453,6 +464,9 @@ class AllUSers extends StatefulWidget {
 }
 
 class _AllUSersState extends State<AllUSers> {
+  void goSingle(user) {
+    Navigator.push(context, MaterialPageRoute(builder: (context) => Single(users: user)));
+  }
   @override
   Widget build(BuildContext context) {
     return GridView.count(
@@ -463,32 +477,32 @@ class _AllUSersState extends State<AllUSers> {
       mainAxisSpacing: 15,
       children: [
         InkWell(
-          onTap: () => {},
+          onTap: () => () => goSingle( widget.users[0]),
           child: ImageWithTextAndIcon(
               name: widget.users[0].firstName, image: widget.users[0].avatar, icon: Icons.heart_broken),
         ),
         InkWell(
-          onTap: () => {},
+          onTap: () => goSingle( widget.users[1]),
           child: ImageWithTextAndIcon(
               name: widget.users[1].firstName, image: widget.users[1].avatar, icon: Icons.heart_broken),
         ),
         InkWell(
-          onTap: () => {},
+          onTap: () => () => goSingle( widget.users[2]),
           child: ImageWithTextAndIcon(
               name: widget.users[2].firstName, image: widget.users[2].avatar, icon: Icons.heart_broken),
         ),
         InkWell(
-          onTap: () => {},
+          onTap: () => () => goSingle( widget.users[3]),
           child: ImageWithTextAndIcon(
               name: widget.users[3].firstName, image: widget.users[3].avatar, icon: Icons.heart_broken),
         ),
         InkWell(
-          onTap: () => {},
+          onTap: () => () => goSingle( widget.users[4]),
           child: ImageWithTextAndIcon(
               name: widget.users[4].firstName, image: widget.users[4].avatar, icon: Icons.heart_broken),
         ),
         InkWell(
-          onTap: () => {},
+          onTap: () => () => goSingle( widget.users[5]),
           child: ImageWithTextAndIcon(
               name: widget.users[5].firstName, image: widget.users[5].avatar, icon: Icons.heart_broken),
         ),
@@ -540,11 +554,12 @@ class _ImageWithTextAndIconState extends State<ImageWithTextAndIcon> {
           Positioned(
             top: 10,
             right: 10,
-            child: Icon(
-              icon,
-              color: Colors.red,
-              size: 30,
-            ),
+            child: 
+                FaIcon(
+                  FontAwesomeIcons.heart,
+                    color: Colors.pink[300],
+                    size:30,
+                ),
           ),
           // Positioned text at the bottom
           Positioned(
