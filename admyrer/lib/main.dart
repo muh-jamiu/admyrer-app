@@ -9,8 +9,12 @@ import './screens/onboarding_screen.dart';
 import './screens/allUsers.dart';
 import './screens/home.dart';
 import './screens/step_Sceen.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
-void main() {
+void main() async {
+  await Hive.initFlutter();
+  await Hive.openBox('cacheBox');
   runApp(const MyApp());
 }
 
