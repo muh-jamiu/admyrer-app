@@ -3,6 +3,7 @@ import 'package:admyrer/screens/login.dart';
 import 'package:admyrer/screens/register.dart';
 import 'package:admyrer/screens/tab_screen.dart';
 import 'package:admyrer/screens/verify.dart';
+import 'package:admyrer/screens/message.dart';
 import 'package:flutter/material.dart';
 import './screens/onboarding_screen.dart';
 import './screens/allUsers.dart';
