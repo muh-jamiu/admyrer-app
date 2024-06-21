@@ -165,6 +165,7 @@ class _UsersState extends State<Users> {
                   children: [
                     const SizedBox(
                       height: 10,
+                      width:10,
                     ),
                     InkWell(
                       onTap:  () => widget.goAi("nothing"),
