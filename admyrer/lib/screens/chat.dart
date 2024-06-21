@@ -5,6 +5,7 @@ import 'package:admyrer/services/api_service.dart';
 import 'dart:convert';
 import 'package:admyrer/models/user.dart';
 import 'package:admyrer/screens/message.dart';
+import 'package:admyrer/screens/ai_chat.dart';
 
 class Chat extends StatefulWidget {
   const Chat({super.key});
@@ -72,6 +73,11 @@ class _ChatState extends State<Chat> {
       context, MaterialPageRoute(builder: (context) => Message(user: user)));
   }
 
+  void goAi(user) {
+    Navigator.push(
+      context, MaterialPageRoute(builder: (context) => AiChat()));
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -99,7 +105,7 @@ class _ChatState extends State<Chat> {
                   const SizedBox(
                     height: 10,
                   ),
-                  Users(users: users, goMessage: goMessage),
+                  Users(users: users, goMessage: goMessage, goAi: goAi),
                   const Divider(
                     color: Color.fromARGB(255, 215, 215, 215),
                     thickness: 1.0,
@@ -138,23 +144,88 @@ class _ChatState extends State<Chat> {
 class Users extends StatefulWidget {
   final List<UserModel> users;
   final void Function(UserModel)  goMessage;
-  const Users({super.key, required this.users, required this.goMessage});
+  final void Function(String)  goAi;
+  const Users({super.key, required this.users, required this.goMessage, required this.goAi});
 
   @override
   State<Users> createState() => _UsersState();
 }
 
 class _UsersState extends State<Users> {
-  //  void goMessage(user) {
-  //   Navigator.push(
-  //     context, MaterialPageRoute(builder: (context) => Message(user: user)));
-  // }
+
   @override
   Widget build(BuildContext context) {
 
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(children: [
+        Column(
+              children: [
+                Row(
+                  children: [
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    InkWell(
+                      onTap:  () => widget.goAi("nothing"),
+                      child: Container(
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                                color: Color.fromARGB(255, 5, 219, 76),
+                                width: 2.0)),
+                        child: Padding(
+                          padding: EdgeInsets.all(2.0),
+                          child: Container(
+                            height: 55,
+                            width: 55,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10)),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(50),
+                              child: FadeInImage.assetNetwork(
+                                  placeholder:
+                                      "assets/images/no_profile_image.webp",
+                                  image: "assets/images/ai.webp",
+                                  height: 55,
+                                  fit: BoxFit.cover,
+                                  width: double.infinity,
+                                  imageErrorBuilder: (BuildContext context,
+                                      Object error, StackTrace? stackTrace) {
+                                    return Image.asset(
+                                      'assets/images/no_profile_image.webp',
+                                      height: 55,
+                                      fit: BoxFit.cover,
+                                      width: double.infinity,
+                                    );
+                                  }),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 20,
+                    )
+                  ],
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                const Row(
+                  children: [
+                    Text(
+                      "Admyrer AI",
+                      style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: Color.fromARGB(255, 2, 2, 2)),
+                    ),
+                    const SizedBox(width: 20),
+                  ],
+                ),
+              ],
+            ),
         Wrap(
           children: widget.users.map((user) {
             return Column(
