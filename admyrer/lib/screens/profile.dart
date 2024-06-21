@@ -8,6 +8,9 @@ import 'package:admyrer/services/api_service.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:convert';
 import 'package:admyrer/models/user.dart';
+import 'package:admyrer/screens/login.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -260,8 +263,10 @@ class _SettingsState extends State<Settings> {
           children: [
             Row(
               children: [
-                Icon(Icons.heart_broken_sharp,
-                    color: Color.fromARGB(255, 63, 63, 63)),
+                const FaIcon(
+                  FontAwesomeIcons.heart,
+                    color: Color.fromARGB(255, 63, 63, 63)
+                ),
                 const SizedBox(
                   width: 10,
                 ),
@@ -317,6 +322,39 @@ class MyGridList extends StatefulWidget {
 }
 
 class _MyGridListState extends State<MyGridList> {
+  void logOutUser() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('authToken');
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Login()));
+  }
+
+  Future<void> _showLogoutConfirmationDialog() async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Logout Confirmation'),
+          content:const  Text('Are you sure you want to log out?'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Dismiss the dialog
+              },
+            ),
+            TextButton(
+              child: const Text('Logout', style: TextStyle(color: Colors.red)),
+              onPressed: () {
+                Navigator.of(context).pop(); // Dismiss the dialog
+                logOutUser(); // Proceed with logout
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return GridView.count(
@@ -336,8 +374,8 @@ class _MyGridListState extends State<MyGridList> {
             child: const Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(
-                  Icons.replay_outlined,
+                const FaIcon(
+                  FontAwesomeIcons.video,
                   color: Colors.purple,
                   size: 25,
                 ),
@@ -355,20 +393,20 @@ class _MyGridListState extends State<MyGridList> {
             width: 100,
             height: 150,
             decoration: BoxDecoration(
-                color: Color.fromARGB(35, 155, 39, 176),
+                color: Color.fromARGB(34, 103, 176, 39),
                 borderRadius: BorderRadius.circular(10)),
             child: const Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(
-                  Icons.replay_outlined,
+                const FaIcon(
+                  FontAwesomeIcons.userGroup,
                   color: Colors.purple,
                   size: 25,
                 ),
                 SizedBox(
                   height: 10,
                 ),
-                Text("Live")
+                Text("Friends")
               ],
             ),
           ),
@@ -379,20 +417,44 @@ class _MyGridListState extends State<MyGridList> {
             width: 100,
             height: 150,
             decoration: BoxDecoration(
-                color: Color.fromARGB(35, 155, 39, 176),
+                color: Color.fromARGB(34, 39, 142, 176),
                 borderRadius: BorderRadius.circular(10)),
             child: const Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(
-                  Icons.replay_outlined,
+                const FaIcon(
+                  FontAwesomeIcons.eye,
                   color: Colors.purple,
                   size: 25,
                 ),
                 SizedBox(
                   height: 10,
                 ),
-                Text("Live")
+                Text("Visits")
+              ],
+            ),
+          ),
+        ),
+        InkWell(
+          onTap: _showLogoutConfirmationDialog,
+          child: Container(
+            width: 100,
+            height: 150,
+            decoration: BoxDecoration(
+                color: Color.fromARGB(34, 176, 39, 39),
+                borderRadius: BorderRadius.circular(10)),
+            child: const Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                 const FaIcon(
+                  FontAwesomeIcons.rightFromBracket,
+                  color: Colors.purple,
+                  size: 25,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Text("Log Out")
               ],
             ),
           ),
@@ -403,20 +465,20 @@ class _MyGridListState extends State<MyGridList> {
             width: 100,
             height: 150,
             decoration: BoxDecoration(
-                color: Color.fromARGB(35, 155, 39, 176),
+                color: Color.fromARGB(34, 39, 176, 73),
                 borderRadius: BorderRadius.circular(10)),
             child: const Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(
-                  Icons.replay_outlined,
+                const FaIcon(
+                  FontAwesomeIcons.thumbsUp,
                   color: Colors.purple,
                   size: 25,
                 ),
                 SizedBox(
                   height: 10,
                 ),
-                Text("Live")
+                Text("People i liked")
               ],
             ),
           ),
@@ -427,20 +489,20 @@ class _MyGridListState extends State<MyGridList> {
             width: 100,
             height: 150,
             decoration: BoxDecoration(
-                color: Color.fromARGB(35, 155, 39, 176),
+                color: Color.fromARGB(34, 176, 48, 39),
                 borderRadius: BorderRadius.circular(10)),
             child: const Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(
-                  Icons.replay_outlined,
+                const FaIcon(
+                  FontAwesomeIcons.thumbsDown,
                   color: Colors.purple,
                   size: 25,
                 ),
                 SizedBox(
                   height: 10,
                 ),
-                Text("Live")
+                Text("People i disliked")
               ],
             ),
           ),
@@ -451,121 +513,25 @@ class _MyGridListState extends State<MyGridList> {
             width: 100,
             height: 150,
             decoration: BoxDecoration(
-                color: Color.fromARGB(35, 155, 39, 176),
+                color: Color.fromARGB(34, 39, 41, 176),
                 borderRadius: BorderRadius.circular(10)),
             child: const Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(
-                  Icons.replay_outlined,
+                const FaIcon(
+                  FontAwesomeIcons.thumbsUp,
                   color: Colors.purple,
                   size: 25,
                 ),
                 SizedBox(
                   height: 10,
                 ),
-                Text("Live")
+                Text("Likes")
               ],
             ),
           ),
         ),
-        InkWell(
-          onTap: () => {},
-          child: Container(
-            width: 100,
-            height: 150,
-            decoration: BoxDecoration(
-                color: Color.fromARGB(35, 155, 39, 176),
-                borderRadius: BorderRadius.circular(10)),
-            child: const Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(
-                  Icons.replay_outlined,
-                  color: Colors.purple,
-                  size: 25,
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Text("Live")
-              ],
-            ),
-          ),
-        ),
-        InkWell(
-          onTap: () => {},
-          child: Container(
-            width: 100,
-            height: 150,
-            decoration: BoxDecoration(
-                color: Color.fromARGB(35, 155, 39, 176),
-                borderRadius: BorderRadius.circular(10)),
-            child: const Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(
-                  Icons.replay_outlined,
-                  color: Colors.purple,
-                  size: 25,
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Text("Live")
-              ],
-            ),
-          ),
-        ),
-        InkWell(
-          onTap: () => {},
-          child: Container(
-            width: 100,
-            height: 150,
-            decoration: BoxDecoration(
-                color: Color.fromARGB(35, 155, 39, 176),
-                borderRadius: BorderRadius.circular(10)),
-            child: const Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(
-                  Icons.replay_outlined,
-                  color: Colors.purple,
-                  size: 25,
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Text("Live")
-              ],
-            ),
-          ),
-        ),
-        InkWell(
-          onTap: () => {},
-          child: Container(
-            width: 100,
-            height: 150,
-            decoration: BoxDecoration(
-                color: Color.fromARGB(35, 155, 39, 176),
-                borderRadius: BorderRadius.circular(10)),
-            child: const Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(
-                  Icons.replay_outlined,
-                  color: Colors.purple,
-                  size: 25,
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Text("Live")
-              ],
-            ),
-          ),
-        ),
-      ],
+       ],
     );
   }
 }
