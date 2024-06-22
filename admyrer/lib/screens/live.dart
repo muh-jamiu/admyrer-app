@@ -10,7 +10,8 @@ class StartVid extends StatefulWidget {
 
 class _StartVidState extends State<StartVid> {
   final String appId = 'b76f67d420d2486699d05d28cf678251';
-  final String token = '007eJxTYJCfmRgfvnLRyW/WP/N6LsTpMLzkcSgOP/grQW8zX156rowCQ5K5WZqZeYqJkUGKkYmFmZmlZYqBaYqRRTJQ1MLI1HBrS1laQyAjw7+lqsyMDBAI4rMw5CZm5jEwAAAFVR5T';
+  final String token =
+      '007eJxTYJCfmRgfvnLRyW/WP/N6LsTpMLzkcSgOP/grQW8zX156rowCQ5K5WZqZeYqJkUGKkYmFmZmlZYqBaYqRRTJQ1MLI1HBrS1laQyAjw7+lqsyMDBAI4rMw5CZm5jEwAAAFVR5T';
   final String channelId = 'main';
   late RtcEngine _engine = createAgoraRtcEngine();
   int _remoteUid = 0;
@@ -27,7 +28,6 @@ class _StartVidState extends State<StartVid> {
       fontSize: 15.0,
     );
   }
-
 
   @override
   void initState() {
@@ -58,7 +58,8 @@ class _StartVidState extends State<StartVid> {
             _remoteUid = remoteUid;
           });
         },
-        onUserOffline: (RtcConnection connection, int remoteUid, UserOfflineReasonType reason) {
+        onUserOffline: (RtcConnection connection, int remoteUid,
+            UserOfflineReasonType reason) {
           setState(() {
             _remoteUid = 0;
           });
@@ -85,17 +86,36 @@ class _StartVidState extends State<StartVid> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Agora Video Call'),
+      home: Container(
+        decoration: const BoxDecoration(
+          gradient: const LinearGradient(
+            colors: [Color.fromARGB(255, 255, 205, 214), Colors.white],
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+          ),
         ),
-        body:  Stack(
-      children: [
-        LocalVideoWidget(engine: _engine, localUserJoined: _localUserJoined),
-        RemoteVideoWidget(engine: _engine, remoteUid: _remoteUid),
-        _toolbar(),
-      ],
-    ),
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text('Video Call'),
+          ),
+          body: Container(
+            decoration: const BoxDecoration(
+              gradient: const LinearGradient(
+                colors: [Color.fromARGB(255, 255, 205, 214), Colors.white],
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+              ),
+            ),
+            child: Stack(
+              children: [
+                LocalVideoWidget(
+                    engine: _engine, localUserJoined: _localUserJoined),
+                RemoteVideoWidget(engine: _engine, remoteUid: _remoteUid),
+                _toolbar(),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -120,7 +140,6 @@ class _StartVidState extends State<StartVid> {
   }
 }
 
-
 class LocalVideoWidget extends StatelessWidget {
   final RtcEngine engine;
   final bool localUserJoined;
@@ -141,7 +160,6 @@ class LocalVideoWidget extends StatelessWidget {
     }
   }
 }
-
 
 class RemoteVideoWidget extends StatelessWidget {
   final RtcEngine engine;

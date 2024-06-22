@@ -34,7 +34,7 @@ class _MessageState extends State<Message> {
     // Request storage permission
     PermissionStatus status = await Permission.storage.request();
 
-    if (status.isGranted) {
+    if (true) {
       final pickedFile = await _picker.getImage(source: ImageSource.gallery);
       setState(() {
         _imageFile = pickedFile;
