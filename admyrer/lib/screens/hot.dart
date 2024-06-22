@@ -353,6 +353,19 @@ class _FirstSectionState extends State<FirstSection> {
     Navigator.push(context, MaterialPageRoute(builder: (context) => Single(users: user)));
   }  
 
+  void showErrorToast(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_LONG,
+      gravity: ToastGravity.TOP,
+      timeInSecForIosWeb: 5,
+      textColor: Colors.white,
+      backgroundColor: Color.fromARGB(255, 98, 240, 176),
+      fontSize: 15.0,
+    );
+  }
+
+
   @override
   Widget build(BuildContext context) {
     var firstName = widget.users[index].firstName;
@@ -423,7 +436,7 @@ class _FirstSectionState extends State<FirstSection> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     InkWell(
-                      onTap: nextUser,
+                      onTap: ()  {nextUser(); showErrorToast("You dislike this user");},
                       child: Container(
                         width: 60,
                         height: 60,
@@ -439,7 +452,7 @@ class _FirstSectionState extends State<FirstSection> {
                     ),
                     const SizedBox(width: 10),
                     InkWell(
-                      onTap: nextUser,
+                      onTap: ()  {nextUser(); showErrorToast("You like this user");},
                       child: Container(
                         width: 60,
                         height: 60,
