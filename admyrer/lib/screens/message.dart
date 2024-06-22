@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:admyrer/models/user.dart';
+import 'package:admyrer/services/api_service.dart';
+import 'dart:convert';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'dart:async';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Message extends StatefulWidget {
   final UserModel user;
@@ -13,6 +18,62 @@ class _MessageState extends State<Message> {
   final List<Map<String, dynamic>> _messages = [];
   final TextEditingController _controller = TextEditingController();
   late UserModel user = widget.user;
+  final ApiService _apiService = ApiService();
+  bool isLoading = true;
+  late String _authToken;
+
+  void showErrorToast(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_LONG,
+      gravity: ToastGravity.TOP,
+      timeInSecForIosWeb: 5,
+      textColor: Colors.white,
+      backgroundColor: Colors.pink[300],
+      fontSize: 15.0,
+    );
+  }
+
+
+  
+  Future<void> getMessage(String message) async {
+     SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _authToken = prefs.getString('authToken') ?? '';
+    });
+
+    try {
+      final response = await _apiService.postRequest("get-message", {
+        "sender":  _authToken,
+        "reciever":   widget.user.id,
+      });
+
+      var data = json.decode(response.body);
+
+      if (data["data"] == null || data["data"] == null) {
+        showErrorToast('Invalid response data');
+        return;
+      }
+
+      print(data);
+
+      // setState(() {
+      //   _messages.add({
+      //     'text': data["data"],
+      //     'isMe': false,
+      //   });
+      // });
+
+
+    } catch (e) {
+      showErrorToast('An error occurred: $e');
+      print(e);
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
 
   void _sendMessage() {
     if (_controller.text.isNotEmpty) {

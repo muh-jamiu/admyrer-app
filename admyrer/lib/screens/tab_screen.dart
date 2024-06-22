@@ -64,10 +64,19 @@ class _TabScreenState extends State<TabScreen> {
                     ),
               ),
         child: Scaffold(
-          body: PageView(
-            controller: _pageController,
-            onPageChanged: _onPageChanged,
-            children: _pages,
+          body: Container(
+        decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                      colors: [Color.fromARGB(255, 255, 205, 214), Colors.white],
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                    ),
+              ),
+            child: PageView(
+              controller: _pageController,
+              onPageChanged: _onPageChanged,
+              children: _pages,
+            ),
           ),
           bottomNavigationBar: Padding(
             padding: const EdgeInsets.all(15.0),
