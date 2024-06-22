@@ -56,7 +56,7 @@ class _MessageState extends State<Message> {
       gravity: ToastGravity.TOP,
       timeInSecForIosWeb: 5,
       textColor: Colors.white,
-      backgroundColor: Colors.pink[300],
+      backgroundColor:  Color.fromARGB(255, 100, 246, 190),
       fontSize: 15.0,
     );
   }
@@ -106,11 +106,30 @@ class _MessageState extends State<Message> {
       setState(() {
         this.conversation = conversation;
         isLoading = false;
-        // _messages.add({
-        //   'text': data["data"],
-        //   'isMe': false,
-        // });
       });
+    } catch (e) {
+      showErrorToast('An error occurred: $e');
+      print(e);
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  Future<void> postMessage(message) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _authToken = prefs.getString('authToken') ?? '';
+    });
+
+    try {
+      final response = await _apiService.postRequest("save-message", {
+        "sender": _authToken,
+        "reciever": widget.user.id,
+        "message": message,
+      });
+
+      showErrorToast('Message sent successfully');
     } catch (e) {
       showErrorToast('An error occurred: $e');
       print(e);
@@ -133,6 +152,7 @@ class _MessageState extends State<Message> {
           'text': _controller.text,
           'isMe': true,
         });
+        postMessage(_controller.text);
         _controller.clear();
       });
     }

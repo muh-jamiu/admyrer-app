@@ -74,7 +74,7 @@ class _LoginState extends State<Login> {
           });
            return;
         }else{
-          showErrorToast("Account login successfully", Color.fromARGB(255, 76, 175, 137));
+          showErrorToast("Account login successfully", Color.fromARGB(255, 100, 246, 190));
           SharedPreferences prefs = await SharedPreferences.getInstance();
           await prefs.setString('authToken', user.body);
           Future.delayed(Duration(seconds:2), () {
