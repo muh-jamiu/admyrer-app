@@ -434,6 +434,7 @@ class _LocationsState extends State<Locations> {
                                         title: const Text('Boys'),
                                         value: isBoys,
                                         onChanged: (bool value) {
+                                          print(value);
                                           setState(() {
                                             isBoys = value;
                                             isGirls = !value && !isBoth

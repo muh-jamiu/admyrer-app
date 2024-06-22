@@ -1,3 +1,4 @@
+import 'package:admyrer/models/chatModel.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:admyrer/models/user.dart';
@@ -22,6 +23,7 @@ class _MessageState extends State<Message> {
   final List<Map<String, dynamic>> _messages = [];
   final TextEditingController _controller = TextEditingController();
   late UserModel user = widget.user;
+  List<ChatModel> conversation = [];
   final ApiService _apiService = ApiService();
   bool isLoading = true;
   late String _authToken;
@@ -78,9 +80,13 @@ class _MessageState extends State<Message> {
         return;
       }
 
-      print(data);
+      List<dynamic> userList = data["data"];
+      List<ChatModel> conversation =
+          userList.map((user) => ChatModel.fromJson(user)).toList();
+      print(conversation);
 
       setState(() {
+        this.conversation = conversation;
         isLoading = false;
         // _messages.add({
         //   'text': data["data"],
