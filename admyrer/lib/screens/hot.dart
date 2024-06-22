@@ -85,6 +85,10 @@ class _HotState extends State<Hot> {
     Navigator.push(context, MaterialPageRoute(builder: (context) => AllUsers(users: users)));
   }
 
+  void goAllUser() {
+    Navigator.push(context, MaterialPageRoute(builder: (context) => AllUsers(users: allUser)));
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -199,11 +203,14 @@ class _HotState extends State<Hot> {
                                       style: TextStyle(
                                           fontSize: 20,
                                           fontWeight: FontWeight.w600)),
-                                  Text(
-                                    "See All",
-                                    style: TextStyle(
-                                        fontSize: 15,
-                                        color: Colors.purple[300]),
+                                  InkWell(
+                                    onTap: goAllUser,
+                                    child: Text(
+                                      "See All",
+                                      style: TextStyle(
+                                          fontSize: 15,
+                                          color: Colors.purple[300]),
+                                    ),
                                   ),
                                 ],
                               ),

@@ -4,6 +4,7 @@ import 'package:admyrer/models/user.dart';
 import 'package:admyrer/services/api_service.dart';
 import 'dart:convert';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'dart:async';
 
 class AiChat extends StatefulWidget {
   const AiChat({super.key});
@@ -16,6 +17,7 @@ class _AiChatState extends State<AiChat> {
   final TextEditingController _controller = TextEditingController();
   final ApiService _apiService = ApiService();
   bool isLoading = true;
+  bool _isTyping = false;
 
   void showErrorToast(String message) {
     Fluttertoast.showToast(
@@ -31,6 +33,10 @@ class _AiChatState extends State<AiChat> {
 
 
   Future<void> postMessage(String message) async {
+     setState(() {
+        _isTyping = true;
+      });
+
     try {
       final response = await _apiService.postRequest("chat-ai", {
         "message":  message,
@@ -44,6 +50,7 @@ class _AiChatState extends State<AiChat> {
       }
 
       setState(() {
+        _isTyping = false;
         _messages.add({
           'text': data["data"],
           'isMe': false,
@@ -55,11 +62,25 @@ class _AiChatState extends State<AiChat> {
       showErrorToast('An error occurred: $e');
       print(e);
       setState(() {
+        _isTyping = false;
         isLoading = false;
       });
     }
   }
 
+  // void _handleTyping() {
+  //   if (!_isTyping) {
+  //     setState(() {
+  //       _isTyping = true;
+  //     });
+  //   }
+  //   _typingTimer?.cancel();
+  //   _typingTimer = Timer(Duration(seconds: 2), () {
+  //     setState(() {
+  //       _isTyping = false;
+  //     });
+  //   });
+  // }
 
   void _sendMessage() {
     if (_controller.text.isNotEmpty) {
@@ -160,7 +181,10 @@ class _AiChatState extends State<AiChat> {
                   child: ListView.builder(
                     itemCount: _messages.length,
                     itemBuilder: (context, index) {
-                      return ChatBubble(
+                       if (index == _messages.length) {
+                          return _isTyping ? TypingIndicator() : Container();
+                        }
+                        return ChatBubble(
                         text: _messages[index]['text'],
                         isMe: _messages[index]['isMe'],
                       );
@@ -274,5 +298,29 @@ class ChatBubbleTrianglePainter extends CustomPainter {
   @override
   bool shouldRepaint(CustomPainter oldDelegate) {
     return false;
+  }
+}
+
+
+class TypingIndicator extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: Container(
+          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 14),
+          decoration: BoxDecoration(
+            color: Colors.grey,
+            borderRadius: BorderRadius.circular(15),
+          ),
+          child:const  Text(
+            'Typing...',
+            style: TextStyle(color: Colors.white),
+          ),
+        ),
+      ),
+    );
   }
 }
