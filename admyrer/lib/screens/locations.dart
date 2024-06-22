@@ -11,7 +11,6 @@ import 'package:admyrer/screens/single.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
-import 'package:dropdown_search/dropdown_search.dart';
 
 class Locations extends StatefulWidget {
   bool isLoading;

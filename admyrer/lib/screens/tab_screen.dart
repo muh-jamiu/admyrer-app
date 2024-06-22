@@ -56,7 +56,7 @@ class _TabScreenState extends State<TabScreen> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        backgroundColor: Colors.pink[400],
+        // backgroundColor: Colors.pink[400],
         body: PageView(
           controller: _pageController,
           onPageChanged: _onPageChanged,
@@ -65,13 +65,13 @@ class _TabScreenState extends State<TabScreen> {
         bottomNavigationBar: Padding(
           padding: const EdgeInsets.all(15.0),
           child: Container(
-            decoration: BoxDecoration(boxShadow: [
-              BoxShadow(
-                color: Colors.white.withOpacity(0.1),
-                spreadRadius: 1,
-                blurRadius: 3,
-              )
-            ]),
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                    colors: [Color.fromARGB(255, 249, 230, 236), Colors.white],
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                  ),
+            ),
             child: BottomNavigationBar(
               currentIndex: _currentIndex,
               onTap: _onTabTapped,
