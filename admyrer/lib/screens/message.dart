@@ -8,6 +8,8 @@ import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:admyrer/screens/single.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class Message extends StatefulWidget {
   final UserModel user;
@@ -23,6 +25,25 @@ class _MessageState extends State<Message> {
   final ApiService _apiService = ApiService();
   bool isLoading = true;
   late String _authToken;
+  PickedFile? _imageFile;
+  final ImagePicker _picker = ImagePicker();
+
+  Future<void> _pickImage() async {
+    // Request storage permission
+    PermissionStatus status = await Permission.storage.request();
+
+    if (status.isGranted) {
+      final pickedFile = await _picker.getImage(source: ImageSource.gallery);
+      setState(() {
+        _imageFile = pickedFile;
+      });
+    } else {
+      // Handle the case when the user denies the permission
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Storage permission is required to access the gallery.')),
+      );
+    }
+  }
 
   void showErrorToast(String message) {
     Fluttertoast.showToast(
@@ -136,13 +157,12 @@ class _MessageState extends State<Message> {
                         const SizedBox(width: 10),
                         InkWell(
                           onTap: () {
-                            void goSingle() {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
                                           Single(users: user)));
-                            }
+                           
                           },
                           child: Container(
                             height: 50,
@@ -184,9 +204,12 @@ class _MessageState extends State<Message> {
                           color: Colors.purple[400],
                         ),
                         SizedBox(width: 15),
-                        Icon(
-                          Icons.camera_alt,
-                          color: Colors.purple[400],
+                        InkWell(
+                          onTap: _pickImage,
+                          child: Icon(
+                            Icons.camera_alt,
+                            color: Colors.purple[400],
+                          ),
                         ),
                       ],
                     )
@@ -246,14 +269,17 @@ class _MessageState extends State<Message> {
                         ),
                       ),
                     ),
-                    IconButton(
-                      icon: Icon(
-                        Icons.camera_alt,
-                        color: Colors.purple[400],
+                    InkWell(
+                      onTap: _pickImage,
+                      child: IconButton(
+                        icon: Icon(
+                          Icons.camera_alt,
+                          color: Colors.purple[400],
+                        ),
+                        onPressed: () {
+                          // Implement camera button functionality
+                        },
                       ),
-                      onPressed: () {
-                        // Implement camera button functionality
-                      },
                     ),
                     IconButton(
                       icon: Icon(

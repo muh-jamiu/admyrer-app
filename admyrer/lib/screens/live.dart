@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class StartVid extends StatefulWidget {
   @override
@@ -14,6 +15,19 @@ class _StartVidState extends State<StartVid> {
   late RtcEngine _engine = createAgoraRtcEngine();
   int _remoteUid = 0;
   bool _localUserJoined = false;
+
+  void showErrorToast(int message) {
+    Fluttertoast.showToast(
+      msg: "$message",
+      toastLength: Toast.LENGTH_LONG,
+      gravity: ToastGravity.TOP,
+      timeInSecForIosWeb: 5,
+      textColor: Colors.white,
+      backgroundColor: Colors.pink[300],
+      fontSize: 15.0,
+    );
+  }
+
 
   @override
   void initState() {
@@ -34,6 +48,7 @@ class _StartVidState extends State<StartVid> {
     _engine.registerEventHandler(
       RtcEngineEventHandler(
         onJoinChannelSuccess: (RtcConnection connection, int uid) {
+          showErrorToast(uid);
           setState(() {
             _localUserJoined = true;
           });

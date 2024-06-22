@@ -25,6 +25,7 @@ dependencies:
   agora_rtc_engine: ^6.3.2
   flutter_local_notifications: ^12.0.0
   timezone: 0.9.3
+  image_picker: ^0.8.4+5
   # dropdown_search: ^4.0.0
 
 
