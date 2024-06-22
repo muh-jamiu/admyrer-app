@@ -44,6 +44,7 @@ class _FollowsState extends State<Follows> {
     setState(() {
       _authToken = prefs.getString('authToken') ?? '';
     });
+    
     try {
       final response = await _apiService.postRequest("get-follows", {
         "id": _authToken,

@@ -223,56 +223,7 @@ class _SettingsState extends State<Settings> {
           ),
         ),
         const SizedBox(
-          height: 25,
-        ),
-        const Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Row(
-              children: [
-                Icon(Icons.heart_broken_sharp,
-                    color: Color.fromARGB(255, 63, 63, 63)),
-                const SizedBox(
-                  width: 10,
-                ),
-                Text(
-                  "10 Likes",
-                  style: TextStyle(
-                      fontSize: 15, color: Color.fromARGB(255, 63, 63, 63)),
-                ),
-              ],
-            ),
-            Row(
-              children: [
-                Icon(Icons.remove_red_eye,
-                    color: Color.fromARGB(255, 63, 63, 63)),
-                const SizedBox(
-                  width: 10,
-                ),
-                Text(
-                  "10 Visits",
-                  style: TextStyle(
-                      fontSize: 15, color: Color.fromARGB(255, 63, 63, 63)),
-                ),
-              ],
-            ),
-            Row(
-              children: [
-                Icon(
-                  Icons.share,
-                  color: Color.fromARGB(255, 63, 63, 63),
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-                Text(
-                  "Share",
-                  style: TextStyle(
-                      fontSize: 15, color: Color.fromARGB(255, 63, 63, 63)),
-                ),
-              ],
-            )
-          ],
+          height: 5,
         ),
       ],
     );

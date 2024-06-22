@@ -6,6 +6,7 @@ import 'dart:convert';
 import 'package:admyrer/models/user.dart';
 import 'package:admyrer/screens/message.dart';
 import 'package:admyrer/screens/ai_chat.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Chat extends StatefulWidget {
   const Chat({super.key});
@@ -18,6 +19,7 @@ class _ChatState extends State<Chat> {
   final ApiService _apiService = ApiService();
   List<UserModel> users = [];
   bool isLoading = true;
+  late String _authToken;
 
   void showErrorToast(String message) {
     Fluttertoast.showToast(
@@ -32,19 +34,24 @@ class _ChatState extends State<Chat> {
   }
 
   Future<void> getUsers() async {
+     SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _authToken = prefs.getString('authToken') ?? '';
+    });
+
     try {
-      final response = await _apiService.postRequest("buildPage", {
-        "id": 10,
+      final response = await _apiService.postRequest("get-follows", {
+        "id": _authToken,
       });
 
       var data = json.decode(response.body);
 
-      if (data["data"] == null || data["data"]["random"] == null) {
+      if (data["data"] == null || data["data"]== null) {
         showErrorToast('Invalid response data');
         return;
       }
 
-      List<dynamic> userList = data["data"]["random"];
+      List<dynamic> userList = data["data"];
       List<UserModel> users =
           userList.map((user) => UserModel.fromJson(user)).toList();
 
@@ -130,7 +137,7 @@ class _ChatState extends State<Chat> {
                             ],
                           ),
                         )
-                      : Expanded(child: ChatList(users: users))
+                      : Expanded(child: ChatList(users: users,  goMessage: goMessage))
                 ],
               ),
             )
@@ -305,7 +312,8 @@ class _UsersState extends State<Users> {
 
 class ChatList extends StatefulWidget {
   final List<UserModel> users;
-  const ChatList({super.key, required this.users});
+  final void Function(UserModel)  goMessage;
+  const ChatList({super.key, required this.users, required this.goMessage});
 
   @override
   State<ChatList> createState() => _ChatListState();
@@ -320,54 +328,57 @@ class _ChatListState extends State<ChatList> {
       itemCount: users.length,
       itemBuilder: (context, index) {
         return ListTile(
-          title: Row(
-            children: [
-              Container(
-                height: 45,
-                width: 45,
-                decoration:
-                    BoxDecoration(borderRadius: BorderRadius.circular(10)),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(50),
-                  child: FadeInImage.assetNetwork(
-                      placeholder: "assets/images/no_profile_image.webp",
-                      image: users[index].avatar,
-                      height: 45,
-                      fit: BoxFit.cover,
-                      width: double.infinity,
-                      imageErrorBuilder: (BuildContext context, Object error,
-                          StackTrace? stackTrace) {
-                        return Image.asset(
-                          'assets/images/no_profile_image.webp',
-                          height: 45,
-                          fit: BoxFit.cover,
-                          width: double.infinity,
-                        );
-                      }),
+          title: InkWell(
+            onTap: () => widget.goMessage(users[index]),
+            child: Row(
+              children: [
+                Container(
+                  height: 45,
+                  width: 45,
+                  decoration:
+                      BoxDecoration(borderRadius: BorderRadius.circular(10)),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(50),
+                    child: FadeInImage.assetNetwork(
+                        placeholder: "assets/images/no_profile_image.webp",
+                        image: users[index].avatar,
+                        height: 45,
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                        imageErrorBuilder: (BuildContext context, Object error,
+                            StackTrace? stackTrace) {
+                          return Image.asset(
+                            'assets/images/no_profile_image.webp',
+                            height: 45,
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                          );
+                        }),
+                  ),
                 ),
-              ),
-              const SizedBox(
-                width: 20,
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    users[index].firstName,
-                    style: const TextStyle(
-                        fontSize: 18, fontWeight: FontWeight.w400),
-                    textAlign: TextAlign.start,
-                  ),
-                  const Text(
-                    "Last Message Notifications",
-                    style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w100,
-                        color: Color.fromARGB(255, 35, 35, 35)),
-                  ),
-                ],
-              ),
-            ],
+                const SizedBox(
+                  width: 20,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      users[index].firstName,
+                      style: const TextStyle(
+                          fontSize: 18, fontWeight: FontWeight.w400),
+                      textAlign: TextAlign.start,
+                    ),
+                    const Text(
+                      "Last Message Notifications",
+                      style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w100,
+                          color: Color.fromARGB(255, 35, 35, 35)),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         );
       },
