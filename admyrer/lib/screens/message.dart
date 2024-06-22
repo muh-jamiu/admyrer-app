@@ -6,6 +6,8 @@ import 'dart:convert';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:admyrer/screens/single.dart';
 
 class Message extends StatefulWidget {
   final UserModel user;
@@ -34,18 +36,16 @@ class _MessageState extends State<Message> {
     );
   }
 
-
-  
   Future<void> getMessage() async {
-     SharedPreferences prefs = await SharedPreferences.getInstance();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       _authToken = prefs.getString('authToken') ?? '';
     });
 
     try {
       final response = await _apiService.postRequest("get-message", {
-        "sender":  _authToken,
-        "reciever":   widget.user.id,
+        "sender": _authToken,
+        "reciever": widget.user.id,
       });
 
       var data = json.decode(response.body);
@@ -57,14 +57,13 @@ class _MessageState extends State<Message> {
 
       print(data);
 
-      // setState(() {
-      //   _messages.add({
-      //     'text': data["data"],
-      //     'isMe': false,
-      //   });
-      // });
-
-
+      setState(() {
+        isLoading = false;
+        // _messages.add({
+        //   'text': data["data"],
+        //   'isMe': false,
+        // });
+      });
     } catch (e) {
       showErrorToast('An error occurred: $e');
       print(e);
@@ -75,7 +74,7 @@ class _MessageState extends State<Message> {
   }
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
     getMessage();
   }
@@ -94,69 +93,81 @@ class _MessageState extends State<Message> {
 
   @override
   Widget build(BuildContext context) {
-     @override
-      void initState(){
-        user = widget.user;
-      }
+    @override
+    void initState() {
+      user = widget.user;
+    }
 
-      var firstName = user.firstName;
-      var avatar = user.avatar;
-      var lastName = user.lastName;
+    var firstName = user.firstName;
+    var avatar = user.avatar;
+    var lastName = user.lastName;
 
     return Scaffold(
       // backgroundColor: Colors.grey[200], // Chat background color
       body: Container(
         decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(30),
-                      bottomRight: Radius.circular(30)),
-                  gradient: LinearGradient(
-                    colors: [Color.fromARGB(255, 249, 230, 236), Colors.white],
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                  ),
-                ),
+          borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(30),
+              bottomRight: Radius.circular(30)),
+          gradient: LinearGradient(
+            colors: [Color.fromARGB(255, 249, 230, 236), Colors.white],
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+          ),
+        ),
         child: SafeArea(
           child: Column(
             children: [
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 30.0),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 16.0, vertical: 30.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(
                       children: [
                         IconButton(
-                          icon: Icon(Icons.arrow_back, color: Colors.purple[400]),
+                          icon:
+                              Icon(Icons.arrow_back, color: Colors.purple[400]),
                           onPressed: () {
-                             Navigator.pop(context);
+                            Navigator.pop(context);
                           },
                         ),
                         const SizedBox(width: 10),
-                        Container(
-                          height: 50,
-                          width: 50,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10)),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(50),
-                            child: FadeInImage.assetNetwork(
-                                placeholder:
-                                    "assets/images/no_profile_image.webp",
-                                image: avatar,
-                                height: 60,
-                                fit: BoxFit.cover,
-                                width: double.infinity,
-                                imageErrorBuilder: (BuildContext context,
-                                    Object error, StackTrace? stackTrace) {
-                                  return Image.asset(
-                                    'assets/images/no_profile_image.webp',
-                                    height: 60,
-                                    fit: BoxFit.cover,
-                                    width: double.infinity,
-                                  );
-                                }),
+                        InkWell(
+                          onTap: () {
+                            void goSingle() {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          Single(users: user)));
+                            }
+                          },
+                          child: Container(
+                            height: 50,
+                            width: 50,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10)),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(50),
+                              child: FadeInImage.assetNetwork(
+                                  placeholder:
+                                      "assets/images/no_profile_image.webp",
+                                  image: avatar,
+                                  height: 60,
+                                  fit: BoxFit.cover,
+                                  width: double.infinity,
+                                  imageErrorBuilder: (BuildContext context,
+                                      Object error, StackTrace? stackTrace) {
+                                    return Image.asset(
+                                      'assets/images/no_profile_image.webp',
+                                      height: 60,
+                                      fit: BoxFit.cover,
+                                      width: double.infinity,
+                                    );
+                                  }),
+                            ),
                           ),
                         ),
                         const SizedBox(width: 10),
@@ -186,22 +197,36 @@ class _MessageState extends State<Message> {
               Expanded(
                 child: Container(
                   decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(30),
-                      bottomRight: Radius.circular(30)),
-                  gradient: LinearGradient(
-                    colors: [Color.fromARGB(255, 249, 230, 236), Colors.white],
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
+                    borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(30),
+                        bottomRight: Radius.circular(30)),
+                    gradient: LinearGradient(
+                      colors: [
+                        Color.fromARGB(255, 249, 230, 236),
+                        Colors.white
+                      ],
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                    ),
                   ),
-                ),
                   child: ListView.builder(
                     itemCount: _messages.length,
                     itemBuilder: (context, index) {
-                      return ChatBubble(
-                        text: _messages[index]['text'],
-                        isMe: _messages[index]['isMe'],
-                      );
+                      isLoading
+                          ? Center(
+                              child: Column(
+                                children: [
+                                  SpinKitThreeBounce(
+                                    color: Colors.pink[400],
+                                    size: 35.0,
+                                  )
+                                ],
+                              ),
+                            )
+                          : ChatBubble(
+                              text: _messages[index]['text'],
+                              isMe: _messages[index]['isMe'],
+                            );
                     },
                   ),
                 ),
