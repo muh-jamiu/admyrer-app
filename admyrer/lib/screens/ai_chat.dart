@@ -30,10 +30,10 @@ class _AiChatState extends State<AiChat> {
   }
 
 
-  Future<void> postMessage() async {
+  Future<void> postMessage(String message) async {
     try {
       final response = await _apiService.postRequest("chat-ai", {
-        "message": _controller.text,
+        "message":  message,
       });
 
       var data = json.decode(response.body);
@@ -43,9 +43,7 @@ class _AiChatState extends State<AiChat> {
         return;
       }
 
-      print(data["data"]);
-
-       setState(() {
+      setState(() {
         _messages.add({
           'text': data["data"],
           'isMe': false,
@@ -65,6 +63,7 @@ class _AiChatState extends State<AiChat> {
 
   void _sendMessage() {
     if (_controller.text.isNotEmpty) {
+      postMessage( _controller.text);
       setState(() {
         _messages.add({
           'text': _controller.text,
