@@ -11,6 +11,8 @@ import 'package:admyrer/screens/single.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
+import 'package:admyrer/widget/gradient_button.dart';
+import 'package:admyrer/widget/normal_button.dart';
 
 class Locations extends StatefulWidget {
   bool isLoading;
@@ -423,6 +425,7 @@ class _LocationsState extends State<Locations> {
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,
                                     children: <Widget>[
+                                      const SizedBox(height: 20),
                                       const TextField(
                                         decoration: const InputDecoration(
                                           labelText:
@@ -430,20 +433,19 @@ class _LocationsState extends State<Locations> {
                                           border: OutlineInputBorder(),
                                         ),
                                       ),
+                                      const SizedBox(height: 20),
                                       SwitchListTile(
+                                        activeColor: Colors.pink[400],
                                         title: const Text('Boys'),
-                                        value: isBoys,
+                                        value: !isBoys,
                                         onChanged: (bool value) {
-                                          print(value);
                                           setState(() {
                                             isBoys = value;
-                                            isGirls = !value && !isBoth
-                                                ? false
-                                                : isGirls;
                                           });
                                         },
                                       ),
                                       SwitchListTile(
+                                        activeColor: Colors.pink[400],
                                         title: const Text('Girls'),
                                         value: isGirls,
                                         onChanged: (bool value) {
@@ -457,6 +459,7 @@ class _LocationsState extends State<Locations> {
                                       ),
                                       SwitchListTile(
                                         title: const Text('Both'),
+                                        activeColor: Colors.pink[400],
                                         value: isBoth,
                                         onChanged: (bool value) {
                                           setState(() {
@@ -473,19 +476,11 @@ class _LocationsState extends State<Locations> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: <Widget>[
-                                          ElevatedButton(
-                                            onPressed: () {
-                                              // Handle search action
-                                            },
-                                            child: Text('Search'),
-                                          ),
-                                          ElevatedButton(
-                                            onPressed: () {},
-                                            child: Text('Reset'),
-                                          ),
+                                        GradientButton(text: "Filter", onPressed: () => {}, isLoading: true),                                         
+                                        NormalButton(text: "Reset", onPressed:  () => {}),
                                         ],
                                       ),
-                                      SizedBox(height: 16),
+                                      const SizedBox(height: 16),
                                     ],
                                   ),
                                 ),
