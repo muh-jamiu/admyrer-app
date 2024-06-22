@@ -155,6 +155,9 @@ class _LocationsState extends State<Locations> {
   }
 
   String? _selectedCountry;
+  bool isBoys = false;
+  bool isGirls = false;
+  bool isBoth = false;
 
   final List<String> _countries = [
     "Afghanistan",
@@ -354,7 +357,7 @@ class _LocationsState extends State<Locations> {
     "Zambia",
     "Zimbabwe"
   ];
-    
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -413,7 +416,79 @@ class _LocationsState extends State<Locations> {
                         children: [
                           InkWell(
                             onTap: () {
-                              showCustomBottomSheet(context);
+                              showCustomBottomSheet(
+                                context,
+                                Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      const TextField(
+                                        decoration: const InputDecoration(
+                                          labelText:
+                                              'Search user by name, age, username, height etc.....',
+                                          border: OutlineInputBorder(),
+                                        ),
+                                      ),
+                                      SwitchListTile(
+                                        title: const Text('Boys'),
+                                        value: isBoys,
+                                        onChanged: (bool value) {
+                                          setState(() {
+                                            isBoys = value;
+                                            isGirls = !value && !isBoth
+                                                ? false
+                                                : isGirls;
+                                          });
+                                        },
+                                      ),
+                                      SwitchListTile(
+                                        title: const Text('Girls'),
+                                        value: isGirls,
+                                        onChanged: (bool value) {
+                                          setState(() {
+                                            isGirls = value;
+                                            isBoys = !value && !isBoth
+                                                ? false
+                                                : isBoys;
+                                          });
+                                        },
+                                      ),
+                                      SwitchListTile(
+                                        title: const Text('Both'),
+                                        value: isBoth,
+                                        onChanged: (bool value) {
+                                          setState(() {
+                                            isBoth = value;
+                                            if (value) {
+                                              isBoys = true;
+                                              isGirls = true;
+                                            }
+                                          });
+                                        },
+                                      ),
+                                      const SizedBox(height: 16),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: <Widget>[
+                                          ElevatedButton(
+                                            onPressed: () {
+                                              // Handle search action
+                                            },
+                                            child: Text('Search'),
+                                          ),
+                                          ElevatedButton(
+                                            onPressed: () {},
+                                            child: Text('Reset'),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(height: 16),
+                                    ],
+                                  ),
+                                ),
+                              );
                             },
                             child: Icon(Icons.more_vert_outlined,
                                 color: Colors.pink[300]),
@@ -486,7 +561,7 @@ class _UserState extends State<User> {
         context, MaterialPageRoute(builder: (context) => Single(users: user)));
   }
 
-   void showErrorToast(String message) {
+  void showErrorToast(String message) {
     Fluttertoast.showToast(
       msg: message,
       toastLength: Toast.LENGTH_LONG,
@@ -497,7 +572,6 @@ class _UserState extends State<User> {
       fontSize: 15.0,
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -570,7 +644,10 @@ class _UserState extends State<User> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     InkWell(
-                      onTap: () {nextUser(); showErrorToast("You dislike this user");},
+                      onTap: () {
+                        nextUser();
+                        showErrorToast("You dislike this user");
+                      },
                       child: Container(
                         width: 60,
                         height: 60,
@@ -600,7 +677,10 @@ class _UserState extends State<User> {
                       ),
                     ),
                     InkWell(
-                      onTap: () {nextUser(); showErrorToast("You like this user");},
+                      onTap: () {
+                        nextUser();
+                        showErrorToast("You like this user");
+                      },
                       child: Container(
                         width: 60,
                         height: 60,

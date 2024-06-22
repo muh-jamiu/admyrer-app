@@ -40,7 +40,9 @@ class _MessageState extends State<Message> {
     } else {
       // Handle the case when the user denies the permission
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Storage permission is required to access the gallery.')),
+        SnackBar(
+            content:
+                Text('Storage permission is required to access the gallery.')),
       );
     }
   }
@@ -157,12 +159,10 @@ class _MessageState extends State<Message> {
                         const SizedBox(width: 10),
                         InkWell(
                           onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          Single(users: user)));
-                           
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Single(users: user)));
                           },
                           child: Container(
                             height: 50,
@@ -232,27 +232,29 @@ class _MessageState extends State<Message> {
                       end: Alignment.centerRight,
                     ),
                   ),
-                  child: ListView.builder(
-                    itemCount: _messages.length,
-                    itemBuilder: (context, index) {
-                      isLoading
-                          ? Center(
-                              child: Column(
-                                children: [
-                                  const SizedBox(height: 60,),
-                                  SpinKitThreeBounce(
-                                    color: Colors.pink[400],
-                                    size: 35.0,
-                                  )
-                                ],
+                  child: isLoading
+                      ? Center(
+                          child: Column(
+                            children: [
+                              const SizedBox(
+                                height: 60,
                               ),
-                            )
-                          : ChatBubble(
+                              SpinKitThreeBounce(
+                                color: Colors.pink[400],
+                                size: 35.0,
+                              )
+                            ],
+                          ),
+                        )
+                      : ListView.builder(
+                          itemCount: _messages.length,
+                          itemBuilder: (context, index) {
+                            return ChatBubble(
                               text: _messages[index]['text'],
                               isMe: _messages[index]['isMe'],
                             );
-                    },
-                  ),
+                          },
+                        ),
                 ),
               ),
               Padding(
