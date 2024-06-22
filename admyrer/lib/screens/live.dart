@@ -17,7 +17,7 @@ class _StartVidState extends State<StartVid> {
   int _remoteUid = 0;
   bool _localUserJoined = false;
 
-  void showErrorToast(int message) {
+  void showErrorToast(String message) {
     Fluttertoast.showToast(
       msg: "$message",
       toastLength: Toast.LENGTH_LONG,
@@ -48,18 +48,20 @@ class _StartVidState extends State<StartVid> {
     _engine.registerEventHandler(
       RtcEngineEventHandler(
         onJoinChannelSuccess: (RtcConnection connection, int uid) {
-          showErrorToast(uid);
+          showErrorToast("You start video call with ID: $uid");
           setState(() {
             _localUserJoined = true;
           });
         },
         onUserJoined: (RtcConnection connection, int remoteUid, int elapsed) {
+          showErrorToast("User with ID: $remoteUid join video call");
           setState(() {
             _remoteUid = remoteUid;
           });
         },
         onUserOffline: (RtcConnection connection, int remoteUid,
             UserOfflineReasonType reason) {
+          showErrorToast("User with ID: $remoteUid left video call");
           setState(() {
             _remoteUid = 0;
           });
@@ -174,11 +176,11 @@ class RemoteVideoWidget extends StatelessWidget {
         controller: VideoViewController.remote(
           rtcEngine: engine,
           canvas: VideoCanvas(uid: remoteUid),
-          connection: const RtcConnection(channelId: 'test'),
+          connection: const RtcConnection(channelId: 'main'),
         ),
       );
     } else {
-      return const Center(child: Text('Waiting for remote user to join...'));
+      return const Center(child: Text('Waiting for other user to join...'));
     }
   }
 }
