@@ -239,6 +239,7 @@ class _MessageState extends State<Message> {
                           ? Center(
                               child: Column(
                                 children: [
+                                  const SizedBox(height: 60,),
                                   SpinKitThreeBounce(
                                     color: Colors.pink[400],
                                     size: 35.0,
