@@ -8,6 +8,9 @@ import 'dart:convert';
 import 'package:admyrer/models/user.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:admyrer/screens/single.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
 class Locations extends StatefulWidget {
   bool isLoading;
@@ -22,6 +25,8 @@ class _LocationsState extends State<Locations> {
   final ApiService _apiService = ApiService();
   List<UserModel> users = [];
   bool isLoading = true;
+
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
   void showErrorToast(String message) {
     Fluttertoast.showToast(
@@ -69,8 +74,45 @@ class _LocationsState extends State<Locations> {
   @override
   void initState() {
     super.initState();
-    getUsers();
+    getUsers();   
+
+    flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
+    const AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+
+    final InitializationSettings initializationSettings = InitializationSettings(
+      android: initializationSettingsAndroid,
+    );
+
+    flutterLocalNotificationsPlugin.initialize(initializationSettings);
+    
+    // Initialize timezone
+    tz.initializeTimeZones();
   }
+
+  
+  Future<void> _scheduleNotification(DateTime dateTime) async {
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails('your_channel_id', 'your_channel_name',
+            channelDescription: 'your_channel_description',
+            importance: Importance.max,
+            priority: Priority.high,
+            showWhen: false);
+    const NotificationDetails platformChannelSpecifics =
+        NotificationDetails(android: androidPlatformChannelSpecifics);
+
+    await flutterLocalNotificationsPlugin.zonedSchedule(
+        0,
+        'Hello!',
+        'This is a notification for you.',
+        tz.TZDateTime.from(dateTime, tz.local),
+        platformChannelSpecifics,
+        androidAllowWhileIdle: true,
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime);
+  }
+
 
   String? _selectedCountry;
 
@@ -148,7 +190,12 @@ class _LocationsState extends State<Locations> {
                                 color: Colors.pink[300]),
                           ),
                           const SizedBox(width: 15),
-                          Icon(Icons.diamond_rounded, color: Colors.blue[300]),
+                          InkWell(
+                            onTap: () {
+                               DateTime scheduledTime = DateTime.now().add(Duration(seconds: 5));
+                             _scheduleNotification(scheduledTime);
+                            },
+                            child: Icon(Icons.diamond_rounded, color: Colors.blue[300])),
                         ],
                       ),
                     ],
