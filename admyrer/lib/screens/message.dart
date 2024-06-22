@@ -36,7 +36,7 @@ class _MessageState extends State<Message> {
 
 
   
-  Future<void> getMessage(String message) async {
+  Future<void> getMessage() async {
      SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       _authToken = prefs.getString('authToken') ?? '';
@@ -74,6 +74,11 @@ class _MessageState extends State<Message> {
     }
   }
 
+  @override
+  void initState(){
+    super.initState();
+    getMessage();
+  }
 
   void _sendMessage() {
     if (_controller.text.isNotEmpty) {

@@ -5,6 +5,7 @@ import 'package:admyrer/services/api_service.dart';
 import 'dart:convert';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:async';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class AiChat extends StatefulWidget {
   const AiChat({super.key});
@@ -59,7 +60,7 @@ class _AiChatState extends State<AiChat> {
 
 
     } catch (e) {
-      showErrorToast('An error occurred: $e');
+      showErrorToast('An error occurr, Please try again');
       print(e);
       setState(() {
         _isTyping = false;
@@ -67,20 +68,6 @@ class _AiChatState extends State<AiChat> {
       });
     }
   }
-
-  // void _handleTyping() {
-  //   if (!_isTyping) {
-  //     setState(() {
-  //       _isTyping = true;
-  //     });
-  //   }
-  //   _typingTimer?.cancel();
-  //   _typingTimer = Timer(Duration(seconds: 2), () {
-  //     setState(() {
-  //       _isTyping = false;
-  //     });
-  //   });
-  // }
 
   void _sendMessage() {
     if (_controller.text.isNotEmpty) {
@@ -181,9 +168,6 @@ class _AiChatState extends State<AiChat> {
                   child: ListView.builder(
                     itemCount: _messages.length,
                     itemBuilder: (context, index) {
-                       if (index == _messages.length) {
-                          return _isTyping ? TypingIndicator() : Container();
-                        }
                         return ChatBubble(
                         text: _messages[index]['text'],
                         isMe: _messages[index]['isMe'],
@@ -207,6 +191,11 @@ class _AiChatState extends State<AiChat> {
                         ),
                       ),
                     ),
+                    _isTyping ? 
+                    const SpinKitThreeBounce(
+                      color: Color.fromARGB(255, 71, 188, 139),
+                      size: 20.0,
+                    ) :
                     IconButton(
                       icon: const Icon(
                         Icons.send,
@@ -298,29 +287,5 @@ class ChatBubbleTrianglePainter extends CustomPainter {
   @override
   bool shouldRepaint(CustomPainter oldDelegate) {
     return false;
-  }
-}
-
-
-class TypingIndicator extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
-      child: Align(
-        alignment: Alignment.centerLeft,
-        child: Container(
-          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 14),
-          decoration: BoxDecoration(
-            color: Colors.grey,
-            borderRadius: BorderRadius.circular(15),
-          ),
-          child:const  Text(
-            'Typing...',
-            style: TextStyle(color: Colors.white),
-          ),
-        ),
-      ),
-    );
   }
 }

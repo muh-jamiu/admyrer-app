@@ -33,6 +33,8 @@ class _ProfileState extends State<Profile> {
   UserModel user = UserModel(id: 0, firstName: "Guest", lastName: "Guest", username: "Guest", avatar: "null");
   bool isLoading = true;
   late String _authToken;
+  List<UserModel>  visits = [];
+  List<UserModel>  likes = [];
 
   void showErrorToast(String message) {
     Fluttertoast.showToast(
@@ -59,9 +61,18 @@ class _ProfileState extends State<Profile> {
       var data = json.decode(response.body);
       var userList = data["data"]["user"];
       UserModel user = UserModel.fromJson(userList);
+      List<dynamic> visitList = data["data"]["visits"]["original"]["data"];
+      List<UserModel> visits =
+          visitList.map((user) => UserModel.fromJson(user)).toList();
+      
+      List<dynamic> likeList = data["data"]["likes"]["original"]["data"];
+      List<UserModel> likes =
+          likeList.map((user) => UserModel.fromJson(user)).toList();
 
       setState(() {
         this.user = user;
+        this.likes = likes;
+        this.visits = visits;
         isLoading = false;
       });
     } catch (e) {
@@ -144,7 +155,7 @@ class _ProfileState extends State<Profile> {
                             ],
                           ),
                         )
-                      : Settings(user: user),
+                      : Settings(user: user, visit: visits.length, likes: likes.length,),
                   const SizedBox(
                     height: 10,
                   ),
@@ -162,7 +173,9 @@ class _ProfileState extends State<Profile> {
 
 class Settings extends StatefulWidget {
   final UserModel user;
-  const Settings({super.key, required this.user});
+  final int visit;
+  final int likes;
+  const Settings({super.key, required this.user, required this.likes,  required this.visit});
 
   @override
   State<Settings> createState() => _SettingsState();
@@ -176,6 +189,8 @@ class _SettingsState extends State<Settings> {
     var country = widget.user.country;
     var state = widget.user.state ?? "N/A";
     var avatar = widget.user.avatar;
+    var likes = widget.likes;
+    var visit = widget.visit;
     return Column(
       children: [
         Center(
@@ -273,7 +288,7 @@ class _SettingsState extends State<Settings> {
         const SizedBox(
           height: 25,
         ),
-        const Row(
+        Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Row(
@@ -286,22 +301,22 @@ class _SettingsState extends State<Settings> {
                   width: 10,
                 ),
                 Text(
-                  "10 Likes",
-                  style: TextStyle(
+                  "$likes Likes",
+                  style: const TextStyle(
                       fontSize: 15, color: Color.fromARGB(255, 63, 63, 63)),
                 ),
               ],
             ),
             Row(
               children: [
-                Icon(Icons.remove_red_eye,
+                const Icon(Icons.remove_red_eye,
                     color: Color.fromARGB(255, 63, 63, 63)),
                 const SizedBox(
                   width: 10,
                 ),
                 Text(
-                  "10 Visits",
-                  style: TextStyle(
+                  "$visit Visits",
+                  style: const TextStyle(
                       fontSize: 15, color: Color.fromARGB(255, 63, 63, 63)),
                 ),
               ],
