@@ -83,7 +83,25 @@ class _MessageState extends State<Message> {
       List<dynamic> userList = data["data"];
       List<ChatModel> conversation =
           userList.map((user) => ChatModel.fromJson(user)).toList();
-      print(conversation);
+
+
+      for(var msg in conversation){
+        if(msg.sender == _authToken){
+          setState(() {
+            _messages.add({
+              'text': msg.message,
+              'isMe': true,
+            });
+          });
+        }else{
+           setState(() {
+            _messages.add({
+              'text': msg.message,
+              'isMe': false,
+            });
+          });
+        }
+      }
 
       setState(() {
         this.conversation = conversation;

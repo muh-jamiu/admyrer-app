@@ -472,11 +472,12 @@ class _LocationsState extends State<Locations> {
                                         },
                                       ),
                                       const SizedBox(height: 16),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                      Column(
+                                        // mainAxisAlignment:
+                                        //     MainAxisAlignment.spaceBetween,
                                         children: <Widget>[
-                                        GradientButton(text: "Filter", onPressed: () => {}, isLoading: true),                                         
+                                        GradientButton(text: "Filter", onPressed: () => {}, isLoading: false),     
+                                        const SizedBox(height: 20),                                    
                                         NormalButton(text: "Reset", onPressed:  () => {}),
                                         ],
                                       ),
