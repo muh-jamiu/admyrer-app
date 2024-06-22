@@ -8,6 +8,7 @@ import 'package:admyrer/services/api_service.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:convert';
 import 'package:admyrer/models/user.dart';
+import 'package:admyrer/screens/message.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class Single extends StatefulWidget {
@@ -33,6 +34,11 @@ class _SingleState extends State<Single> {
       backgroundColor: Colors.pink[300],
       fontSize: 15.0,
     );
+  }
+
+ void goMessage(user) {
+    Navigator.push(
+      context, MaterialPageRoute(builder: (context) => Message(user: user)));
   }
 
   @override
@@ -97,7 +103,7 @@ class _SingleState extends State<Single> {
                   ),
                   const SizedBox(
                     height: 20,
-                  ), Settings(user: user),
+                  ), Settings(user: user, goMessage: goMessage),
                   const SizedBox(
                     height: 10,
                   ),
@@ -114,7 +120,8 @@ class _SingleState extends State<Single> {
 
 class Settings extends StatefulWidget {
   final UserModel user;
-  const Settings({super.key, required this.user});
+  final void Function(UserModel)  goMessage;
+  const Settings({super.key, required this.user, required this.goMessage});
 
   @override
   State<Settings> createState() => _SettingsState();
@@ -196,7 +203,7 @@ class _SettingsState extends State<Settings> {
         ),
         Center(
           child: InkWell(
-            onTap: () => {},
+            onTap:  () => widget.goMessage(widget.user),
             child: Container(
               padding: const EdgeInsets.all(10),
               width: 190,
@@ -213,9 +220,12 @@ class _SettingsState extends State<Settings> {
                   const SizedBox(
                     width: 10,
                   ),
-                  Text(
-                    "Chat with $firstName",
-                    style: TextStyle(color: Colors.pink),
+                  InkWell(
+                    onTap: () => widget.goMessage(widget.user),
+                    child: Text(
+                      "Chat with $firstName",
+                      style: TextStyle(color: Colors.pink),
+                    ),
                   )
                 ],
               ),
