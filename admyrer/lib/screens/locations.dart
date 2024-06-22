@@ -354,14 +354,6 @@ class _LocationsState extends State<Locations> {
     "Zambia",
     "Zimbabwe"
   ];
-
-  // final List<String> _countries = [
-  //   "Afghanistan",
-  //   "Albania",
-  //   "Algeria",
-  //   "Andorra",
-  //   "Angola",
-  //   "Antigua and Barbuda",];
     
   @override
   Widget build(BuildContext context) {
@@ -413,16 +405,6 @@ class _LocationsState extends State<Locations> {
                                   );
                                 }).toList(),
                               ),
-
-                              // DropdownSearch<String>(
-                              //   items: _countries,
-                              //   onChanged: (String? newValue) {
-                              //     setState(() {
-                              //       _selectedCountry = newValue;
-                              //     });
-                              //   },
-                              //   selectedItem: _selectedCountry,
-                              // ),
                             ],
                           )
                         ],
@@ -504,6 +486,19 @@ class _UserState extends State<User> {
         context, MaterialPageRoute(builder: (context) => Single(users: user)));
   }
 
+   void showErrorToast(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_LONG,
+      gravity: ToastGravity.TOP,
+      timeInSecForIosWeb: 5,
+      textColor: Colors.white,
+      backgroundColor: Color.fromARGB(255, 98, 240, 176),
+      fontSize: 15.0,
+    );
+  }
+
+
   @override
   Widget build(BuildContext context) {
     var firstName = widget.users[index].firstName;
@@ -575,7 +570,7 @@ class _UserState extends State<User> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     InkWell(
-                      onTap: nextUser,
+                      onTap: () {nextUser(); showErrorToast("You dislike this user");},
                       child: Container(
                         width: 60,
                         height: 60,
@@ -605,7 +600,7 @@ class _UserState extends State<User> {
                       ),
                     ),
                     InkWell(
-                      onTap: nextUser,
+                      onTap: () {nextUser(); showErrorToast("You like this user");},
                       child: Container(
                         width: 60,
                         height: 60,
