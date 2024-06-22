@@ -248,6 +248,44 @@ class MyGridList extends StatefulWidget {
 }
 
 class _MyGridListState extends State<MyGridList> {
+  void showErrorToast(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_LONG,
+      gravity: ToastGravity.TOP_RIGHT,
+      timeInSecForIosWeb: 5,
+      textColor: Colors.white,
+      backgroundColor: Color.fromARGB(255, 98, 240, 176),
+      fontSize: 15.0,
+    );
+  }
+
+ Future<void> _showStartVC() async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Video Call Confirmation'),
+          content:const  Text('Are you sure you want to start video call with this user?'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Dismiss the dialog
+              },
+            ),
+            TextButton(
+              child: const Text('Start', style: TextStyle(color: Colors.red)),
+              onPressed: () {
+                Navigator.of(context).pop();// Proceed with logout
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return GridView.count(
@@ -257,7 +295,7 @@ class _MyGridListState extends State<MyGridList> {
       mainAxisSpacing: 10,
       children: [
          InkWell(
-          onTap: () => {},
+          onTap: _showStartVC,
           child: Container(
             width: 100,
             height: 150,
@@ -281,7 +319,7 @@ class _MyGridListState extends State<MyGridList> {
           ),
         ),
         InkWell(
-          onTap: () => {},
+          onTap: () => showErrorToast("You follow this user"),
           child: Container(
             width: 100,
             height: 150,
@@ -305,7 +343,7 @@ class _MyGridListState extends State<MyGridList> {
           ),
         ),
         InkWell(
-          onTap: () => {},
+          onTap: () => showErrorToast("You dislike this user"),
           child: Container(
             width: 100,
             height: 150,
@@ -329,7 +367,7 @@ class _MyGridListState extends State<MyGridList> {
           ),
         ),
         InkWell(
-          onTap: () => {},
+          onTap: () => showErrorToast("You like this user"),
           child: Container(
             width: 100,
             height: 150,
