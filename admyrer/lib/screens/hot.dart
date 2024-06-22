@@ -30,7 +30,7 @@ class _HotState extends State<Hot> {
     Fluttertoast.showToast(
       msg: message,
       toastLength: Toast.LENGTH_LONG,
-      gravity: ToastGravity.TOP_RIGHT,
+      gravity: ToastGravity.TOP,
       timeInSecForIosWeb: 5,
       textColor: Colors.white,
       backgroundColor: Colors.pink[300],

@@ -33,13 +33,13 @@ class _LoginState extends State<Login> {
     Navigator.pushNamed(context, "/forgot");
   }
 
-  void showErrorToast(String message) {
+  void showErrorToast(String message, Color color) {
     Fluttertoast.showToast(
       msg: message,
       toastLength: Toast.LENGTH_LONG,
       gravity: ToastGravity.TOP,
       timeInSecForIosWeb: 5,
-      backgroundColor: Colors.pink[300],
+      backgroundColor: color,
       textColor: Colors.white,
       fontSize: 15.0
     );
@@ -68,13 +68,13 @@ class _LoginState extends State<Login> {
         });
         
         if(user.statusCode != 200){
-           showErrorToast(user.body);
+           showErrorToast("Invalid Credentials Provided", const Color.fromARGB(255, 238, 71, 126));
            setState(() {
             isLoading = false;
           });
            return;
         }else{
-          showErrorToast("Account login successfully");
+          showErrorToast("Account login successfully", Color.fromARGB(255, 76, 175, 137));
           SharedPreferences prefs = await SharedPreferences.getInstance();
           await prefs.setString('authToken', user.body);
           Future.delayed(Duration(seconds:2), () {

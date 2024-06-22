@@ -171,7 +171,7 @@ class ChatBubble extends StatelessWidget {
             Container(
               padding: EdgeInsets.symmetric(vertical: 10, horizontal: 14),
               decoration: BoxDecoration(
-                color: isMe ? Colors.purple[300] : Colors.grey,
+                color: isMe ? Color.fromARGB(255, 104, 200, 163) : Colors.grey,
                 borderRadius: BorderRadius.circular(15),
               ),
               child: Text(
@@ -202,7 +202,7 @@ class ChatBubbleTrianglePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     var paint = Paint()
-      ..color = isMe ? Colors.purple : Colors.grey
+      ..color = isMe ? Color.fromARGB(255, 39, 176, 137) : Colors.grey
       ..style = PaintingStyle.fill;
 
     var path = Path();

@@ -23,7 +23,7 @@ class _ChatState extends State<Chat> {
     Fluttertoast.showToast(
       msg: message,
       toastLength: Toast.LENGTH_LONG,
-      gravity: ToastGravity.TOP_RIGHT,
+      gravity: ToastGravity.TOP,
       timeInSecForIosWeb: 5,
       textColor: Colors.white,
       backgroundColor: Colors.pink[300],
