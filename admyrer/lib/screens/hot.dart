@@ -24,6 +24,7 @@ class Hot extends StatefulWidget {
 class _HotState extends State<Hot> {
   final ApiService _apiService = ApiService();
   List<UserModel> users = [];
+  List<UserModel> allUser = [];
   bool isLoading = true;
 
   void showErrorToast(String message) {
@@ -55,8 +56,14 @@ class _HotState extends State<Hot> {
       List<UserModel> users =
           userList.map((user) => UserModel.fromJson(user)).toList();
 
+      
+      List<dynamic> alluserList = data["data"]["all"];
+      List<UserModel> allusers =
+          alluserList.map((user) => UserModel.fromJson(user)).toList();
+
       setState(() {
         this.users = users;
+        this.allUser = allusers;
         isLoading = false;
       });
 
@@ -205,8 +212,8 @@ class _HotState extends State<Hot> {
                               ),
                               Container(
                                   height: 620,
-                                  child: AllUSers(
-                                    users: users,
+                                  child: _AllUSersOneState(
+                                    users: allUser,
                                   ))
                             ],
                           ),
@@ -582,6 +589,63 @@ class _ImageWithTextAndIconState extends State<ImageWithTextAndIcon> {
           ),
         ],
       ),
+    );
+  }
+}
+
+
+class _AllUSersOneState extends StatefulWidget {
+  final List<UserModel> users;
+  const _AllUSersOneState({super.key, required this.users});
+
+  @override
+  State<_AllUSersOneState> createState() => __AllUSersOneStateState();
+}
+
+class __AllUSersOneStateState extends State<_AllUSersOneState> {
+  void goSingle(user) {
+    Navigator.push(context, MaterialPageRoute(builder: (context) => Single(users: user)));
+  }
+  @override
+  Widget build(BuildContext context) {
+    return GridView.count(
+      physics: NeverScrollableScrollPhysics(),
+      crossAxisCount: 2,
+      crossAxisSpacing: 20,
+      childAspectRatio: 3 / 3,
+      mainAxisSpacing: 15,
+      children: [
+        InkWell(
+          onTap: () => goSingle( widget.users[0]),
+          child: ImageWithTextAndIcon(
+              name: widget.users[0].firstName, image: widget.users[0].avatar, icon: Icons.heart_broken),
+        ),
+        InkWell(
+          onTap: () => goSingle( widget.users[1]),
+          child: ImageWithTextAndIcon(
+              name: widget.users[1].firstName, image: widget.users[1].avatar, icon: Icons.heart_broken),
+        ),
+        InkWell(
+          onTap: () => goSingle( widget.users[2]),
+          child: ImageWithTextAndIcon(
+              name: widget.users[2].firstName, image: widget.users[2].avatar, icon: Icons.heart_broken),
+        ),
+        InkWell(
+          onTap: () => goSingle( widget.users[3]),
+          child: ImageWithTextAndIcon(
+              name: widget.users[3].firstName, image: widget.users[3].avatar, icon: Icons.heart_broken),
+        ),
+        InkWell(
+          onTap: () => goSingle( widget.users[4]),
+          child: ImageWithTextAndIcon(
+              name: widget.users[4].firstName, image: widget.users[4].avatar, icon: Icons.heart_broken),
+        ),
+        InkWell(
+          onTap: () => goSingle( widget.users[5]),
+          child: ImageWithTextAndIcon(
+              name: widget.users[5].firstName, image: widget.users[5].avatar, icon: Icons.heart_broken),
+        ),
+      ],
     );
   }
 }

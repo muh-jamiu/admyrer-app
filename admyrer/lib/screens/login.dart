@@ -173,8 +173,8 @@ class _LoginState extends State<Login> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             GoogleLogin(onPressed: _handleSignIn),
-                            Facebook(onPressed: () => {}),
-                            Facebook(onPressed: () => {}),
+                            // Facebook(onPressed: () => {}),
+                            // Facebook(onPressed: () => {}),
                           ]),
                       const SizedBox(
                         height: 30,

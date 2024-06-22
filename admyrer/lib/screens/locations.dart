@@ -11,6 +11,7 @@ import 'package:admyrer/screens/single.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
+import 'package:dropdown_search/dropdown_search.dart';
 
 class Locations extends StatefulWidget {
   bool isLoading;
@@ -26,7 +27,8 @@ class _LocationsState extends State<Locations> {
   List<UserModel> users = [];
   bool isLoading = true;
 
-  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
 
   void showErrorToast(String message) {
     Fluttertoast.showToast(
@@ -35,7 +37,7 @@ class _LocationsState extends State<Locations> {
       gravity: ToastGravity.TOP,
       timeInSecForIosWeb: 5,
       textColor: Colors.white,
-      backgroundColor: Colors.pink[300],
+      backgroundColor: Color.fromARGB(255, 98, 240, 176),
       fontSize: 15.0,
     );
   }
@@ -61,7 +63,6 @@ class _LocationsState extends State<Locations> {
         this.users = users;
         isLoading = false;
       });
-
     } catch (e) {
       showErrorToast('An error occurred: $e');
       print(e);
@@ -74,24 +75,65 @@ class _LocationsState extends State<Locations> {
   @override
   void initState() {
     super.initState();
-    getUsers();   
+    getUsers();
 
     flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
     const AndroidInitializationSettings initializationSettingsAndroid =
         AndroidInitializationSettings('@mipmap/ic_launcher');
 
-    final InitializationSettings initializationSettings = InitializationSettings(
+    final InitializationSettings initializationSettings =
+        InitializationSettings(
       android: initializationSettingsAndroid,
     );
 
     flutterLocalNotificationsPlugin.initialize(initializationSettings);
-    
+
     // Initialize timezone
     tz.initializeTimeZones();
   }
 
-  
+  Future<void> getUsersByCountry(country) async {
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      final response = await _apiService.postRequest("county-user", {
+        "country": country,
+      });
+
+      var data = json.decode(response.body);
+
+      if (data["data"] == null || data["data"] == null) {
+        showErrorToast('Invalid response data');
+        return;
+      }
+
+      List<dynamic> userList = data["data"];
+      List<UserModel> users =
+          userList.map((user) => UserModel.fromJson(user)).toList();
+
+      if (users.length != 0) {
+        setState(() {
+          this.users = users;
+          isLoading = false;
+        });
+      } else {
+        setState(() {
+          isLoading = false;
+        });
+        showErrorToast('No matching user was found in $country');
+      }
+    } catch (e) {
+      showErrorToast('An error occurred: $e');
+      print(e);
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
   Future<void> _scheduleNotification(DateTime dateTime) async {
     const AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails('your_channel_id', 'your_channel_name',
@@ -113,20 +155,205 @@ class _LocationsState extends State<Locations> {
             UILocalNotificationDateInterpretation.absoluteTime);
   }
 
-
   String? _selectedCountry;
 
   final List<String> _countries = [
-    'United States',
-    'Canada',
-    'Mexico',
-    'United Kingdom',
-    'Germany',
-    'France',
-    'India',
-    'China',
-    'Japan',
-    'Australia',
+    "Afghanistan",
+    "Albania",
+    "Algeria",
+    "Andorra",
+    "Angola",
+    "Antigua and Barbuda",
+    "Argentina",
+    "Armenia",
+    "Australia",
+    "Austria",
+    "Azerbaijan",
+    "Bahamas",
+    "Bahrain",
+    "Bangladesh",
+    "Barbados",
+    "Belarus",
+    "Belgium",
+    "Belize",
+    "Benin",
+    "Bhutan",
+    "Bolivia",
+    "Bosnia and Herzegovina",
+    "Botswana",
+    "Brazil",
+    "Brunei",
+    "Bulgaria",
+    "Burkina Faso",
+    "Burundi",
+    "Cabo Verde",
+    "Cambodia",
+    "Cameroon",
+    "Canada",
+    "Central African Republic",
+    "Chad",
+    "Chile",
+    "China",
+    "Colombia",
+    "Comoros",
+    "Congo, Democratic Republic of the",
+    "Congo, Republic of the",
+    "Costa Rica",
+    "Croatia",
+    "Cuba",
+    "Cyprus",
+    "Czech Republic",
+    "Denmark",
+    "Djibouti",
+    "Dominica",
+    "Dominican Republic",
+    "East Timor (Timor-Leste)",
+    "Ecuador",
+    "Egypt",
+    "El Salvador",
+    "Equatorial Guinea",
+    "Eritrea",
+    "Estonia",
+    "Eswatini (Swaziland)",
+    "Ethiopia",
+    "Fiji",
+    "Finland",
+    "France",
+    "Gabon",
+    "Gambia",
+    "Georgia",
+    "Germany",
+    "Ghana",
+    "Greece",
+    "Grenada",
+    "Guatemala",
+    "Guinea",
+    "Guinea-Bissau",
+    "Guyana",
+    "Haiti",
+    "Honduras",
+    "Hungary",
+    "Iceland",
+    "India",
+    "Indonesia",
+    "Iran",
+    "Iraq",
+    "Ireland",
+    "Israel",
+    "Italy",
+    "Ivory Coast (Côte d'Ivoire)",
+    "Jamaica",
+    "Japan",
+    "Jordan",
+    "Kazakhstan",
+    "Kenya",
+    "Kiribati",
+    "Korea, North",
+    "Korea, South",
+    "Kosovo",
+    "Kuwait",
+    "Kyrgyzstan",
+    "Laos",
+    "Latvia",
+    "Lebanon",
+    "Lesotho",
+    "Liberia",
+    "Libya",
+    "Liechtenstein",
+    "Lithuania",
+    "Luxembourg",
+    "Madagascar",
+    "Malawi",
+    "Malaysia",
+    "Maldives",
+    "Mali",
+    "Malta",
+    "Marshall Islands",
+    "Mauritania",
+    "Mauritius",
+    "Mexico",
+    "Micronesia",
+    "Moldova",
+    "Monaco",
+    "Mongolia",
+    "Montenegro",
+    "Morocco",
+    "Mozambique",
+    "Myanmar (Burma)",
+    "Namibia",
+    "Nauru",
+    "Nepal",
+    "Netherlands",
+    "New Zealand",
+    "Nicaragua",
+    "Niger",
+    "Nigeria",
+    "North Macedonia (Macedonia)",
+    "Norway",
+    "Oman",
+    "Pakistan",
+    "Palau",
+    "Panama",
+    "Papua New Guinea",
+    "Paraguay",
+    "Peru",
+    "Philippines",
+    "Poland",
+    "Portugal",
+    "Qatar",
+    "Romania",
+    "Russia",
+    "Rwanda",
+    "Saint Kitts and Nevis",
+    "Saint Lucia",
+    "Saint Vincent and the Grenadines",
+    "Samoa",
+    "San Marino",
+    "Sao Tome and Principe",
+    "Saudi Arabia",
+    "Senegal",
+    "Serbia",
+    "Seychelles",
+    "Sierra Leone",
+    "Singapore",
+    "Slovakia",
+    "Slovenia",
+    "Solomon Islands",
+    "Somalia",
+    "South Africa",
+    "South Sudan",
+    "Spain",
+    "Sri Lanka",
+    "Sudan",
+    "Suriname",
+    "Sweden",
+    "Switzerland",
+    "Syria",
+    "Taiwan",
+    "Tajikistan",
+    "Tanzania",
+    "Thailand",
+    "Togo",
+    "Tonga",
+    "Trinidad and Tobago",
+    "Tunisia",
+    "Turkey",
+    "Turkmenistan",
+    "Tuvalu",
+    "Uganda",
+    "Ukraine",
+    "United Arab Emirates",
+    "United Kingdom",
+    "United States",
+    "Uruguay",
+    "Uzbekistan",
+    "Vanuatu",
+    "Vatican City (Holy See)",
+    "Venezuela",
+    "Vietnam",
+    "Yemen",
+    "Zambia",
+    "Zimbabwe"
   ];
 
   @override
@@ -169,15 +396,31 @@ class _LocationsState extends State<Locations> {
                                   setState(() {
                                     _selectedCountry = newValue;
                                   });
+                                  getUsersByCountry(_selectedCountry);
                                 },
                                 items: _countries.map<DropdownMenuItem<String>>(
                                     (String value) {
                                   return DropdownMenuItem<String>(
                                     value: value,
-                                    child: Text(value),
+                                    child: ListView(
+                                      shrinkWrap: true,
+                                      children: [
+                                        Text(value),
+                                      ],
+                                    ),
                                   );
                                 }).toList(),
                               ),
+
+                              // DropdownSearch<String>(
+                              //   items: _countries,
+                              //   onChanged: (String? newValue) {
+                              //     setState(() {
+                              //       _selectedCountry = newValue;
+                              //     });
+                              //   },
+                              //   selectedItem: _selectedCountry,
+                              // ),
                             ],
                           )
                         ],
@@ -185,17 +428,21 @@ class _LocationsState extends State<Locations> {
                       Row(
                         children: [
                           InkWell(
-                            onTap: () {showCustomBottomSheet(context);},
+                            onTap: () {
+                              showCustomBottomSheet(context);
+                            },
                             child: Icon(Icons.more_vert_outlined,
                                 color: Colors.pink[300]),
                           ),
                           const SizedBox(width: 15),
                           InkWell(
-                            onTap: () {
-                               DateTime scheduledTime = DateTime.now().add(Duration(seconds: 5));
-                             _scheduleNotification(scheduledTime);
-                            },
-                            child: Icon(Icons.diamond_rounded, color: Colors.blue[300])),
+                              onTap: () {
+                                DateTime scheduledTime =
+                                    DateTime.now().add(Duration(seconds: 5));
+                                _scheduleNotification(scheduledTime);
+                              },
+                              child: Icon(Icons.diamond_rounded,
+                                  color: Colors.blue[300])),
                         ],
                       ),
                     ],
