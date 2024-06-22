@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:admyrer/models/user.dart';
+import 'package:admyrer/services/api_service.dart';
+import 'dart:convert';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class AiChat extends StatefulWidget {
   const AiChat({super.key});
@@ -11,6 +14,54 @@ class AiChat extends StatefulWidget {
 class _AiChatState extends State<AiChat> {
   final List<Map<String, dynamic>> _messages = [];
   final TextEditingController _controller = TextEditingController();
+  final ApiService _apiService = ApiService();
+  bool isLoading = true;
+
+  void showErrorToast(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_LONG,
+      gravity: ToastGravity.TOP,
+      timeInSecForIosWeb: 5,
+      textColor: Colors.white,
+      backgroundColor: Colors.pink[300],
+      fontSize: 15.0,
+    );
+  }
+
+
+  Future<void> postMessage() async {
+    try {
+      final response = await _apiService.postRequest("chat-ai", {
+        "message": _controller.text,
+      });
+
+      var data = json.decode(response.body);
+
+      if (data["data"] == null || data["data"] == null) {
+        showErrorToast('Invalid response data');
+        return;
+      }
+
+      print(data["data"]);
+
+       setState(() {
+        _messages.add({
+          'text': data["data"],
+          'isMe': false,
+        });
+      });
+
+
+    } catch (e) {
+      showErrorToast('An error occurred: $e');
+      print(e);
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
 
   void _sendMessage() {
     if (_controller.text.isNotEmpty) {
@@ -134,7 +185,7 @@ class _AiChatState extends State<AiChat> {
                       ),
                     ),
                     IconButton(
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.send,
                         color: Color.fromARGB(255, 71, 188, 139),
                       ),
