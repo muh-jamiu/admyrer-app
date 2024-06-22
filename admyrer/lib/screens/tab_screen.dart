@@ -65,9 +65,9 @@ class _TabScreenState extends State<TabScreen> {
         bottomNavigationBar: Padding(
           padding: const EdgeInsets.all(15.0),
           child: Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               gradient: const LinearGradient(
-                    colors: [Color.fromARGB(255, 249, 230, 236), Colors.white],
+                    colors: [Color.fromARGB(255, 255, 205, 214), Colors.white],
                     begin: Alignment.centerLeft,
                     end: Alignment.centerRight,
                   ),

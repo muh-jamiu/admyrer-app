@@ -355,6 +355,14 @@ class _LocationsState extends State<Locations> {
     "Zimbabwe"
   ];
 
+  // final List<String> _countries = [
+  //   "Afghanistan",
+  //   "Albania",
+  //   "Algeria",
+  //   "Andorra",
+  //   "Angola",
+  //   "Antigua and Barbuda",];
+    
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -401,12 +409,7 @@ class _LocationsState extends State<Locations> {
                                     (String value) {
                                   return DropdownMenuItem<String>(
                                     value: value,
-                                    child: ListView(
-                                      shrinkWrap: true,
-                                      children: [
-                                        Text(value),
-                                      ],
-                                    ),
+                                    child: Text(value),
                                   );
                                 }).toList(),
                               ),
