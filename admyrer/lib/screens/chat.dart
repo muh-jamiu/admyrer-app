@@ -26,7 +26,7 @@ class _ChatState extends State<Chat> {
       msg: message,
       toastLength: Toast.LENGTH_LONG,
       gravity: ToastGravity.TOP,
-      timeInSecForIosWeb: 5,
+      timeInSecForIosWeb: 3,
       textColor: Colors.white,
       backgroundColor: Colors.pink[300],
       fontSize: 15.0,

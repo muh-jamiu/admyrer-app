@@ -32,7 +32,7 @@ class _HotState extends State<Hot> {
       msg: message,
       toastLength: Toast.LENGTH_LONG,
       gravity: ToastGravity.TOP,
-      timeInSecForIosWeb: 5,
+      timeInSecForIosWeb: 3,
       textColor: Colors.white,
       backgroundColor: Colors.pink[300],
       fontSize: 15.0,
@@ -221,7 +221,35 @@ class _HotState extends State<Hot> {
                                   height: 620,
                                   child: _AllUSersOneState(
                                     users: allUser,
-                                  ))
+                                  )),
+
+                              const SizedBox(
+                                height: 15,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const Text("Active Live Users",
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w600)),
+                                  InkWell(
+                                    onTap: goAllUser,
+                                    child: Text(
+                                      "See All",
+                                      style: TextStyle(
+                                          fontSize: 15,
+                                          color: Colors.purple[300]),
+                                    ),
+                                  ),
+                                ],
+                              ),
+
+                              Container(
+                                  height: 620,
+                                child: LiveUsers(users: allUser),
+                              )
                             ],
                           ),
                         ),
@@ -358,7 +386,7 @@ class _FirstSectionState extends State<FirstSection> {
       msg: message,
       toastLength: Toast.LENGTH_LONG,
       gravity: ToastGravity.TOP,
-      timeInSecForIosWeb: 5,
+      timeInSecForIosWeb: 3,
       textColor: Colors.white,
       backgroundColor: Color.fromARGB(255, 98, 240, 176),
       fontSize: 15.0,
@@ -623,6 +651,63 @@ class _AllUSersOneState extends StatefulWidget {
 }
 
 class __AllUSersOneStateState extends State<_AllUSersOneState> {
+  void goSingle(user) {
+    Navigator.push(context, MaterialPageRoute(builder: (context) => Single(users: user)));
+  }
+  @override
+  Widget build(BuildContext context) {
+    return GridView.count(
+      physics: NeverScrollableScrollPhysics(),
+      crossAxisCount: 2,
+      crossAxisSpacing: 20,
+      childAspectRatio: 3 / 3,
+      mainAxisSpacing: 15,
+      children: [
+        InkWell(
+          onTap: () => goSingle( widget.users[0]),
+          child: ImageWithTextAndIcon(
+              name: widget.users[0].firstName, image: widget.users[0].avatar, icon: Icons.heart_broken),
+        ),
+        InkWell(
+          onTap: () => goSingle( widget.users[1]),
+          child: ImageWithTextAndIcon(
+              name: widget.users[1].firstName, image: widget.users[1].avatar, icon: Icons.heart_broken),
+        ),
+        InkWell(
+          onTap: () => goSingle( widget.users[2]),
+          child: ImageWithTextAndIcon(
+              name: widget.users[2].firstName, image: widget.users[2].avatar, icon: Icons.heart_broken),
+        ),
+        InkWell(
+          onTap: () => goSingle( widget.users[3]),
+          child: ImageWithTextAndIcon(
+              name: widget.users[3].firstName, image: widget.users[3].avatar, icon: Icons.heart_broken),
+        ),
+        InkWell(
+          onTap: () => goSingle( widget.users[4]),
+          child: ImageWithTextAndIcon(
+              name: widget.users[4].firstName, image: widget.users[4].avatar, icon: Icons.heart_broken),
+        ),
+        InkWell(
+          onTap: () => goSingle( widget.users[5]),
+          child: ImageWithTextAndIcon(
+              name: widget.users[5].firstName, image: widget.users[5].avatar, icon: Icons.heart_broken),
+        ),
+      ],
+    );
+  }
+}
+
+
+class LiveUsers extends StatefulWidget {
+  final List<UserModel> users;
+  const LiveUsers({super.key, required this.users});
+
+  @override
+  State<LiveUsers> createState() => _LiveUsersState();
+}
+
+class _LiveUsersState extends State<LiveUsers> {
   void goSingle(user) {
     Navigator.push(context, MaterialPageRoute(builder: (context) => Single(users: user)));
   }

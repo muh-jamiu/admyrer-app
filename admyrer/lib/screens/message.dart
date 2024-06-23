@@ -54,7 +54,7 @@ class _MessageState extends State<Message> {
       msg: message,
       toastLength: Toast.LENGTH_LONG,
       gravity: ToastGravity.TOP,
-      timeInSecForIosWeb: 5,
+      timeInSecForIosWeb: 3,
       textColor: Colors.white,
       backgroundColor:  Color.fromARGB(255, 100, 246, 190),
       fontSize: 15.0,

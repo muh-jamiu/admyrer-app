@@ -253,7 +253,7 @@ class _MyGridListState extends State<MyGridList> {
       msg: message,
       toastLength: Toast.LENGTH_LONG,
       gravity: ToastGravity.TOP_RIGHT,
-      timeInSecForIosWeb: 5,
+      timeInSecForIosWeb: 3,
       textColor: Colors.white,
       backgroundColor: Color.fromARGB(255, 98, 240, 176),
       fontSize: 15.0,

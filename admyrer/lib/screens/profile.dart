@@ -42,7 +42,7 @@ class _ProfileState extends State<Profile> {
       msg: message,
       toastLength: Toast.LENGTH_LONG,
       gravity: ToastGravity.TOP,
-      timeInSecForIosWeb: 5,
+      timeInSecForIosWeb: 3,
       textColor: Colors.white,
       backgroundColor: Colors.pink[300],
       fontSize: 15.0,
@@ -450,7 +450,7 @@ class _MyGridListState extends State<MyGridList> {
                 SizedBox(
                   height: 10,
                 ),
-                Text("Live")
+                Text("Start Live")
               ],
             ),
           ),
