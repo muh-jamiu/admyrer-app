@@ -80,7 +80,7 @@ class _ProfileState extends State<Profile> {
         isLoading = false;
       });
     } catch (e) {
-      showErrorToast('An error occurred: $e');
+      // showErrorToast('An error occurred: $e');
       print(e);
       setState(() {
         isLoading = false;

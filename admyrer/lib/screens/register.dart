@@ -5,6 +5,7 @@ import 'package:admyrer/widget/bootstrap_textfield.dart';
 import 'package:admyrer/widget/google_login.dart';
 import 'package:admyrer/widget/facebook.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class Register extends StatefulWidget {
   const Register({super.key});
@@ -18,6 +19,19 @@ class _LoginState extends State<Register> {
   void login() {
     Navigator.pushNamed(context, "/login");
   }
+
+  void showErrorToast(String message) {
+    Fluttertoast.showToast(
+      msg: "$message",
+      toastLength: Toast.LENGTH_LONG,
+      gravity: ToastGravity.TOP,
+      timeInSecForIosWeb: 5,
+      textColor: Colors.white,
+      backgroundColor: Colors.pink[300],
+      fontSize: 15.0,
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +105,7 @@ class _LoginState extends State<Register> {
                         controller: TextEditingController(),
                       ),
                       const SizedBox(height: 50,),
-                      GradientButton(text: "Sign up", onPressed:  () => {}, isLoading: isLoading),
+                      GradientButton(text: "Sign up", onPressed:  () => showErrorToast("Something went wrong, Please try again"), isLoading: isLoading),
                     ],
                   ),
                   

@@ -45,7 +45,6 @@ class _StartVidState extends State<StartVid> {
       final response = await _apiService.getRequest("token");
       var data = json.decode(response.body);
       String token = data["data"];
-      print(token);
 
       setState(() {
         this.token = token;
@@ -63,6 +62,7 @@ class _StartVidState extends State<StartVid> {
 
   Future<void> _initAgora() async {
     await getToken();
+    print(token);
 
     // Request camera and microphone permissions
     await [Permission.camera, Permission.microphone].request();

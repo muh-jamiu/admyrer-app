@@ -1,3 +1,4 @@
+import 'package:admyrer/models/recent_model.dart';
 import 'package:admyrer/widget/backgrounds.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -21,6 +22,7 @@ class _ChatState extends State<Chat> {
   List<UserModel> users = [];
   bool isLoading = true;
   late String _authToken;
+  late RecentModel _recent;
 
   void showErrorToast(String message) {
     Fluttertoast.showToast(
@@ -45,25 +47,37 @@ class _ChatState extends State<Chat> {
         "id": _authToken,
       });
 
+      
+      // final recent = await _apiService.postRequest("get-recent", {
+      //   "sender": _authToken,
+      // });
+
       var data = json.decode(response.body);
+      // var recent_data = json.decode(recent.body);
+      // print(recent_data);
 
       if (data["data"] == null || data["data"]== null) {
         showErrorToast('Invalid response data');
         return;
       }
 
+      
+      // var recent_list = recent_data["data"];
+      // RecentModel _recent = RecentModel.fromJson(recent_list);
+      // print(_recent);
+
       List<dynamic> userList = data["data"];
       List<UserModel> users =
           userList.map((user) => UserModel.fromJson(user)).toList();
 
       setState(() {
+        // this._recent = _recent;
         this.users = users;
         isLoading = false;
       });
 
-      print(users);
     } catch (e) {
-      showErrorToast('An error occurred: $e');
+      // showErrorToast('An error occurred: $e');
       print(e);
       setState(() {
         isLoading = false;
