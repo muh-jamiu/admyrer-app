@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:admyrer/services/api_service.dart';
+import 'dart:convert';
 
 class StartVid extends StatefulWidget {
   @override
@@ -10,12 +12,15 @@ class StartVid extends StatefulWidget {
 
 class _StartVidState extends State<StartVid> {
   final String appId = 'b76f67d420d2486699d05d28cf678251';
-  final String token =
-      '007eJxTYMj8dcqtqobLlr9VccnPv3WPLePkDa7ndv9fwGehslqM20yBIcncLM3MPMXEyCDFyMTCzMzSMsXANMXIIhkoamFkavj8YHlaQyAjQ9MBIWZGBggE8VkYchMz8xgYANfMHac=';
+  // final String token =
+  //     '007eJxTYMj8dcqtqobLlr9VccnPv3WPLePkDa7ndv9fwGehslqM20yBIcncLM3MPMXEyCDFyMTCzMzSMsXANMXIIhkoamFkavj8YHlaQyAjQ9MBIWZGBggE8VkYchMz8xgYANfMHac=';
   final String channelId = 'main';
   late RtcEngine _engine = createAgoraRtcEngine();
   int _remoteUid = 0;
   bool _localUserJoined = false;
+  final ApiService _apiService = ApiService();
+  bool isLoading = true;
+  String token = "";
 
   void showErrorToast(String message) {
     Fluttertoast.showToast(
@@ -35,7 +40,30 @@ class _StartVidState extends State<StartVid> {
     _initAgora();
   }
 
+  Future<void> getToken() async {
+    try {
+      final response = await _apiService.getRequest("token");
+      var data = json.decode(response.body);
+      String token = data["data"];
+      print(token);
+
+      setState(() {
+        this.token = token;
+        isLoading = false;
+      });
+    } catch (e) {
+      showErrorToast('An error occurred: $e');
+      print(e);
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+
   Future<void> _initAgora() async {
+    await getToken();
+
     // Request camera and microphone permissions
     await [Permission.camera, Permission.microphone].request();
 
