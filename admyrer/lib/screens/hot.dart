@@ -39,7 +39,7 @@ class _HotState extends State<Hot> {
       timeInSecForIosWeb: 3,
       textColor: Colors.white,
       backgroundColor: Colors.pink[300],
-      fontSize: 15.0,
+      fontSize: 20.0,
     );
   }
 
@@ -252,7 +252,7 @@ class _HotState extends State<Hot> {
                                           fontSize: 20,
                                           fontWeight: FontWeight.w600)),
                                   InkWell(
-                                    onTap: goAllUser,
+                                    onTap: () => {},
                                     child: Text(
                                       "See All",
                                       style: TextStyle(
@@ -406,7 +406,7 @@ class _FirstSectionState extends State<FirstSection> {
       timeInSecForIosWeb: 3,
       textColor: Colors.white,
       backgroundColor: Color.fromARGB(255, 98, 240, 176),
-      fontSize: 15.0,
+      fontSize: 20.0,
     );
   }
 
@@ -728,9 +728,16 @@ class _LiveUsersState extends State<LiveUsers> {
   void goSingle(user) {
     Navigator.push(context, MaterialPageRoute(builder: (context) => Single(users: user)));
   }
+  bool isShow = true;
   @override
   Widget build(BuildContext context) {
-    return GridView.count(
+    return isShow ?
+    const Column(children: [
+      SizedBox(height: 30,),
+      Center(child: Text("There are no live users at the moment"),)
+    ],)
+    :
+    GridView.count(
       physics: NeverScrollableScrollPhysics(),
       crossAxisCount: 2,
       crossAxisSpacing: 20,

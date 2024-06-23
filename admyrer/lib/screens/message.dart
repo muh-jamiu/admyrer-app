@@ -57,7 +57,7 @@ class _MessageState extends State<Message> {
       timeInSecForIosWeb: 3,
       textColor: Colors.white,
       backgroundColor:  Color.fromARGB(255, 100, 246, 190),
-      fontSize: 15.0,
+      fontSize: 20.0,
     );
   }
 

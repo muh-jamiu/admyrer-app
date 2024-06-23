@@ -35,7 +35,7 @@ class _FollowsState extends State<Follows> {
       timeInSecForIosWeb: 5,
       textColor: Colors.white,
       backgroundColor: Colors.pink[300],
-      fontSize: 15.0,
+      fontSize: 20.0,
     );
   }
 

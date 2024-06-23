@@ -32,7 +32,7 @@ class _SingleState extends State<Single> {
       timeInSecForIosWeb: 5,
       textColor: Colors.white,
       backgroundColor: Colors.pink[300],
-      fontSize: 15.0,
+      fontSize: 20.0,
     );
   }
 
@@ -256,7 +256,7 @@ class _MyGridListState extends State<MyGridList> {
       timeInSecForIosWeb: 3,
       textColor: Colors.white,
       backgroundColor: Color.fromARGB(255, 98, 240, 176),
-      fontSize: 15.0,
+      fontSize: 20.0,
     );
   }
 

@@ -29,8 +29,8 @@ class _StartVidState extends State<StartVid> {
       gravity: ToastGravity.TOP,
       timeInSecForIosWeb: 5,
       textColor: Colors.white,
-      backgroundColor: Colors.pink[300],
-      fontSize: 15.0,
+      backgroundColor: Color.fromARGB(255, 98, 240, 178),
+      fontSize: 20.0,
     );
   }
 
@@ -62,7 +62,6 @@ class _StartVidState extends State<StartVid> {
 
   Future<void> _initAgora() async {
     await getToken();
-    print(token);
 
     // Request camera and microphone permissions
     await [Permission.camera, Permission.microphone].request();
@@ -126,7 +125,7 @@ class _StartVidState extends State<StartVid> {
         ),
         child: Scaffold(
           appBar: AppBar(
-            title: Text('Video Call'),
+            title: Text('Live Stream'),
           ),
           body: Container(
             decoration: const BoxDecoration(
@@ -179,10 +178,13 @@ class LocalVideoWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (localUserJoined) {
-      return AgoraVideoView(
-        controller: VideoViewController(
-          rtcEngine: engine,
-          canvas: const VideoCanvas(uid: 0),
+      return Align(
+        alignment: Alignment.topLeft,
+        child: AgoraVideoView(
+          controller: VideoViewController(
+            rtcEngine: engine,
+            canvas: const VideoCanvas(uid: 0),
+          ),
         ),
       );
     } else {
@@ -200,11 +202,14 @@ class RemoteVideoWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (remoteUid != 0) {
-      return AgoraVideoView(
-        controller: VideoViewController.remote(
-          rtcEngine: engine,
-          canvas: VideoCanvas(uid: remoteUid),
-          connection: const RtcConnection(channelId: 'main'),
+      return Align(
+        alignment: Alignment.topRight,
+        child: AgoraVideoView(
+          controller: VideoViewController.remote(
+            rtcEngine: engine,
+            canvas: VideoCanvas(uid: remoteUid),
+            connection: const RtcConnection(channelId: 'main'),
+          ),
         ),
       );
     } else {

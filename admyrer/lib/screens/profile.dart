@@ -48,7 +48,7 @@ class _ProfileState extends State<Profile> {
       timeInSecForIosWeb: 3,
       textColor: Colors.white,
       backgroundColor: Colors.pink[300],
-      fontSize: 15.0,
+      fontSize: 20.0,
     );
   }
 
