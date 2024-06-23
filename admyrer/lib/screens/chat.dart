@@ -339,7 +339,14 @@ class _ChatListState extends State<ChatList> {
   @override
   Widget build(BuildContext context) {
     var users = widget.users;
-    return ListView.builder(
+    return users.length == 0 ?
+    
+    const Column(children: [
+      SizedBox(height: 40,),
+      Center(child: Text("You don't have any friends"),)
+    ],)
+    :
+    ListView.builder(
       itemCount: users.length,
       itemBuilder: (context, index) {
         return ListTile(
@@ -384,7 +391,7 @@ class _ChatListState extends State<ChatList> {
                       textAlign: TextAlign.start,
                     ),
                     const Text(
-                      "Last Message Notifications",
+                      "Last Message...",
                       style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w100,
