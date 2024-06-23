@@ -39,7 +39,7 @@ class _HotState extends State<Hot> {
     );
   }
 
-  Future<void> getUsers() async {
+  Future<void> getUsers() async {    
     try {
       final response = await _apiService.postRequest("buildPage", {
         "id": 10,

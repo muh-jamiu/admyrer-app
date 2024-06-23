@@ -44,6 +44,11 @@ class _LocationsState extends State<Locations> {
   }
 
   Future<void> getUsers() async {
+    if(users.length > 0){
+        isLoading = false;
+        return;
+    }
+    
     try {
       final response = await _apiService.postRequest("buildPage", {
         "id": 10,

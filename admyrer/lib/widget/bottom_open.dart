@@ -10,7 +10,7 @@ void showCustomBottomSheet(BuildContext context, Widget content) {
               topLeft: Radius.circular(30), topRight: Radius.circular(30)),
           // color: Colors.pink[400],
         ),
-        height: 600,
+        height: 700,
         child:  content,
         );
     },
