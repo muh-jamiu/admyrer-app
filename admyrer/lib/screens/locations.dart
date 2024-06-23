@@ -14,6 +14,8 @@ import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 import 'package:admyrer/widget/gradient_button.dart';
 import 'package:admyrer/widget/normal_button.dart';
+import 'package:admyrer/widget/bottom_open.dart';
+import 'package:admyrer/widget/custom_sheet.dart';
 
 class Locations extends StatefulWidget {
   bool isLoading;
@@ -45,9 +47,9 @@ class _LocationsState extends State<Locations> {
   }
 
   Future<void> getUsers() async {
-    if(users.length > 0){
-        isLoading = false;
-        return;
+    if (users.length > 0) {
+      isLoading = false;
+      return;
     }
 
     try {
@@ -163,11 +165,6 @@ class _LocationsState extends State<Locations> {
   }
 
   String? _selectedCountry;
-  bool isBoys = false;
-  bool isGirls = false;
-  bool isBoth = false;
-  final TextEditingController _searchController = TextEditingController();
-
   final List<String> _countries = [
     "Afghanistan",
     "Albania",
@@ -367,10 +364,14 @@ class _LocationsState extends State<Locations> {
     "Zimbabwe"
   ];
 
-  void goSearch(){    
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => SearchPage(search: _searchController.text)));
+
+  void goSearch(String search) {
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) => SearchPage(search: search)));
   }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -431,72 +432,7 @@ class _LocationsState extends State<Locations> {
                             onTap: () {
                               showCustomBottomSheet(
                                 context,
-                                Padding(
-                                  padding: const EdgeInsets.all(16.0),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: <Widget>[
-                                      const SizedBox(height: 20),
-                                       TextField(
-                                        controller: _searchController,
-                                        decoration: const InputDecoration(
-                                          labelText:
-                                              'Search user by name, age, username, height etc.....',
-                                          border: OutlineInputBorder(),
-                                        ),
-                                      ),
-                                      const SizedBox(height: 20),
-                                      SwitchListTile(
-                                        activeColor: Colors.pink[400],
-                                        title: const Text('Boys'),
-                                        value: !isBoys,
-                                        onChanged: (bool value) {
-                                          setState(() {
-                                            isBoys = value;
-                                          });
-                                        },
-                                      ),
-                                      SwitchListTile(
-                                        activeColor: Colors.pink[400],
-                                        title: const Text('Girls'),
-                                        value: isGirls,
-                                        onChanged: (bool value) {
-                                          setState(() {
-                                            isGirls = value;
-                                            isBoys = !value && !isBoth
-                                                ? false
-                                                : isBoys;
-                                          });
-                                        },
-                                      ),
-                                      SwitchListTile(
-                                        title: const Text('Both'),
-                                        activeColor: Colors.pink[400],
-                                        value: isBoth,
-                                        onChanged: (bool value) {
-                                          setState(() {
-                                            isBoth = value;
-                                            if (value) {
-                                              isBoys = true;
-                                              isGirls = true;
-                                            }
-                                          });
-                                        },
-                                      ),
-                                      const SizedBox(height: 16),
-                                      Column(
-                                        // mainAxisAlignment:
-                                        //     MainAxisAlignment.spaceBetween,
-                                        children: <Widget>[
-                                        GradientButton(text: "Filter", onPressed: goSearch, isLoading: false),     
-                                        const SizedBox(height: 20),                                    
-                                        NormalButton(text: "Reset", onPressed:  () => {}),
-                                        ],
-                                      ),
-                                      const SizedBox(height: 16),
-                                    ],
-                                  ),
-                                ),
+                                CustomSheet(goSearch: goSearch),
                               );
                             },
                             child: Icon(Icons.more_vert_outlined,
@@ -579,18 +515,18 @@ class _UserState extends State<User> {
 
   @override
   Widget build(BuildContext context) {
-      void nextUser() {
-    if(widget.users.length == index + 1){
-       setState(() {
-        index = 0;
-      });
-    }else{         
-      setState(() {
-        index += 1;
-      });
+    void nextUser() {
+      if (widget.users.length == index + 1) {
+        setState(() {
+          index = 0;
+        });
+      } else {
+        setState(() {
+          index += 1;
+        });
+      }
     }
 
-  }
     var firstName = widget.users[index].firstName;
     var lastName = widget.users[index].lastName;
     var country = widget.users[index].country;
@@ -719,82 +655,6 @@ class _UserState extends State<User> {
           ),
         )
       ],
-    );
-  }
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Dropdown Menu Example',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: MyHomePage(),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  String? _selectedCountry;
-
-  final List<String> _countries = [
-    'United States',
-    'Canada',
-    'Mexico',
-    'United Kingdom',
-    'Germany',
-    'France',
-    'India',
-    'China',
-    'Japan',
-    'Australia',
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Dropdown Menu Example'),
-      ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              DropdownButton<String>(
-                hint: Text('Select a country'),
-                value: _selectedCountry,
-                onChanged: (String? newValue) {
-                  setState(() {
-                    _selectedCountry = newValue;
-                  });
-                },
-                items: _countries.map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-              ),
-              SizedBox(height: 20),
-              Text(
-                _selectedCountry != null
-                    ? 'Selected country: $_selectedCountry'
-                    : 'No country selected',
-                style: TextStyle(fontSize: 16),
-              ),
-            ],
-          ),
-        ),
-      ),
     );
   }
 }

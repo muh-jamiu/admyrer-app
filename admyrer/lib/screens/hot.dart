@@ -12,6 +12,10 @@ import 'dart:convert';
 import 'package:admyrer/screens/allUsers.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:admyrer/screens/single.dart';
+import 'package:admyrer/widget/bottom_open.dart';
+import 'package:admyrer/widget/custom_sheet.dart';
+import 'package:admyrer/screens/search_page.dart';
+
 // import "package:Admyrer/widget/background.dart";
 
 class Hot extends StatefulWidget {
@@ -89,6 +93,13 @@ class _HotState extends State<Hot> {
     Navigator.push(context, MaterialPageRoute(builder: (context) => AllUsers(users: allUser)));
   }
 
+  void goSearch(String search) {
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) => SearchPage(search: search)));
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -117,9 +128,15 @@ class _HotState extends State<Hot> {
                       ),
                       Row(
                         children: [
-                          Icon(
-                            Icons.more_vert_outlined,
-                            color: Colors.grey[800],
+                          InkWell(
+                            onTap: () {
+                              showCustomBottomSheet(
+                                context,
+                                CustomSheet(goSearch: goSearch),
+                              );
+                            },
+                            child: Icon(Icons.more_vert_outlined,
+                                color: Colors.pink[300]),
                           ),
                           const SizedBox(width: 15),
                           Icon(Icons.diamond_rounded, color: Colors.blue[300]),

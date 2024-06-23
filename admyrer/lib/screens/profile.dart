@@ -20,6 +20,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
+import 'package:admyrer/widget/bottom_open.dart';
+import 'package:admyrer/widget/custom_sheet.dart';
+import 'package:admyrer/screens/search_page.dart';
 
 
 class Profile extends StatefulWidget {
@@ -96,6 +99,13 @@ class _ProfileState extends State<Profile> {
         context, MaterialPageRoute(builder: (context) => EditProfile(user: user)));
   }
 
+  void goSearch(String search) {
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) => SearchPage(search: search)));
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -124,9 +134,15 @@ class _ProfileState extends State<Profile> {
                       ),
                       Row(
                         children: [
-                          Icon(
-                            Icons.more_vert_outlined,
-                            color: Colors.pink[300],
+                          InkWell(
+                            onTap: () {
+                              showCustomBottomSheet(
+                                context,
+                                CustomSheet(goSearch: goSearch),
+                              );
+                            },
+                            child: Icon(Icons.more_vert_outlined,
+                                color: Colors.pink[300]),
                           ),
                           const SizedBox(width: 15),
                           Icon(Icons.diamond_rounded, color: Colors.blue[300]),

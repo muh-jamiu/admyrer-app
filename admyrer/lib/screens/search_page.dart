@@ -7,6 +7,8 @@ import 'package:admyrer/widget/image_my_placeholder.dart';
 import 'package:admyrer/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:admyrer/widget/bottom_open.dart';
+import 'package:admyrer/widget/custom_sheet.dart';
 import 'package:admyrer/services/api_service.dart';
 import 'dart:convert';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -73,8 +75,16 @@ class _SearchPageState extends State<SearchPage> {
     getUsers();
   }
 
+  void goSearch(String search) {
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) => SearchPage(search: search)));
+  }
+
   @override
   Widget build(BuildContext context) {
+    var _search = widget.search;
     return MaterialApp(
       home: Scaffold(
         body: Stack(
@@ -111,9 +121,17 @@ class _SearchPageState extends State<SearchPage> {
                       ),
                       Row(
                         children: [
-                          Icon(
-                            Icons.more_vert_outlined,
-                            color: Colors.grey[800],
+                          InkWell(
+                            onTap: () {
+                              showCustomBottomSheet(
+                                context,
+                                CustomSheet(goSearch: goSearch),
+                              );
+                            },
+                            child: Icon(
+                              Icons.more_vert_outlined,
+                              color: Colors.grey[800],
+                            ),
                           ),
                           const SizedBox(width: 15),
                           Icon(Icons.diamond_rounded, color: Colors.blue[300]),
@@ -150,11 +168,11 @@ class _SearchPageState extends State<SearchPage> {
                       height: 700,
                       child: 
                     users.length == 0 ? 
-                    const Center(child: Column(
+                    Center(child: Column(
                       children: [
-                        SizedBox(height: 80,),
-                        Text("Empty", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
-                        Text("No user was found"),
+                        const SizedBox(height: 80,),
+                        const Text("Empty", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+                        Text("No user was found '$_search'"),
                       ],
                     ),)
                     : ListUser(
