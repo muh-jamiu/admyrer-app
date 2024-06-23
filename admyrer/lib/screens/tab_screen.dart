@@ -56,7 +56,7 @@ class _TabScreenState extends State<TabScreen> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        backgroundColor: Colors.purple[400],
+        // backgroundColor: Colors.purple[400],
         body: PageView(
           controller: _pageController,
           onPageChanged: _onPageChanged,
