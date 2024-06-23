@@ -4,6 +4,7 @@ import 'package:admyrer/screens/password_text.dart';
 import 'package:admyrer/widget/bootstrap_textfield.dart';
 import 'package:admyrer/widget/google_login.dart';
 import 'package:admyrer/widget/facebook.dart';
+import 'package:admyrer/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -16,6 +17,7 @@ class Register extends StatefulWidget {
 
 class _LoginState extends State<Register> {
   bool isLoading = false;
+  final ApiService _apiService = ApiService();
   void login() {
     Navigator.pushNamed(context, "/login");
   }
@@ -30,6 +32,17 @@ class _LoginState extends State<Register> {
       backgroundColor: Colors.pink[300],
       fontSize: 20.0,
     );
+  }
+
+    Future<void> _handleSignIn() async {
+    final user = await _apiService.signInWithGoogle();
+    print(user);
+
+    if (user != null) {
+      // Obtain the user's ID token
+      final authHeaders = await user.authHeaders;
+      final idToken = authHeaders['Authorization']?.split(' ')[1];
+    }
   }
 
 
@@ -120,9 +133,7 @@ class _LoginState extends State<Register> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          GoogleLogin(onPressed: () => {}),
-                          Facebook(onPressed: () => {}),
-                          Facebook(onPressed: () => {}),
+                          GoogleLogin(onPressed: _handleSignIn),
                         ]
                       ),
                       const SizedBox(height: 30,),                    
