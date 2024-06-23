@@ -11,7 +11,7 @@ class StartVid extends StatefulWidget {
 class _StartVidState extends State<StartVid> {
   final String appId = 'b76f67d420d2486699d05d28cf678251';
   final String token =
-      '007eJxTYJCfmRgfvnLRyW/WP/N6LsTpMLzkcSgOP/grQW8zX156rowCQ5K5WZqZeYqJkUGKkYmFmZmlZYqBaYqRRTJQ1MLI1HBrS1laQyAjw7+lqsyMDBAI4rMw5CZm5jEwAAAFVR5T';
+      '007eJxTYMj8dcqtqobLlr9VccnPv3WPLePkDa7ndv9fwGehslqM20yBIcncLM3MPMXEyCDFyMTCzMzSMsXANMXIIhkoamFkavj8YHlaQyAjQ9MBIWZGBggE8VkYchMz8xgYANfMHac=';
   final String channelId = 'main';
   late RtcEngine _engine = createAgoraRtcEngine();
   int _remoteUid = 0;

@@ -55,69 +55,43 @@ class _TabScreenState extends State<TabScreen> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Container(
-        decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                      colors: [Color.fromARGB(255, 255, 205, 214), Colors.white],
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
-                    ),
+      home: Scaffold(
+        backgroundColor: Colors.purple[400],
+        body: PageView(
+          controller: _pageController,
+          onPageChanged: _onPageChanged,
+          children: _pages,
+        ),
+        bottomNavigationBar: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: BottomNavigationBar(
+            currentIndex: _currentIndex,
+            onTap: _onTabTapped,
+            selectedItemColor: Colors.pink[300],
+            unselectedItemColor: Colors.grey[600],
+            type: BottomNavigationBarType.shifting,
+            items: const [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.location_on_outlined),
+                label: 'Location',
               ),
-        child: Scaffold(
-          body: Container(
-        decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                      colors: [Color.fromARGB(255, 255, 205, 214), Colors.white],
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
-                    ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.fireplace_outlined),
+                label: 'Hot',
               ),
-            child: PageView(
-              controller: _pageController,
-              onPageChanged: _onPageChanged,
-              children: _pages,
-            ),
-          ),
-          bottomNavigationBar: Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: Container(
-              decoration: const BoxDecoration(
-                gradient: const LinearGradient(
-                      colors: [Color.fromARGB(255, 255, 205, 214), Colors.white],
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
-                    ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.notification_important_outlined),
+                label: 'Notifications',
               ),
-              child: BottomNavigationBar(
-                currentIndex: _currentIndex,
-                onTap: _onTabTapped,
-                selectedItemColor: Colors.pink[300],
-                unselectedItemColor: Colors.grey[600],
-                type: BottomNavigationBarType.shifting,
-                items: const [
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.location_on_outlined),
-                    label: 'Location',
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.fireplace_outlined),
-                    label: 'Hot',
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.notification_important_outlined),
-                    label: 'Notifications',
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.chat_bubble_outline),
-                    label: 'Chats',
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.person),
-                    label: 'Profile',
-                  ),
-                ],
+              BottomNavigationBarItem(
+                icon: Icon(Icons.chat_bubble_outline),
+                label: 'Chats',
               ),
-            ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.person),
+                label: 'Profile',
+              ),
+            ],
           ),
         ),
       ),

@@ -8,6 +8,7 @@ import 'dart:convert';
 import 'package:admyrer/models/user.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:admyrer/screens/single.dart';
+import 'package:admyrer/screens/search_page.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
@@ -48,7 +49,7 @@ class _LocationsState extends State<Locations> {
         isLoading = false;
         return;
     }
-    
+
     try {
       final response = await _apiService.postRequest("buildPage", {
         "id": 10,
@@ -165,6 +166,7 @@ class _LocationsState extends State<Locations> {
   bool isBoys = false;
   bool isGirls = false;
   bool isBoth = false;
+  final TextEditingController _searchController = TextEditingController();
 
   final List<String> _countries = [
     "Afghanistan",
@@ -365,6 +367,10 @@ class _LocationsState extends State<Locations> {
     "Zimbabwe"
   ];
 
+  void goSearch(){    
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => SearchPage(search: _searchController.text)));
+  }
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -431,7 +437,8 @@ class _LocationsState extends State<Locations> {
                                     mainAxisSize: MainAxisSize.min,
                                     children: <Widget>[
                                       const SizedBox(height: 20),
-                                      const TextField(
+                                       TextField(
+                                        controller: _searchController,
                                         decoration: const InputDecoration(
                                           labelText:
                                               'Search user by name, age, username, height etc.....',
@@ -481,7 +488,7 @@ class _LocationsState extends State<Locations> {
                                         // mainAxisAlignment:
                                         //     MainAxisAlignment.spaceBetween,
                                         children: <Widget>[
-                                        GradientButton(text: "Filter", onPressed: () => {}, isLoading: false),     
+                                        GradientButton(text: "Filter", onPressed: goSearch, isLoading: false),     
                                         const SizedBox(height: 20),                                    
                                         NormalButton(text: "Reset", onPressed:  () => {}),
                                         ],
@@ -552,11 +559,6 @@ class User extends StatefulWidget {
 
 class _UserState extends State<User> {
   var index = 0;
-  void nextUser() {
-    setState(() {
-      index += 1;
-    });
-  }
 
   void goSingle(user) {
     Navigator.push(
@@ -577,6 +579,18 @@ class _UserState extends State<User> {
 
   @override
   Widget build(BuildContext context) {
+      void nextUser() {
+    if(widget.users.length == index + 1){
+       setState(() {
+        index = 0;
+      });
+    }else{         
+      setState(() {
+        index += 1;
+      });
+    }
+
+  }
     var firstName = widget.users[index].firstName;
     var lastName = widget.users[index].lastName;
     var country = widget.users[index].country;

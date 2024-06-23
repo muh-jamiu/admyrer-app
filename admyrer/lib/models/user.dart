@@ -3,7 +3,7 @@ import 'dart:convert';
 class UserModel {
   final int id;
   final String username;
-  final String? email;
+  final String email;
   final String firstName;
   final String lastName;
   final String avatar;
@@ -50,7 +50,7 @@ class UserModel {
   UserModel({
     required this.id,
     required this.username,
-    this.email,
+    required this.email,
     required this.firstName,
     required this.lastName,
     required this.avatar,

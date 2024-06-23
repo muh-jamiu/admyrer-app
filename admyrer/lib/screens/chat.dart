@@ -99,7 +99,7 @@ class _ChatState extends State<Chat> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(
-                    height: 30,
+                    height: 40,
                   ),
                   const Padding(
                     padding: EdgeInsets.only(left: 10),

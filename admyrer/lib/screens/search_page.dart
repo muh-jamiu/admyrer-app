@@ -14,7 +14,7 @@ import 'package:admyrer/screens/single.dart';
 // import "package:Admyrer/widget/background.dart";
 
 class SearchPage extends StatefulWidget {
-  final List search; 
+  final String search; 
   const SearchPage({super.key, required this.search});
 
   @override
@@ -40,8 +40,8 @@ class _SearchPageState extends State<SearchPage> {
 
   Future<void> getUsers() async {
     try {
-      final response = await _apiService.postRequest("get-likes", {
-        "id": 10,
+      final response = await _apiService.postRequest("search", {
+        "search": widget.search,
       });
 
       var data = json.decode(response.body);

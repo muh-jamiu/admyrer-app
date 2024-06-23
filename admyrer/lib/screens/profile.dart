@@ -13,6 +13,7 @@ import 'package:admyrer/screens/Likes.dart';
 import 'package:admyrer/screens/disliked.dart';
 import 'package:admyrer/screens/visits.dart';
 import 'package:admyrer/screens/follows.dart';
+import 'package:admyrer/screens/edit_profile.dart';
 import 'package:admyrer/screens/live.dart';
 import 'package:admyrer/screens/liked.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -30,7 +31,7 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
   final ApiService _apiService = ApiService();
-  UserModel user = UserModel(id: 0, firstName: "Guest", lastName: "Guest", username: "Guest", avatar: "null");
+  UserModel user = UserModel(id: 0, firstName: "Guest", lastName: "Guest", username: "Guest", avatar: "null", email: "null");
   bool isLoading = true;
   late String _authToken;
   List<UserModel>  visits = [];
@@ -88,6 +89,11 @@ class _ProfileState extends State<Profile> {
   void initState() {
     super.initState();
     getUsers();
+  }
+
+  void goEdit() {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => EditProfile(user: user)));
   }
 
   @override
@@ -155,7 +161,7 @@ class _ProfileState extends State<Profile> {
                             ],
                           ),
                         )
-                      : Settings(user: user, visit: visits.length, likes: likes.length,),
+                      : Settings(user: user, visit: visits.length, likes: likes.length, goEdit: goEdit),
                   const SizedBox(
                     height: 10,
                   ),
@@ -175,7 +181,8 @@ class Settings extends StatefulWidget {
   final UserModel user;
   final int visit;
   final int likes;
-  const Settings({super.key, required this.user, required this.likes,  required this.visit});
+  final Function goEdit;
+  const Settings({super.key, required this.user, required this.likes,  required this.visit, required this.goEdit});
 
   @override
   State<Settings> createState() => _SettingsState();
@@ -259,7 +266,7 @@ class _SettingsState extends State<Settings> {
         ),
         Center(
           child: InkWell(
-            onTap: () => {},
+            onTap:() =>  widget.goEdit(),
             child: Container(
               padding: const EdgeInsets.all(10),
               width: 130,
@@ -321,7 +328,7 @@ class _SettingsState extends State<Settings> {
                 ),
               ],
             ),
-            Row(
+            const Row(
               children: [
                 Icon(
                   Icons.share,
