@@ -424,6 +424,33 @@ class _MyGridListState extends State<MyGridList> {
     );
   }
 
+  Future<void> _showNightCLub() async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Night Club'),
+          content:const  Text('Are you sure you want to start night club video call?'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Dismiss the dialog
+              },
+            ),
+            TextButton(
+              child: const Text('Start', style: TextStyle(color: Colors.red)),
+              onPressed: () {
+                Navigator.of(context).pop(); // Dismiss the dialog
+                logOutUser(); // Proceed with logout
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void goVisists() {
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => Visits()));
@@ -452,6 +479,55 @@ class _MyGridListState extends State<MyGridList> {
   void goLive() {
     Navigator.push(
       context, MaterialPageRoute(builder: (context) => StartVid()));
+  }
+
+  List<String> users = [
+    'User 1',
+    'User 2',
+    'User 3',
+    'User 4',
+    'User 5',
+  ];
+
+  List<String> selectedUsers = [];
+
+  String? selectedUserOne;
+
+  void _showUserSelectionOnlyOne() async {
+    final selected = await showDialog<String>(
+      context: context,
+      builder: (context) {
+        return SelectOne(
+          users: users,
+          initiallySelectedUser: selectedUserOne,
+        );
+      },
+    );
+
+    if (selected != null) {
+      setState(() {
+        selectedUserOne = selected;
+      });
+    }
+  }
+
+
+  void _showUserSelectionModal() async {
+    final selected = await showDialog<List<String>>(
+      context: context,
+      builder: (context) {
+        return WebDate(
+          users: users,
+          initiallySelectedUsers: selectedUsers,
+        );
+      },
+    );
+
+    if (selected != null) {
+      setState(() {
+        selectedUsers = selected;
+      });
+    }
   }
 
   @override
@@ -510,8 +586,8 @@ class _MyGridListState extends State<MyGridList> {
             ),
           ),
         ),
-         InkWell(
-          onTap: (){},
+        InkWell(
+          onTap: _showNightCLub,
           child: Container(
             width: 100,
             height: 150,
@@ -536,7 +612,7 @@ class _MyGridListState extends State<MyGridList> {
         ),
 
         InkWell(
-          onTap: (){},
+          onTap: _showUserSelectionOnlyOne,
           child: Container(
             width: 100,
             height: 150,
@@ -561,7 +637,7 @@ class _MyGridListState extends State<MyGridList> {
         ),
 
         InkWell(
-          onTap: (){},
+          onTap: _showUserSelectionModal,
           child: Container(
             width: 100,
             height: 150,
@@ -760,3 +836,128 @@ class _MyGridListState extends State<MyGridList> {
   }
 }
 
+
+class WebDate extends StatefulWidget {
+  final List<String> users;
+  final List<String> initiallySelectedUsers;
+
+  WebDate({required this.users, required this.initiallySelectedUsers});
+
+  @override
+  _WebDateState createState() => _WebDateState();
+}
+
+class _WebDateState extends State<WebDate> {
+  late List<String> _selectedUsers;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedUsers = List.from(widget.initiallySelectedUsers);
+  }
+
+  void _onUserSelected(bool selected, String user) {
+    setState(() {
+      if (selected) {
+        _selectedUsers.add(user);
+      } else {
+        _selectedUsers.remove(user);
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text('Select Users'),
+      content: SingleChildScrollView(
+        child: ListBody(
+          children: widget.users.map((user) {
+            return CheckboxListTile(
+              value: _selectedUsers.contains(user),
+              title: Text(user),
+              onChanged: (bool? selected) {
+                _onUserSelected(selected ?? false, user);
+              },
+            );
+          }).toList(),
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: Text('Cancel'),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            Navigator.of(context).pop(_selectedUsers);
+          },
+          child: Text('Confirm'),
+        ),
+      ],
+    );
+  }
+}
+
+class SelectOne extends StatefulWidget {
+  final List<String> users;
+  final String? initiallySelectedUser;
+
+  SelectOne({required this.users, this.initiallySelectedUser});
+
+  @override
+  _SelectOneState createState() => _SelectOneState();
+}
+
+class _SelectOneState extends State<SelectOne> {
+  String? _selectedUser;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedUser = widget.initiallySelectedUser;
+  }
+
+  void _onUserSelected(String? user) {
+    setState(() {
+      _selectedUser = user;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text('Select only one user'),
+      content: SingleChildScrollView(
+        child: ListBody(
+          children: widget.users.map((user) {
+            return RadioListTile<String>(
+              value: user,
+              groupValue: _selectedUser,
+              title: Text(user),
+              onChanged: (String? selected) {
+                _onUserSelected(selected);
+              },
+            );
+          }).toList(),
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: Text('Cancel'),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            Navigator.of(context).pop(_selectedUser);
+          },
+          child: Text('Confirm'),
+        ),
+      ],
+    );
+  }
+}
