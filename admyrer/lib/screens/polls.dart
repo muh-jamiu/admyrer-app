@@ -5,6 +5,7 @@ import 'package:admyrer/widget/google_login.dart';
 import 'package:admyrer/widget/facebook.dart';
 import 'package:admyrer/widget/image_my_placeholder.dart';
 import 'package:admyrer/models/user.dart';
+import 'package:admyrer/models/polls_model.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:admyrer/services/api_service.dart';
@@ -25,6 +26,7 @@ class Polls extends StatefulWidget {
 class _PollsState extends State<Polls> {
   final ApiService _apiService = ApiService();
   List<UserModel> users = [];
+  List<PollsModel> polls = [];
   bool isLoading = true;
   late String _authToken;
 
@@ -48,23 +50,21 @@ class _PollsState extends State<Polls> {
     });
 
     try {
-      final response = await _apiService.postRequest("get-visit", {
-        "id": _authToken,
-      });
-
+      final response = await _apiService.getRequest("get-polls");
+      
       var data = json.decode(response.body);
 
       if (data["data"] == null || data["data"] == null) {
         showErrorToast('Invalid response data');
         return;
       }
-
-      List<dynamic> userList = data["data"];
-      List<UserModel> users =
-          userList.map((user) => UserModel.fromJson(user)).toList();
+      
+      List<dynamic> pollList = data["data"];
+      List<PollsModel> polls =
+          pollList.map((user) => PollsModel.fromJson(user)).toList();
 
       setState(() {
-        this.users = users;
+        this.polls = polls;
         isLoading = false;
       });
 
@@ -144,7 +144,12 @@ class _PollsState extends State<Polls> {
                         )
                       :
                   Container(
-                    child: Expanded(child: PollScreen(),),
+                    child: polls.isEmpty ? const Column(children: [
+                      SizedBox(height: 60),
+                      Center(child: Text("Empty", style: TextStyle(fontSize: 30),),),
+                      Center(child: Text("There are no polls available at the moment", style: TextStyle(fontSize: 30),),)
+                    ],) :
+                    Expanded(child: PollScreen(polls: polls),),
                   )
                 ],
               ),
@@ -158,32 +163,26 @@ class _PollsState extends State<Polls> {
 
 
 
-class PollScreen extends StatelessWidget {
+class PollScreen extends StatefulWidget {
+  final List<PollsModel> polls;
+  const PollScreen({super.key, required this.polls});
+  @override
+  State<PollScreen> createState() => _PollScreenState();
+}
+
+class _PollScreenState extends State<PollScreen> {
   @override
   Widget build(BuildContext context) {
-    return ListView(
-        children: [
-          PollWidget(
-            pollTitle: "What's your favorite color?",
-            options: ['Red', 'Blue', 'Green', 'Yellow'],
-          ),
-          PollWidget(
-            pollTitle: "What's your favorite season?",
-            options: ['Spring', 'Summer', 'Fall', 'Winter'],
-          ),
-          PollWidget(
-            pollTitle: "What's your favorite pet?",
-            options: ['Dog', 'Cat', 'Bird', 'Fish'],
-          ),
-          PollWidget(
-            pollTitle: "What's your favorite pet?",
-            options: ['Dog', 'Cat', 'Bird', 'Fish'],
-          ),
-          PollWidget(
-            pollTitle: "What's your favorite pet?",
-            options: ['Dog', 'Cat', 'Bird', 'Fish'],
-          ),
-        ],
+      var polls = widget.polls;
+      List<String> test = [];
+     return ListView.builder(
+      itemCount: polls.length,
+      itemBuilder: (context, index) {   
+        return PollWidget(
+            pollTitle: polls[index].title,
+            options: polls[index].options.split(RegExp(r'[, \n]')),
+        );
+      },
     );
   }
 }
@@ -213,7 +212,7 @@ class _PollWidgetState extends State<PollWidget> {
           children: [
             const SizedBox(height: 10,),
             Text(
-              widget.pollTitle,
+              widget.pollTitle + " ?",
               style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Colors.white),
             ),
             ...List.generate(widget.options.length, (index) {

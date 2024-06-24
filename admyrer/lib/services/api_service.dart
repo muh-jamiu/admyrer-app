@@ -7,6 +7,7 @@ class ApiService {
 
   Future<dynamic> getRequest(String endpoint) async {
     final response = await http.get(Uri.parse('$baseUrl/$endpoint'));
+    print(response);
     return response;
 
     if (response.statusCode == 200) {
