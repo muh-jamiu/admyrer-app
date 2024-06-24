@@ -8,7 +8,9 @@ import 'package:admyrer/services/api_service.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:convert';
 import 'package:admyrer/models/user.dart';
+import 'package:admyrer/screens/quiz.dart';
 import 'package:admyrer/screens/login.dart';
+import 'package:admyrer/screens/polls.dart';
 import 'package:admyrer/screens/Likes.dart';
 import 'package:admyrer/screens/disliked.dart';
 import 'package:admyrer/screens/visits.dart';
@@ -99,6 +101,17 @@ class _ProfileState extends State<Profile> {
         context, MaterialPageRoute(builder: (context) => EditProfile(user: user)));
   }
 
+  void goPolls() {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => Polls()));
+  }
+
+  void goQuiz() {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => Quiz()));
+  }
+
+
   void goSearch(String search) {
     Navigator.pushReplacement(
         context,
@@ -181,7 +194,7 @@ class _ProfileState extends State<Profile> {
                   const SizedBox(
                     height: 10,
                   ),
-                  Expanded(child: MyGridList(user: user))
+                  Expanded(child: MyGridList(user: user, goPolls: goPolls, goQuiz: goQuiz,))
                 ],
               ),
             )
@@ -369,7 +382,9 @@ class _SettingsState extends State<Settings> {
 
 class MyGridList extends StatefulWidget {
   final UserModel user;
-  const MyGridList({super.key, required this.user});
+  final Function goPolls;
+  final Function goQuiz;
+  const MyGridList({super.key, required this.user,required this.goQuiz, required this.goPolls});
 
   @override
   State<MyGridList> createState() => _MyGridListState();
@@ -615,6 +630,56 @@ class _MyGridListState extends State<MyGridList> {
             ),
           ),
         ),
+          InkWell(
+          onTap: () => widget.goQuiz(),
+          child: Container(
+            width: 100,
+            height: 150,
+            decoration: BoxDecoration(
+                color: Color.fromARGB(33, 176, 39, 121),
+                borderRadius: BorderRadius.circular(10)),
+            child: const Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const FaIcon(
+                  FontAwesomeIcons.circleQuestion,
+                  color: Colors.purple,
+                  size: 25,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Text("Quiz")
+              ],
+            ),
+          ),
+        ),
+      
+        InkWell(
+          onTap: () => widget.goPolls(),
+          child: Container(
+            width: 100,
+            height: 150,
+            decoration: BoxDecoration(
+                color: Color.fromARGB(33, 176, 117, 39),
+                borderRadius: BorderRadius.circular(10)),
+            child: const Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const FaIcon(
+                  FontAwesomeIcons.squarePollVertical,
+                  color: Colors.purple,
+                  size: 25,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Text("Polls")
+              ],
+            ),
+          ),
+        ),
+      
        ],
     );
   }
