@@ -605,7 +605,7 @@ class _MyGridListState extends State<MyGridList> {
                 SizedBox(
                   height: 10,
                 ),
-                Text("Start Night Club")
+                Text("Night Club")
               ],
             ),
           ),
@@ -630,7 +630,7 @@ class _MyGridListState extends State<MyGridList> {
                 SizedBox(
                   height: 10,
                 ),
-                Text("Go on Speed Date")
+                Text("Speed Date")
               ],
             ),
           ),
@@ -856,6 +856,31 @@ class _WebDateState extends State<WebDate> {
     _selectedUsers = List.from(widget.initiallySelectedUsers);
   }
 
+  Future<void> _showWebDate() async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Web Date'),
+          content:const  Text('Starting web date with selected users?'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Dismiss the dialog
+              },
+            ),
+            TextButton(
+              child: const Text('Start', style: TextStyle(color: Colors.red)),
+              onPressed: () {},
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+
   void _onUserSelected(bool selected, String user) {
     setState(() {
       if (selected) {
@@ -869,11 +894,12 @@ class _WebDateState extends State<WebDate> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('Select Users'),
+      title:const  Text('Select Friends', style: TextStyle(fontSize: 15),),
       content: SingleChildScrollView(
         child: ListBody(
           children: widget.users.map((user) {
             return CheckboxListTile(
+              activeColor: Colors.pink[400],
               value: _selectedUsers.contains(user),
               title: Text(user),
               onChanged: (bool? selected) {
@@ -890,9 +916,10 @@ class _WebDateState extends State<WebDate> {
           },
           child: Text('Cancel'),
         ),
-        ElevatedButton(
+        TextButton(
           onPressed: () {
             Navigator.of(context).pop(_selectedUsers);
+          _showWebDate();
           },
           child: Text('Confirm'),
         ),
@@ -926,14 +953,39 @@ class _SelectOneState extends State<SelectOne> {
     });
   }
 
+  Future<void> _showSpeedDate() async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Speed Date'),
+          content:const  Text('Starting Speed date with selected user?'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Dismiss the dialog
+              },
+            ),
+            TextButton(
+              child: const Text('Start', style: TextStyle(color: Colors.red)),
+              onPressed: () {},
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('Select only one user'),
+      title: Text('Select only one user', style: TextStyle(fontSize: 15),),
       content: SingleChildScrollView(
         child: ListBody(
           children: widget.users.map((user) {
             return RadioListTile<String>(
+              activeColor:Colors.pink[400],
               value: user,
               groupValue: _selectedUser,
               title: Text(user),
@@ -951,9 +1003,10 @@ class _SelectOneState extends State<SelectOne> {
           },
           child: Text('Cancel'),
         ),
-        ElevatedButton(
+        TextButton(
           onPressed: () {
             Navigator.of(context).pop(_selectedUser);
+            _showSpeedDate();
           },
           child: Text('Confirm'),
         ),
