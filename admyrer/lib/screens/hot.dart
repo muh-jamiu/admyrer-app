@@ -39,7 +39,7 @@ class _HotState extends State<Hot> {
       timeInSecForIosWeb: 3,
       textColor: Colors.white,
       backgroundColor: Colors.pink[300],
-      fontSize: 20.0,
+      fontSize: 15.0,
     );
   }
 
@@ -406,7 +406,7 @@ class _FirstSectionState extends State<FirstSection> {
       timeInSecForIosWeb: 3,
       textColor: Colors.white,
       backgroundColor: Color.fromARGB(255, 98, 240, 176),
-      fontSize: 20.0,
+      fontSize: 15.0,
     );
   }
 

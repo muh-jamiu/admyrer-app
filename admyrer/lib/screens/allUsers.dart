@@ -32,7 +32,7 @@ class _AllUsersState extends State<AllUsers> {
       timeInSecForIosWeb: 5,
       textColor: Colors.white,
       backgroundColor: Colors.pink[300],
-      fontSize: 20.0,
+      fontSize: 15.0,
     );
   }
 

@@ -41,7 +41,7 @@ class _LoginState extends State<Login> {
       timeInSecForIosWeb: 5,
       backgroundColor: color,
       textColor: Colors.white,
-      fontSize: 20.0
+      fontSize: 15.0
     );
   }
 

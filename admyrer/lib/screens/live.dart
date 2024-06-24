@@ -30,7 +30,7 @@ class _StartVidState extends State<StartVid> {
       timeInSecForIosWeb: 5,
       textColor: Colors.white,
       backgroundColor: Color.fromARGB(255, 98, 240, 178),
-      fontSize: 20.0,
+      fontSize: 15.0,
     );
   }
 

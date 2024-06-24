@@ -32,7 +32,7 @@ class _ChatState extends State<Chat> {
       timeInSecForIosWeb: 3,
       textColor: Colors.white,
       backgroundColor: Colors.pink[300],
-      fontSize: 20.0,
+      fontSize: 15.0,
     );
   }
 
