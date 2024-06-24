@@ -4,7 +4,7 @@ import 'package:admyrer/widget/gradient_button.dart';
 import 'package:admyrer/widget/normal_button.dart';
 import 'package:flutter/material.dart';
 import 'package:admyrer/screens/live.dart';
-import 'package:admyrer/screens/polls.dart';
+import 'package:admyrer/screens/quiz.dart';
 
 class StepSceen extends StatefulWidget {
   const StepSceen({super.key});
@@ -19,7 +19,7 @@ class _StepSceenState extends State<StepSceen> {
   void login() {
     // Navigator.pushReplacementNamed(context, "/login");
     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => Polls()));
+        context, MaterialPageRoute(builder: (context) => Quiz()));
   }
 
   void register() {
