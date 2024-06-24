@@ -510,6 +510,81 @@ class _MyGridListState extends State<MyGridList> {
             ),
           ),
         ),
+         InkWell(
+          onTap: (){},
+          child: Container(
+            width: 100,
+            height: 150,
+            decoration: BoxDecoration(
+                color: Color.fromARGB(34, 176, 39, 44),
+                borderRadius: BorderRadius.circular(10)),
+            child: const Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const FaIcon(
+                  FontAwesomeIcons.moon,
+                  color: Colors.purple,
+                  size: 25,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Text("Start Night Club")
+              ],
+            ),
+          ),
+        ),
+
+        InkWell(
+          onTap: (){},
+          child: Container(
+            width: 100,
+            height: 150,
+            decoration: BoxDecoration(
+                color: Color.fromARGB(34, 39, 44, 176),
+                borderRadius: BorderRadius.circular(10)),
+            child: const Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const FaIcon(
+                  FontAwesomeIcons.forwardFast,
+                  color: Colors.purple,
+                  size: 25,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Text("Go on Speed Date")
+              ],
+            ),
+          ),
+        ),
+
+        InkWell(
+          onTap: (){},
+          child: Container(
+            width: 100,
+            height: 150,
+            decoration: BoxDecoration(
+                color: Color.fromARGB(34, 110, 176, 39),
+                borderRadius: BorderRadius.circular(10)),
+            child: const Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const FaIcon(
+                  FontAwesomeIcons.peopleGroup,
+                  color: Colors.purple,
+                  size: 25,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Text("Web Date")
+              ],
+            ),
+          ),
+        ),
+        
         InkWell(
           onTap: () => goVisists(),
           child: Container(
