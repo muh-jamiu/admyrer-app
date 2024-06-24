@@ -41,6 +41,40 @@ class _ProfileState extends State<Profile> {
   late String _authToken;
   List<UserModel>  visits = [];
   List<UserModel>  likes = [];
+  List<UserModel>  follows = [];
+
+    
+  Future<void> getFollows() async {
+     SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _authToken = prefs.getString('authToken') ?? '';
+    });
+    
+    try {
+      final response = await _apiService.postRequest("get-follows", {
+        "id": _authToken,
+      });
+
+      var data = json.decode(response.body);
+
+      if (data["data"] == null || data["data"] == null) {
+        showErrorToast('Invalid response data');
+        return;
+      }
+
+      List<dynamic> userList = data["data"];
+      List<UserModel> follows =
+          userList.map((user) => UserModel.fromJson(user)).toList();
+
+      setState(() {
+        this.follows = follows;
+      });
+
+    } catch (e) {
+      showErrorToast('An error occurred: $e');
+      print(e);
+    }
+  }
 
   void showErrorToast(String message) {
     Fluttertoast.showToast(
@@ -94,6 +128,7 @@ class _ProfileState extends State<Profile> {
   void initState() {
     super.initState();
     getUsers();
+    getFollows();
   }
 
   void goEdit() {
@@ -194,7 +229,7 @@ class _ProfileState extends State<Profile> {
                   const SizedBox(
                     height: 10,
                   ),
-                  Expanded(child: MyGridList(user: user, goPolls: goPolls, goQuiz: goQuiz,))
+                  Expanded(child: MyGridList(user: user, goPolls: goPolls, goQuiz: goQuiz, follows: follows))
                 ],
               ),
             )
@@ -382,9 +417,10 @@ class _SettingsState extends State<Settings> {
 
 class MyGridList extends StatefulWidget {
   final UserModel user;
+  final List<UserModel> follows;
   final Function goPolls;
   final Function goQuiz;
-  const MyGridList({super.key, required this.user,required this.goQuiz, required this.goPolls});
+  const MyGridList({super.key, required this.user,required this.goQuiz, required this.goPolls, required this.follows});
 
   @override
   State<MyGridList> createState() => _MyGridListState();
@@ -498,7 +534,7 @@ class _MyGridListState extends State<MyGridList> {
       context: context,
       builder: (context) {
         return SelectOne(
-          users: users,
+          users: widget.follows,
           initiallySelectedUser: selectedUserOne,
         );
       },
@@ -929,7 +965,7 @@ class _WebDateState extends State<WebDate> {
 }
 
 class SelectOne extends StatefulWidget {
-  final List<String> users;
+  final List<UserModel> users;
   final String? initiallySelectedUser;
 
   SelectOne({required this.users, this.initiallySelectedUser});
@@ -980,15 +1016,15 @@ class _SelectOneState extends State<SelectOne> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('Select only one user', style: TextStyle(fontSize: 15),),
+      title: const Text('Select only one user', style: TextStyle(fontSize: 15),),
       content: SingleChildScrollView(
         child: ListBody(
           children: widget.users.map((user) {
             return RadioListTile<String>(
               activeColor:Colors.pink[400],
-              value: user,
+              value: user.username,
               groupValue: _selectedUser,
-              title: Text(user),
+              title: Text(user.username),
               onChanged: (String? selected) {
                 _onUserSelected(selected);
               },
