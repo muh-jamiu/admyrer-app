@@ -553,7 +553,7 @@ class _MyGridListState extends State<MyGridList> {
       context: context,
       builder: (context) {
         return WebDate(
-          users: users,
+          users: widget.follows,
           initiallySelectedUsers: selectedUsers,
         );
       },
@@ -874,7 +874,7 @@ class _MyGridListState extends State<MyGridList> {
 
 
 class WebDate extends StatefulWidget {
-  final List<String> users;
+  final List<UserModel> users;
   final List<String> initiallySelectedUsers;
 
   WebDate({required this.users, required this.initiallySelectedUsers});
@@ -936,10 +936,10 @@ class _WebDateState extends State<WebDate> {
           children: widget.users.map((user) {
             return CheckboxListTile(
               activeColor: Colors.pink[400],
-              value: _selectedUsers.contains(user),
-              title: Text(user),
+              value: _selectedUsers.contains(user.firstName),
+              title: Text(user.firstName),
               onChanged: (bool? selected) {
-                _onUserSelected(selected ?? false, user);
+                _onUserSelected(selected ?? false, user.firstName);
               },
             );
           }).toList(),
@@ -1022,9 +1022,9 @@ class _SelectOneState extends State<SelectOne> {
           children: widget.users.map((user) {
             return RadioListTile<String>(
               activeColor:Colors.pink[400],
-              value: user.username,
+              value: user.firstName,
               groupValue: _selectedUser,
-              title: Text(user.username),
+              title: Text(user.firstName),
               onChanged: (String? selected) {
                 _onUserSelected(selected);
               },
