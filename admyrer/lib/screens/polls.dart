@@ -143,10 +143,94 @@ class _PollsState extends State<Polls> {
                           ),
                         )
                       :
-                  Container()
+                  Container(
+                    child: Expanded(child: PollScreen(),),
+                  )
                 ],
               ),
             )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+
+
+class PollScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+        children: [
+          PollWidget(
+            pollTitle: "What's your favorite color?",
+            options: ['Red', 'Blue', 'Green', 'Yellow'],
+          ),
+          PollWidget(
+            pollTitle: "What's your favorite season?",
+            options: ['Spring', 'Summer', 'Fall', 'Winter'],
+          ),
+          PollWidget(
+            pollTitle: "What's your favorite pet?",
+            options: ['Dog', 'Cat', 'Bird', 'Fish'],
+          ),
+          PollWidget(
+            pollTitle: "What's your favorite pet?",
+            options: ['Dog', 'Cat', 'Bird', 'Fish'],
+          ),
+          PollWidget(
+            pollTitle: "What's your favorite pet?",
+            options: ['Dog', 'Cat', 'Bird', 'Fish'],
+          ),
+        ],
+    );
+  }
+}
+
+class PollWidget extends StatefulWidget {
+  final String pollTitle;
+  final List<String> options;
+
+  PollWidget({required this.pollTitle, required this.options});
+
+  @override
+  _PollWidgetState createState() => _PollWidgetState();
+}
+
+class _PollWidgetState extends State<PollWidget> {
+  int? _selectedOptionIndex;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      color: Colors.purple[400],
+      margin: const EdgeInsets.all(10),
+      child: Padding(
+        padding: const EdgeInsets.all(18.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 10,),
+            Text(
+              widget.pollTitle,
+              style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Colors.white),
+            ),
+            ...List.generate(widget.options.length, (index) {
+              return ListTile(
+                title: Text(widget.options[index], style: const TextStyle(color:Colors.white),),
+                leading: Radio<int>(
+                  activeColor: Colors.pink[400],
+                  value: index,
+                  groupValue: _selectedOptionIndex,
+                  onChanged: (int? value) {
+                    setState(() {
+                      _selectedOptionIndex = value;
+                    });
+                  },
+                ),
+              );
+            }),
           ],
         ),
       ),
