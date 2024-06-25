@@ -73,6 +73,7 @@ class _StartVidState extends State<StartVid> {
     _engine = createAgoraRtcEngine();
     await _engine.initialize(RtcEngineContext(appId: appId));
     await _engine.enableVideo();
+    await _engine.startPreview(); 
 
     // Set event handlers
     _engine.registerEventHandler(
@@ -174,7 +175,7 @@ class _StartVidState extends State<StartVid> {
               children: [
                 LocalVideoWidget(
                     engine: _engine, localUserJoined: _localUserJoined, isCam: _isVideoMuted,),
-                RemoteVideoWidget(engine: _engine, remoteUid: _remoteUid),
+                RemoteVideoWidget(engine: _engine, remoteUid: _remoteUid, isCam: _remoteVideoMuted,),
                 _toolbar(),
               ],
             ),
