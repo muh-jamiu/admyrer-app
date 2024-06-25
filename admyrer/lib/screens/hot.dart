@@ -17,6 +17,7 @@ import 'package:admyrer/widget/bottom_open.dart';
 import 'package:admyrer/widget/custom_sheet.dart';
 import 'package:admyrer/screens/search_page.dart';
 import 'package:admyrer/screens/join_stream.dart';
+import 'package:admyrer/screens/join_club.dart';
 
 // import "package:Admyrer/widget/background.dart";
 
@@ -142,6 +143,12 @@ class _HotState extends State<Hot> {
     Navigator.push(context,
         MaterialPageRoute(builder: (context) => JoinStream(token: token, channel: channel )));
   }
+
+    void goClub(token, channel) {
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => JoinClub(token: token, channel: channel )));
+  }
+
 
 
   void goAll() {
@@ -377,7 +384,7 @@ class _HotState extends State<Hot> {
                                     )
                                   : Container(
                                       height: 250,
-                                      child: ClubUsers(users: clubs),
+                                      child: ClubUsers(users: clubs, goClub: goClub),
                                     )
                             ],
                           ),
@@ -904,7 +911,8 @@ class _LiveUsersState extends State<LiveUsers> {
 
 class ClubUsers extends StatefulWidget {
   final List<Livemodel> users;
-  const ClubUsers({super.key, required this.users});
+  final Function goClub;
+  const ClubUsers({super.key, required this.users, required this.goClub});
 
   @override
   State<ClubUsers> createState() => _ClubUsersState();
@@ -927,7 +935,7 @@ class _ClubUsersState extends State<ClubUsers> {
             mainAxisSpacing: 15,
             children: [
               InkWell(
-                onTap: () => goSingle(widget.users[0]),
+                onTap: () => widget.goClub(widget.users[0].token, widget.users[0].channel),
                 child: ImageWithTextAndIcon(
                     name: widget.users[0].username ?? "",
                     image: widget.users[0].avatar ?? "",
@@ -935,7 +943,7 @@ class _ClubUsersState extends State<ClubUsers> {
               ),
               widget.users.length > 1 ?
               InkWell(
-                onTap: () => goSingle(widget.users[1]),
+                onTap: () => widget.goClub(widget.users[1].token, widget.users[1].channel),
                 child: ImageWithTextAndIcon(
                     name: widget.users[1].username ?? "",
                     image: widget.users[1].avatar ?? "",
