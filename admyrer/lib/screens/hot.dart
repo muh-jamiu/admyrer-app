@@ -31,8 +31,33 @@ class _HotState extends State<Hot> {
   List<UserModel> users = [];
   List<UserModel> allUser = [];
   List<Livemodel> lives = [];
-  List<UserModel> clubs = [];
+  List<Livemodel> clubs = [];
   bool isLoading = true;
+
+   Future<void> getClubs() async {
+    try {
+      final response = await _apiService.getRequest("club");
+
+      var data = json.decode(response.body);
+
+      if (data["data"] == null || data["data"]["random"] == null) {
+        showErrorToast('Invalid response data');
+        return;
+      }
+
+      List<dynamic> userList = data["data"]["random"];
+      List<Livemodel> clubs =
+          userList.map((user) => Livemodel.fromJson(user)).toList();
+
+      setState(() {
+        this.clubs = clubs;
+      });
+    } catch (e) {
+      // showErrorToast('An error occurred: $e');
+      print(e);
+    }
+  }
+
 
   Future<void> getLives() async {
     try {
@@ -301,7 +326,7 @@ class _HotState extends State<Hot> {
                                     )
                                   : 
                               Container(
-                                height: 580,
+                                height: 280,
                                 child: LiveUsers(users: lives),
                               ),
                               Row(
@@ -324,7 +349,7 @@ class _HotState extends State<Hot> {
                                 ],
                               ),
                               
-                              allUser.length == 0
+                              clubs.length == 0
                                   ? const Column(
                                       children: [
                                         SizedBox(
@@ -332,13 +357,13 @@ class _HotState extends State<Hot> {
                                         ),
                                         Center(
                                           child: Text(
-                                              "There are no live users at the moment"),
+                                              "There are no active night clubs at the moment"),
                                         )
                                       ],
                                     )
                                   : Container(
-                                      height: 620,
-                                      child: ClubUsers(users: allUser),
+                                      height: 300,
+                                      child: ClubUsers(users: clubs),
                                     )
                             ],
                           ),
@@ -862,7 +887,7 @@ class _LiveUsersState extends State<LiveUsers> {
 }
 
 class ClubUsers extends StatefulWidget {
-  final List<UserModel> users;
+  final List<Livemodel> users;
   const ClubUsers({super.key, required this.users});
 
   @override
@@ -899,15 +924,15 @@ class _ClubUsersState extends State<ClubUsers> {
               InkWell(
                 onTap: () => goSingle(widget.users[0]),
                 child: ImageWithTextAndIcon(
-                    name: widget.users[0].firstName,
-                    image: widget.users[0].avatar,
+                    name: widget.users[0].username ?? "",
+                    image: widget.users[0].avatar ?? "",
                     icon: Icons.heart_broken),
               ),
               InkWell(
                 onTap: () => goSingle(widget.users[1]),
                 child: ImageWithTextAndIcon(
-                    name: widget.users[1].firstName,
-                    image: widget.users[1].avatar,
+                    name: widget.users[1].username ?? "",
+                    image: widget.users[1].avatar ?? "",
                     icon: Icons.heart_broken),
               ),
             ],
