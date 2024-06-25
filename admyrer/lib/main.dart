@@ -3,18 +3,26 @@ import 'package:admyrer/screens/login.dart';
 import 'package:admyrer/screens/register.dart';
 import 'package:admyrer/screens/tab_screen.dart';
 import 'package:admyrer/screens/verify.dart';
-import 'package:admyrer/screens/message.dart';
 import 'package:flutter/material.dart';
 import './screens/onboarding_screen.dart';
-import './screens/allUsers.dart';
 import './screens/home.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
 import './screens/step_Sceen.dart';
-import 'package:hive/hive.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 
 void main() async {
-  await Hive.initFlutter();
-  await Hive.openBox('cacheBox');
+  AwesomeNotifications().initialize(
+    'resource://drawable/res_app_icon',
+    [
+      NotificationChannel(
+        channelKey: 'basic_channel',
+        channelName: 'Basic notifications',
+        channelDescription: 'Notification channel for basic tests',
+        defaultColor: Color(0xFF9D50DD),
+        ledColor: Colors.white
+      )
+    ],
+    debug: true
+  );
   runApp(const MyApp());
 }
 

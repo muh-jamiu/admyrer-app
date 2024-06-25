@@ -106,18 +106,7 @@ class _EditProfileState extends State<EditProfile> {
                             ),
                           ),
                         ],
-                      ),
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.more_vert_outlined,
-                            color: Colors.pink[300],
-                          ),
-                          const SizedBox(width: 15),
-                          Icon(Icons.diamond_rounded, color: Colors.blue[300]),
-                        ],
-                      ),
-                    ],
+                      ),],
                   ),
                   const SizedBox(
                     height: 10,

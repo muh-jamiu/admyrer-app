@@ -2,24 +2,17 @@ import 'package:admyrer/widget/backgrounds.dart';
 import 'package:admyrer/widget/bottom_open.dart';
 import 'package:flutter/material.dart';
 import 'package:admyrer/services/api_service.dart';
-import 'package:admyrer/services/hive_helper.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:convert';
 import 'package:admyrer/models/user.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:admyrer/screens/single.dart';
 import 'package:admyrer/screens/search_page.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:timezone/data/latest.dart' as tz;
-import 'package:timezone/timezone.dart' as tz;
-import 'package:admyrer/widget/gradient_button.dart';
-import 'package:admyrer/widget/normal_button.dart';
-import 'package:admyrer/widget/bottom_open.dart';
 import 'package:admyrer/widget/custom_sheet.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
 
 class Locations extends StatefulWidget {
   bool isLoading;
-
   Locations({Key? key, required this.isLoading}) : super(key: key);
 
   @override
@@ -32,8 +25,16 @@ class _LocationsState extends State<Locations> {
   bool isLoading = true;
   String token = "";
 
-  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
+  void ShowNoties(){
+    AwesomeNotifications().createNotification(
+      content: NotificationContent(
+        id: 10,
+        channelKey: 'basic_channel',
+        title: 'Hello!',
+        body: 'This is a simple notification created with Awesome Notifications.',
+      ),
+    );
+  }
 
   void showErrorToast(String message) {
     Fluttertoast.showToast(
@@ -86,21 +87,7 @@ class _LocationsState extends State<Locations> {
   void initState() {
     super.initState();
     getUsers();
-
-    flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-
-    const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
-
-    final InitializationSettings initializationSettings =
-        InitializationSettings(
-      android: initializationSettingsAndroid,
-    );
-
-    flutterLocalNotificationsPlugin.initialize(initializationSettings);
-
-    // Initialize timezone
-    tz.initializeTimeZones();
+    ShowNoties();
   }
 
   Future<void> getUsersByCountry(country) async {
@@ -142,27 +129,6 @@ class _LocationsState extends State<Locations> {
         isLoading = false;
       });
     }
-  }
-
-  Future<void> _scheduleNotification(DateTime dateTime) async {
-    const AndroidNotificationDetails androidPlatformChannelSpecifics =
-        AndroidNotificationDetails('your_channel_id', 'your_channel_name',
-            channelDescription: 'your_channel_description',
-            importance: Importance.max,
-            priority: Priority.high,
-            showWhen: false);
-    const NotificationDetails platformChannelSpecifics =
-        NotificationDetails(android: androidPlatformChannelSpecifics);
-
-    await flutterLocalNotificationsPlugin.zonedSchedule(
-        0,
-        'Hello!',
-        'This is a notification for you.',
-        tz.TZDateTime.from(dateTime, tz.local),
-        platformChannelSpecifics,
-        androidAllowWhileIdle: true,
-        uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime);
   }
 
   String? _selectedCountry;
@@ -441,11 +407,7 @@ class _LocationsState extends State<Locations> {
                           ),
                           const SizedBox(width: 15),
                           InkWell(
-                              onTap: () {
-                                DateTime scheduledTime =
-                                    DateTime.now().add(Duration(seconds: 5));
-                                _scheduleNotification(scheduledTime);
-                              },
+                              onTap: () {},
                               child: Icon(Icons.diamond_rounded,
                                   color: Colors.blue[300])),
                         ],

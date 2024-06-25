@@ -170,7 +170,7 @@ class _ProfileState extends State<Profile> {
                   const SizedBox(
                     height: 30,
                   ),
-                  Row(
+                  const Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text(
@@ -179,22 +179,6 @@ class _ProfileState extends State<Profile> {
                           fontSize: 25,
                           fontWeight: FontWeight.bold,
                         ),
-                      ),
-                      Row(
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              showCustomBottomSheet(
-                                context,
-                                CustomSheet(goSearch: goSearch),
-                              );
-                            },
-                            child: Icon(Icons.more_vert_outlined,
-                                color: Colors.pink[300]),
-                          ),
-                          const SizedBox(width: 15),
-                          Icon(Icons.diamond_rounded, color: Colors.blue[300]),
-                        ],
                       ),
                     ],
                   ),
