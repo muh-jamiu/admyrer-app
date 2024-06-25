@@ -160,9 +160,6 @@ class _StartVidState extends State<StartVid> {
           ),
         ),
         child: Scaffold(
-          appBar: AppBar(
-            title: Text('Live Stream'),
-          ),
           body: Container(
             decoration: const BoxDecoration(
               gradient: const LinearGradient(
@@ -173,6 +170,7 @@ class _StartVidState extends State<StartVid> {
             ),
             child: Stack(
               children: [
+                _topBar(),
                 LocalVideoWidget(
                     engine: _engine, localUserJoined: _localUserJoined, isCam: _isVideoMuted,),
                 RemoteVideoWidget(engine: _engine, remoteUid: _remoteUid, isCam: _remoteVideoMuted,),
@@ -184,6 +182,14 @@ class _StartVidState extends State<StartVid> {
       ),
     );
   }
+
+  Widget _topBar() {
+    return const Align(
+      alignment: Alignment.topLeft,
+      child: Row(children: [
+        Text("Live Stream")
+      ],),
+    );}
 
   Widget _toolbar() {
     return Align(

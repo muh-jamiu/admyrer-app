@@ -186,7 +186,7 @@ class _EditProfileState extends State<EditProfile> {
                         ),
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.all(25),
+                            padding: const EdgeInsets.all(15),
                             backgroundColor: Colors.pink[400],
                           ),
                             onPressed: () {},
@@ -241,7 +241,7 @@ class _EditProfileState extends State<EditProfile> {
                         ),
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.all(25),
+                            padding: const EdgeInsets.all(15),
                             backgroundColor: Colors.pink[400],
                           ),
                             onPressed: () {},
@@ -327,7 +327,7 @@ class _EditProfileState extends State<EditProfile> {
                         ),
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.all(25),
+                            padding: const EdgeInsets.all(15),
                             backgroundColor: Colors.pink[400],
                           ),
                             onPressed: () {},

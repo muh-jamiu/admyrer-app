@@ -208,7 +208,7 @@ class _UsersState extends State<Users> {
                               borderRadius: BorderRadius.circular(50),
                               child: FadeInImage.assetNetwork(
                                   placeholder:
-                                      "assets/images/no_profile_image.webp",
+                                      "assets/images/ai.webp",
                                   image: "assets/images/ai.webp",
                                   height: 55,
                                   fit: BoxFit.cover,
@@ -216,7 +216,7 @@ class _UsersState extends State<Users> {
                                   imageErrorBuilder: (BuildContext context,
                                       Object error, StackTrace? stackTrace) {
                                     return Image.asset(
-                                      'assets/images/no_profile_image.webp',
+                                      'assets/images/ai.webp',
                                       height: 55,
                                       fit: BoxFit.cover,
                                       width: double.infinity,
