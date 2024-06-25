@@ -6,23 +6,9 @@ import 'package:admyrer/screens/verify.dart';
 import 'package:flutter/material.dart';
 import './screens/onboarding_screen.dart';
 import './screens/home.dart';
-import 'package:awesome_notifications/awesome_notifications.dart';
 import './screens/step_Sceen.dart';
 
 void main() async {
-  AwesomeNotifications().initialize(
-    'resource://drawable/res_app_icon',
-    [
-      NotificationChannel(
-        channelKey: 'basic_channel',
-        channelName: 'Basic notifications',
-        channelDescription: 'Notification channel for basic tests',
-        defaultColor: Colors.pink[400],
-        ledColor: Colors.white
-      )
-    ],
-    debug: true
-  );
   runApp(const MyApp());
 }
 
