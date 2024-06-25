@@ -43,6 +43,12 @@ class _ProfileState extends State<Profile> {
   List<UserModel>  likes = [];
   List<UserModel>  follows = [];
 
+  void goLive() {
+    Navigator.push(
+      context, MaterialPageRoute(builder: (context) => StartVid()));
+  }
+
+
     
   Future<void> getFollows() async {
      SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -213,7 +219,7 @@ class _ProfileState extends State<Profile> {
                   const SizedBox(
                     height: 10,
                   ),
-                  Expanded(child: MyGridList(user: user, goPolls: goPolls, goQuiz: goQuiz, follows: follows))
+                  Expanded(child: MyGridList(user: user, goPolls: goPolls, goQuiz: goQuiz, follows: follows, goLive: goLive))
                 ],
               ),
             )
@@ -404,7 +410,16 @@ class MyGridList extends StatefulWidget {
   final List<UserModel> follows;
   final Function goPolls;
   final Function goQuiz;
-  const MyGridList({super.key, required this.user,required this.goQuiz, required this.goPolls, required this.follows});
+  final Function goLive;
+  const MyGridList(
+    {super.key, 
+    required this.user,
+    required this.goQuiz, 
+    required this.goPolls, 
+    required this.follows,
+    required this.goLive
+    }
+    );
 
   @override
   State<MyGridList> createState() => _MyGridListState();
@@ -496,11 +511,6 @@ class _MyGridListState extends State<MyGridList> {
       context, MaterialPageRoute(builder: (context) => Follows()));
   }
 
-  void goLive() {
-    Navigator.push(
-      context, MaterialPageRoute(builder: (context) => StartVid()));
-  }
-
   List<String> users = [
     'User 1',
     'User 2',
@@ -559,7 +569,7 @@ class _MyGridListState extends State<MyGridList> {
       mainAxisSpacing: 10,
       children: [
         InkWell(
-          onTap: goLive,
+          onTap: () => widget.goLive(),
           child: Container(
             width: 100,
             height: 150,
