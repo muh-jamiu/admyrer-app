@@ -126,7 +126,7 @@ class _AiChatState extends State<AiChat> {
                             borderRadius: BorderRadius.circular(50),
                             child: FadeInImage.assetNetwork(
                                 placeholder:
-                                    "assets/images/no_profile_image.webp",
+                                    "assets/images/ai.webp",
                                 image: "assets/images/ai.webp",
                                 height: 60,
                                 fit: BoxFit.cover,
@@ -134,7 +134,7 @@ class _AiChatState extends State<AiChat> {
                                 imageErrorBuilder: (BuildContext context,
                                     Object error, StackTrace? stackTrace) {
                                   return Image.asset(
-                                    'assets/images/no_profile_image.webp',
+                                    'assets/images/ai.webp',
                                     height: 60,
                                     fit: BoxFit.cover,
                                     width: double.infinity,

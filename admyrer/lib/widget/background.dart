@@ -16,7 +16,7 @@ class Background extends StatelessWidget {
       child:  Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children:  [
-          Image.asset("assets/images/icon_splash.png", width: 200, height: 200,),
+          Image.asset("assets/images/main_logo.png", width: 200, height: 100,),
           const Center(
             // child: Text(
             //   'ADMYRER',
