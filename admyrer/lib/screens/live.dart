@@ -187,61 +187,67 @@ class _StartVidState extends State<StartVid> {
     return const Align(
       alignment: Alignment.topLeft,
       child: Row(children: [
-        Text("Live Stream")
+        Padding(
+          padding: EdgeInsets.all(18.0),
+          child: Text("Live Stream", style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold,color: Colors.white)),
+        )
       ],),
     );}
 
   Widget _toolbar() {
-    return Align(
-      alignment: Alignment.bottomCenter,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          RawMaterialButton(
-            onPressed: _toggleMute,
-            shape: const CircleBorder(),
-            elevation: 2.0,
-            fillColor: _isMuted ? Colors.pink[400] : Colors.white,
-            padding: const EdgeInsets.all(12.0),
-            child: Icon(
-              _isMuted ? Icons.mic_off : Icons.mic,
-              color: _isMuted ? Colors.white : Colors.pink[400],
-              size: 20.0,
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 15),
+      child: Align(
+        alignment: Alignment.bottomCenter,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            RawMaterialButton(
+              onPressed: _toggleMute,
+              shape: const CircleBorder(),
+              elevation: 2.0,
+              fillColor: _isMuted ? Colors.pink[400] : Colors.white,
+              padding: const EdgeInsets.all(12.0),
+              child: Icon(
+                _isMuted ? Icons.mic_off : Icons.mic,
+                color: _isMuted ? Colors.white : Colors.pink[400],
+                size: 20.0,
+              ),
             ),
-          ),
-          IconButton(
-            icon: const Icon(Icons.call_end),
-            color: Colors.red,
-            onPressed: () {
-              _engine.leaveChannel();
-              Navigator.pop(context);
-            },
-          ),
-          RawMaterialButton(
-            onPressed: _toggleVideoMute,
-            shape: const CircleBorder(),
-            elevation: 2.0,
-            fillColor: _isVideoMuted ? Colors.pink[400] : Colors.white,
-            padding: const EdgeInsets.all(12.0),
-            child: Icon(
-              _isVideoMuted ? Icons.videocam_off : Icons.videocam,
-              color: _isVideoMuted ? Colors.white : Colors.pink[400],
-              size: 20.0,
+            IconButton(
+              icon: const Icon(Icons.call_end),
+              color: Colors.red,
+              onPressed: () {
+                _engine.leaveChannel();
+                Navigator.pop(context);
+              },
             ),
-          ),
-          RawMaterialButton(
-            onPressed: _switchCamera,
-            shape: const CircleBorder(),
-            elevation: 2.0,
-            fillColor: Colors.white,
-            padding: const EdgeInsets.all(12.0),
-            child: Icon(
-              Icons.switch_camera,
-              color: Colors.pink[400],
-              size: 20.0,
+            RawMaterialButton(
+              onPressed: _toggleVideoMute,
+              shape: const CircleBorder(),
+              elevation: 2.0,
+              fillColor: _isVideoMuted ? Colors.pink[400] : Colors.white,
+              padding: const EdgeInsets.all(12.0),
+              child: Icon(
+                _isVideoMuted ? Icons.videocam_off : Icons.videocam,
+                color: _isVideoMuted ? Colors.white : Colors.pink[400],
+                size: 20.0,
+              ),
             ),
-          ),
-        ],
+            RawMaterialButton(
+              onPressed: _switchCamera,
+              shape: const CircleBorder(),
+              elevation: 2.0,
+              fillColor: Colors.white,
+              padding: const EdgeInsets.all(12.0),
+              child: Icon(
+                Icons.switch_camera,
+                color: Colors.pink[400],
+                size: 20.0,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
