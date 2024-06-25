@@ -10,6 +10,10 @@ import 'package:admyrer/screens/single.dart';
 import 'package:admyrer/screens/search_page.dart';
 import 'package:admyrer/widget/custom_sheet.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:flutter/services.dart';
+import 'dart:ui' as ui;
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
 
 class Locations extends StatefulWidget {
   bool isLoading;
@@ -25,13 +29,30 @@ class _LocationsState extends State<Locations> {
   bool isLoading = true;
   String token = "";
 
-  void ShowNoties(){
+  Future<String> loadImageAsFile(String assetPath) async {
+    final ByteData data = await rootBundle.load(assetPath);
+    final Uint8List bytes = data.buffer.asUint8List();
+
+    final tempDir = await getTemporaryDirectory();
+    final file = File('${tempDir.path}/temp_image.png');
+    await file.writeAsBytes(bytes);
+
+    return file.path;
+  }
+
+  void ShowNoties() async{
+    final imagePath = await loadImageAsFile('assets/images/icon.png');
+    
     AwesomeNotifications().createNotification(
       content: NotificationContent(
         id: 10,
         channelKey: 'basic_channel',
         title: 'Hello!',
         body: 'This is a simple notification created with Awesome Notifications.',
+        backgroundColor: Colors.pink[400],
+        color: Colors.white,
+        bigPicture: '$imagePath',
+        notificationLayout: NotificationLayout.BigPicture,
       ),
     );
   }
