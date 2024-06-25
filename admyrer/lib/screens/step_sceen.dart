@@ -17,7 +17,7 @@ class _StepSceenState extends State<StepSceen> {
   bool isLoading = false;
 
   void login() {
-    Navigator.pushReplacementNamed(context, "/hot");
+    Navigator.pushReplacementNamed(context, "/tab");
   }
 
   void register() {

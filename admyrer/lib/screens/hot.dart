@@ -40,12 +40,12 @@ class _HotState extends State<Hot> {
 
       var data = json.decode(response.body);
 
-      if (data["data"] == null || data["data"]["random"] == null) {
+      if (data["data"] == null || data["data"] == null) {
         showErrorToast('Invalid response data');
         return;
       }
 
-      List<dynamic> userList = data["data"]["random"];
+      List<dynamic> userList = data["data"];
       List<Livemodel> clubs =
           userList.map((user) => Livemodel.fromJson(user)).toList();
 
@@ -65,12 +65,12 @@ class _HotState extends State<Hot> {
 
       var data = json.decode(response.body);
 
-      if (data["data"] == null || data["data"]["random"] == null) {
+      if (data["data"] == null || data["data"] == null) {
         showErrorToast('Invalid response data');
         return;
       }
 
-      List<dynamic> userList = data["data"]["random"];
+      List<dynamic> userList = data["data"];
       List<Livemodel> lives =
           userList.map((user) => Livemodel.fromJson(user)).toList();
 
@@ -134,6 +134,7 @@ class _HotState extends State<Hot> {
   void initState() {
     getUsers();
     getLives();
+    getClubs();
   }
 
   void goAll() {
@@ -321,12 +322,15 @@ class _HotState extends State<Hot> {
                                         Center(
                                           child: Text(
                                               "There are no live users at the moment"),
-                                        )
+                                        ),
+                                        SizedBox(
+                                          height: 30,
+                                        ),
                                       ],
                                     )
                                   : 
                               Container(
-                                height: 280,
+                                height: 250,
                                 child: LiveUsers(users: lives),
                               ),
                               Row(
@@ -358,11 +362,14 @@ class _HotState extends State<Hot> {
                                         Center(
                                           child: Text(
                                               "There are no active night clubs at the moment"),
-                                        )
+                                        ),
+                                        SizedBox(
+                                          height: 30,
+                                        ),
                                       ],
                                     )
                                   : Container(
-                                      height: 300,
+                                      height: 250,
                                       child: ClubUsers(users: clubs),
                                     )
                             ],
@@ -874,13 +881,14 @@ class _LiveUsersState extends State<LiveUsers> {
               image: widget.users[0].avatar ?? "",
               icon: Icons.heart_broken),
         ),
+        widget.users.length > 1 ? 
         InkWell(
           onTap: () => goSingle(widget.users[1]),
           child: ImageWithTextAndIcon(
               name: widget.users[1].username ?? "",
               image: widget.users[1].avatar ?? "",
               icon: Icons.heart_broken),
-        ),
+        ): Container(),
       ],
     );
   }
@@ -903,18 +911,7 @@ class _ClubUsersState extends State<ClubUsers> {
   bool isShow = true;
   @override
   Widget build(BuildContext context) {
-    return isShow
-        ? const Column(
-            children: [
-              SizedBox(
-                height: 30,
-              ),
-              Center(
-                child: Text("There are no live users at the moment"),
-              )
-            ],
-          )
-        : GridView.count(
+    return GridView.count(
             physics: NeverScrollableScrollPhysics(),
             crossAxisCount: 2,
             crossAxisSpacing: 20,
@@ -928,13 +925,14 @@ class _ClubUsersState extends State<ClubUsers> {
                     image: widget.users[0].avatar ?? "",
                     icon: Icons.heart_broken),
               ),
+              widget.users.length > 1 ?
               InkWell(
                 onTap: () => goSingle(widget.users[1]),
                 child: ImageWithTextAndIcon(
                     name: widget.users[1].username ?? "",
                     image: widget.users[1].avatar ?? "",
                     icon: Icons.heart_broken),
-              ),
+              ): Container(),
             ],
           );
   }
