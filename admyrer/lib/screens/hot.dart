@@ -16,6 +16,7 @@ import 'package:admyrer/screens/single.dart';
 import 'package:admyrer/widget/bottom_open.dart';
 import 'package:admyrer/widget/custom_sheet.dart';
 import 'package:admyrer/screens/search_page.dart';
+import 'package:admyrer/screens/join_stream.dart';
 
 // import "package:Admyrer/widget/background.dart";
 
@@ -136,6 +137,12 @@ class _HotState extends State<Hot> {
     getLives();
     getClubs();
   }
+
+  void goStream(token, channel) {
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => JoinStream(token: token, channel: channel )));
+  }
+
 
   void goAll() {
     Navigator.push(context,
@@ -331,7 +338,7 @@ class _HotState extends State<Hot> {
                                   : 
                               Container(
                                 height: 250,
-                                child: LiveUsers(users: lives),
+                                child: LiveUsers(users: lives, goStream: goStream),
                               ),
                               Row(
                                 mainAxisAlignment:
@@ -853,7 +860,8 @@ class __AllUSersOneStateState extends State<_AllUSersOneState> {
 
 class LiveUsers extends StatefulWidget {
   final List<Livemodel> users;
-  const LiveUsers({super.key, required this.users});
+  final Function goStream;
+  const LiveUsers({super.key, required this.users, required this.goStream});
 
   @override
   State<LiveUsers> createState() => _LiveUsersState();
@@ -875,7 +883,7 @@ class _LiveUsersState extends State<LiveUsers> {
       mainAxisSpacing: 15,
       children: [
         InkWell(
-          onTap: () => goSingle(widget.users[0]),
+          onTap: () => widget.goStream(widget.users[0].token, widget.users[0].channel),
           child: ImageWithTextAndIcon(
               name: widget.users[0].username ?? "",
               image: widget.users[0].avatar ?? "",
@@ -883,7 +891,7 @@ class _LiveUsersState extends State<LiveUsers> {
         ),
         widget.users.length > 1 ? 
         InkWell(
-          onTap: () => goSingle(widget.users[1]),
+          onTap: () => widget.goStream(widget.users[1].token, widget.users[1].channel),
           child: ImageWithTextAndIcon(
               name: widget.users[1].username ?? "",
               image: widget.users[1].avatar ?? "",
