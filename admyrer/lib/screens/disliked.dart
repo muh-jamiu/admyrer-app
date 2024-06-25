@@ -128,7 +128,7 @@ class _DislLikeState extends State<DislLike> {
                               CircularProgressIndicator(
                                 valueColor:
                                     AlwaysStoppedAnimation<Color>(Colors.pink),
-                                strokeWidth: 6.0,
+                                strokeWidth: 3.0,
                               ),
                               SizedBox(height: 20),
                               Text(

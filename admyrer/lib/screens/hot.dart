@@ -5,6 +5,7 @@ import 'package:admyrer/widget/google_login.dart';
 import 'package:admyrer/widget/facebook.dart';
 import 'package:admyrer/widget/image_my_placeholder.dart';
 import 'package:admyrer/models/user.dart';
+import 'package:admyrer/models/live_model.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:admyrer/services/api_service.dart';
@@ -29,7 +30,33 @@ class _HotState extends State<Hot> {
   final ApiService _apiService = ApiService();
   List<UserModel> users = [];
   List<UserModel> allUser = [];
+  List<Livemodel> lives = [];
+  List<UserModel> clubs = [];
   bool isLoading = true;
+
+  Future<void> getLives() async {
+    try {
+      final response = await _apiService.getRequest("live");
+
+      var data = json.decode(response.body);
+
+      if (data["data"] == null || data["data"]["random"] == null) {
+        showErrorToast('Invalid response data');
+        return;
+      }
+
+      List<dynamic> userList = data["data"]["random"];
+      List<Livemodel> lives =
+          userList.map((user) => Livemodel.fromJson(user)).toList();
+
+      setState(() {
+        this.lives = lives;
+      });
+    } catch (e) {
+      // showErrorToast('An error occurred: $e');
+      print(e);
+    }
+  }
 
   void showErrorToast(String message) {
     Fluttertoast.showToast(
@@ -43,7 +70,7 @@ class _HotState extends State<Hot> {
     );
   }
 
-  Future<void> getUsers() async {    
+  Future<void> getUsers() async {
     try {
       final response = await _apiService.postRequest("buildPage", {
         "id": 10,
@@ -60,7 +87,6 @@ class _HotState extends State<Hot> {
       List<UserModel> users =
           userList.map((user) => UserModel.fromJson(user)).toList();
 
-      
       List<dynamic> alluserList = data["data"]["all"];
       List<UserModel> allusers =
           alluserList.map((user) => UserModel.fromJson(user)).toList();
@@ -70,7 +96,6 @@ class _HotState extends State<Hot> {
         this.allUser = allusers;
         isLoading = false;
       });
-
     } catch (e) {
       // showErrorToast('An error occurred: $e');
       print(e);
@@ -83,21 +108,22 @@ class _HotState extends State<Hot> {
   @override
   void initState() {
     getUsers();
+    getLives();
   }
 
   void goAll() {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => AllUsers(users: users)));
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => AllUsers(users: users)));
   }
 
   void goAllUser() {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => AllUsers(users: allUser)));
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => AllUsers(users: allUser)));
   }
 
   void goSearch(String search) {
-    Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-            builder: (context) => SearchPage(search: search)));
+    Navigator.pushReplacement(context,
+        MaterialPageRoute(builder: (context) => SearchPage(search: search)));
   }
 
   @override
@@ -157,7 +183,7 @@ class _HotState extends State<Hot> {
                               CircularProgressIndicator(
                                 valueColor:
                                     AlwaysStoppedAnimation<Color>(Colors.pink),
-                                strokeWidth: 6.0,
+                                strokeWidth: 3.0,
                               ),
                               SizedBox(height: 20),
                               Text(
@@ -239,7 +265,6 @@ class _HotState extends State<Hot> {
                                   child: _AllUSersOneState(
                                     users: allUser,
                                   )),
-
                               const SizedBox(
                                 height: 15,
                               ),
@@ -262,11 +287,59 @@ class _HotState extends State<Hot> {
                                   ),
                                 ],
                               ),
-
+                              lives.length == 0
+                                  ? const Column(
+                                      children: [
+                                        SizedBox(
+                                          height: 30,
+                                        ),
+                                        Center(
+                                          child: Text(
+                                              "There are no live users at the moment"),
+                                        )
+                                      ],
+                                    )
+                                  : 
                               Container(
-                                  height: 620,
-                                child: LiveUsers(users: allUser),
-                              )
+                                height: 580,
+                                child: LiveUsers(users: lives),
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const Text("Active Night Clubs",
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w600)),
+                                  InkWell(
+                                    onTap: () => {},
+                                    child: Text(
+                                      "See All",
+                                      style: TextStyle(
+                                          fontSize: 15,
+                                          color: Colors.purple[300]),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              
+                              allUser.length == 0
+                                  ? const Column(
+                                      children: [
+                                        SizedBox(
+                                          height: 30,
+                                        ),
+                                        Center(
+                                          child: Text(
+                                              "There are no live users at the moment"),
+                                        )
+                                      ],
+                                    )
+                                  : Container(
+                                      height: 620,
+                                      child: ClubUsers(users: allUser),
+                                    )
                             ],
                           ),
                         ),
@@ -289,13 +362,12 @@ class Users extends StatefulWidget {
 }
 
 class _UsersState extends State<Users> {
-
   @override
   Widget build(BuildContext context) {
-    
-  void goSingle(user) {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => Single(users: user)));
-  }
+    void goSingle(user) {
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => Single(users: user)));
+    }
 
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
@@ -316,7 +388,8 @@ class _UsersState extends State<Users> {
                           decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               border: Border.all(
-                                  color: const Color.fromARGB(255, 207, 37, 212),
+                                  color:
+                                      const Color.fromARGB(255, 207, 37, 212),
                                   width: 2.0)),
                           child: Padding(
                             padding: EdgeInsets.all(2.0),
@@ -393,10 +466,11 @@ class _FirstSectionState extends State<FirstSection> {
       index += 1;
     });
   }
- 
+
   void goSingle(user) {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => Single(users: user)));
-  }  
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => Single(users: user)));
+  }
 
   void showErrorToast(String message) {
     Fluttertoast.showToast(
@@ -409,7 +483,6 @@ class _FirstSectionState extends State<FirstSection> {
       fontSize: 15.0,
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -481,7 +554,10 @@ class _FirstSectionState extends State<FirstSection> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     InkWell(
-                      onTap: ()  {nextUser(); showErrorToast("You dislike this user");},
+                      onTap: () {
+                        nextUser();
+                        showErrorToast("You dislike this user");
+                      },
                       child: Container(
                         width: 60,
                         height: 60,
@@ -497,21 +573,23 @@ class _FirstSectionState extends State<FirstSection> {
                     ),
                     const SizedBox(width: 10),
                     InkWell(
-                      onTap: ()  {nextUser(); showErrorToast("You like this user");},
+                      onTap: () {
+                        nextUser();
+                        showErrorToast("You like this user");
+                      },
                       child: Container(
                         width: 60,
                         height: 60,
                         decoration: BoxDecoration(
                             color: Colors.pink[300],
                             borderRadius: BorderRadius.circular(50)),
-                        child:
-                Center(
-                  child: const FaIcon(
-                    FontAwesomeIcons.heart,
-                      color: Colors.white,
-                      size: 25,
-                  ),
-                ),
+                        child: Center(
+                          child: const FaIcon(
+                            FontAwesomeIcons.heart,
+                            color: Colors.white,
+                            size: 25,
+                          ),
+                        ),
                       ),
                     ),
                   ],
@@ -536,8 +614,10 @@ class AllUSers extends StatefulWidget {
 
 class _AllUSersState extends State<AllUSers> {
   void goSingle(user) {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => Single(users: user)));
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => Single(users: user)));
   }
+
   @override
   Widget build(BuildContext context) {
     return GridView.count(
@@ -548,34 +628,46 @@ class _AllUSersState extends State<AllUSers> {
       mainAxisSpacing: 15,
       children: [
         InkWell(
-          onTap: () => goSingle( widget.users[0]),
+          onTap: () => goSingle(widget.users[0]),
           child: ImageWithTextAndIcon(
-              name: widget.users[0].firstName, image: widget.users[0].avatar, icon: Icons.heart_broken),
+              name: widget.users[0].firstName,
+              image: widget.users[0].avatar,
+              icon: Icons.heart_broken),
         ),
         InkWell(
-          onTap: () => goSingle( widget.users[1]),
+          onTap: () => goSingle(widget.users[1]),
           child: ImageWithTextAndIcon(
-              name: widget.users[1].firstName, image: widget.users[1].avatar, icon: Icons.heart_broken),
+              name: widget.users[1].firstName,
+              image: widget.users[1].avatar,
+              icon: Icons.heart_broken),
         ),
         InkWell(
-          onTap: () => goSingle( widget.users[2]),
+          onTap: () => goSingle(widget.users[2]),
           child: ImageWithTextAndIcon(
-              name: widget.users[2].firstName, image: widget.users[2].avatar, icon: Icons.heart_broken),
+              name: widget.users[2].firstName,
+              image: widget.users[2].avatar,
+              icon: Icons.heart_broken),
         ),
         InkWell(
-          onTap: () => goSingle( widget.users[3]),
+          onTap: () => goSingle(widget.users[3]),
           child: ImageWithTextAndIcon(
-              name: widget.users[3].firstName, image: widget.users[3].avatar, icon: Icons.heart_broken),
+              name: widget.users[3].firstName,
+              image: widget.users[3].avatar,
+              icon: Icons.heart_broken),
         ),
         InkWell(
-          onTap: () => goSingle( widget.users[4]),
+          onTap: () => goSingle(widget.users[4]),
           child: ImageWithTextAndIcon(
-              name: widget.users[4].firstName, image: widget.users[4].avatar, icon: Icons.heart_broken),
+              name: widget.users[4].firstName,
+              image: widget.users[4].avatar,
+              icon: Icons.heart_broken),
         ),
         InkWell(
-          onTap: () => goSingle( widget.users[5]),
+          onTap: () => goSingle(widget.users[5]),
           child: ImageWithTextAndIcon(
-              name: widget.users[5].firstName, image: widget.users[5].avatar, icon: Icons.heart_broken),
+              name: widget.users[5].firstName,
+              image: widget.users[5].avatar,
+              icon: Icons.heart_broken),
         ),
       ],
     );
@@ -625,12 +717,11 @@ class _ImageWithTextAndIconState extends State<ImageWithTextAndIcon> {
           Positioned(
             top: 10,
             right: 10,
-            child: 
-                FaIcon(
-                  FontAwesomeIcons.heart,
-                    color: Colors.pink[300],
-                    size:30,
-                ),
+            child: FaIcon(
+              FontAwesomeIcons.heart,
+              color: Colors.pink[300],
+              size: 30,
+            ),
           ),
           // Positioned text at the bottom
           Positioned(
@@ -658,7 +749,6 @@ class _ImageWithTextAndIconState extends State<ImageWithTextAndIcon> {
   }
 }
 
-
 class _AllUSersOneState extends StatefulWidget {
   final List<UserModel> users;
   const _AllUSersOneState({super.key, required this.users});
@@ -669,8 +759,10 @@ class _AllUSersOneState extends StatefulWidget {
 
 class __AllUSersOneStateState extends State<_AllUSersOneState> {
   void goSingle(user) {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => Single(users: user)));
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => Single(users: user)));
   }
+
   @override
   Widget build(BuildContext context) {
     return GridView.count(
@@ -681,43 +773,54 @@ class __AllUSersOneStateState extends State<_AllUSersOneState> {
       mainAxisSpacing: 15,
       children: [
         InkWell(
-          onTap: () => goSingle( widget.users[0]),
+          onTap: () => goSingle(widget.users[0]),
           child: ImageWithTextAndIcon(
-              name: widget.users[0].firstName, image: widget.users[0].avatar, icon: Icons.heart_broken),
+              name: widget.users[0].firstName,
+              image: widget.users[0].avatar,
+              icon: Icons.heart_broken),
         ),
         InkWell(
-          onTap: () => goSingle( widget.users[1]),
+          onTap: () => goSingle(widget.users[1]),
           child: ImageWithTextAndIcon(
-              name: widget.users[1].firstName, image: widget.users[1].avatar, icon: Icons.heart_broken),
+              name: widget.users[1].firstName,
+              image: widget.users[1].avatar,
+              icon: Icons.heart_broken),
         ),
         InkWell(
-          onTap: () => goSingle( widget.users[2]),
+          onTap: () => goSingle(widget.users[2]),
           child: ImageWithTextAndIcon(
-              name: widget.users[2].firstName, image: widget.users[2].avatar, icon: Icons.heart_broken),
+              name: widget.users[2].firstName,
+              image: widget.users[2].avatar,
+              icon: Icons.heart_broken),
         ),
         InkWell(
-          onTap: () => goSingle( widget.users[3]),
+          onTap: () => goSingle(widget.users[3]),
           child: ImageWithTextAndIcon(
-              name: widget.users[3].firstName, image: widget.users[3].avatar, icon: Icons.heart_broken),
+              name: widget.users[3].firstName,
+              image: widget.users[3].avatar,
+              icon: Icons.heart_broken),
         ),
         InkWell(
-          onTap: () => goSingle( widget.users[4]),
+          onTap: () => goSingle(widget.users[4]),
           child: ImageWithTextAndIcon(
-              name: widget.users[4].firstName, image: widget.users[4].avatar, icon: Icons.heart_broken),
+              name: widget.users[4].firstName,
+              image: widget.users[4].avatar,
+              icon: Icons.heart_broken),
         ),
         InkWell(
-          onTap: () => goSingle( widget.users[5]),
+          onTap: () => goSingle(widget.users[5]),
           child: ImageWithTextAndIcon(
-              name: widget.users[5].firstName, image: widget.users[5].avatar, icon: Icons.heart_broken),
+              name: widget.users[5].firstName,
+              image: widget.users[5].avatar,
+              icon: Icons.heart_broken),
         ),
       ],
     );
   }
 }
 
-
 class LiveUsers extends StatefulWidget {
-  final List<UserModel> users;
+  final List<Livemodel> users;
   const LiveUsers({super.key, required this.users});
 
   @override
@@ -726,18 +829,13 @@ class LiveUsers extends StatefulWidget {
 
 class _LiveUsersState extends State<LiveUsers> {
   void goSingle(user) {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => Single(users: user)));
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => Single(users: user)));
   }
-  bool isShow = true;
+
   @override
   Widget build(BuildContext context) {
-    return isShow ?
-    const Column(children: [
-      SizedBox(height: 30,),
-      Center(child: Text("There are no live users at the moment"),)
-    ],)
-    :
-    GridView.count(
+    return GridView.count(
       physics: NeverScrollableScrollPhysics(),
       crossAxisCount: 2,
       crossAxisSpacing: 20,
@@ -745,36 +843,74 @@ class _LiveUsersState extends State<LiveUsers> {
       mainAxisSpacing: 15,
       children: [
         InkWell(
-          onTap: () => goSingle( widget.users[0]),
+          onTap: () => goSingle(widget.users[0]),
           child: ImageWithTextAndIcon(
-              name: widget.users[0].firstName, image: widget.users[0].avatar, icon: Icons.heart_broken),
+              name: widget.users[0].username ?? "",
+              image: widget.users[0].avatar ?? "",
+              icon: Icons.heart_broken),
         ),
         InkWell(
-          onTap: () => goSingle( widget.users[1]),
+          onTap: () => goSingle(widget.users[1]),
           child: ImageWithTextAndIcon(
-              name: widget.users[1].firstName, image: widget.users[1].avatar, icon: Icons.heart_broken),
-        ),
-        InkWell(
-          onTap: () => goSingle( widget.users[2]),
-          child: ImageWithTextAndIcon(
-              name: widget.users[2].firstName, image: widget.users[2].avatar, icon: Icons.heart_broken),
-        ),
-        InkWell(
-          onTap: () => goSingle( widget.users[3]),
-          child: ImageWithTextAndIcon(
-              name: widget.users[3].firstName, image: widget.users[3].avatar, icon: Icons.heart_broken),
-        ),
-        InkWell(
-          onTap: () => goSingle( widget.users[4]),
-          child: ImageWithTextAndIcon(
-              name: widget.users[4].firstName, image: widget.users[4].avatar, icon: Icons.heart_broken),
-        ),
-        InkWell(
-          onTap: () => goSingle( widget.users[5]),
-          child: ImageWithTextAndIcon(
-              name: widget.users[5].firstName, image: widget.users[5].avatar, icon: Icons.heart_broken),
+              name: widget.users[1].username ?? "",
+              image: widget.users[1].avatar ?? "",
+              icon: Icons.heart_broken),
         ),
       ],
     );
+  }
+}
+
+class ClubUsers extends StatefulWidget {
+  final List<UserModel> users;
+  const ClubUsers({super.key, required this.users});
+
+  @override
+  State<ClubUsers> createState() => _ClubUsersState();
+}
+
+class _ClubUsersState extends State<ClubUsers> {
+  void goSingle(user) {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => Single(users: user)));
+  }
+
+  bool isShow = true;
+  @override
+  Widget build(BuildContext context) {
+    return isShow
+        ? const Column(
+            children: [
+              SizedBox(
+                height: 30,
+              ),
+              Center(
+                child: Text("There are no live users at the moment"),
+              )
+            ],
+          )
+        : GridView.count(
+            physics: NeverScrollableScrollPhysics(),
+            crossAxisCount: 2,
+            crossAxisSpacing: 20,
+            childAspectRatio: 3 / 3,
+            mainAxisSpacing: 15,
+            children: [
+              InkWell(
+                onTap: () => goSingle(widget.users[0]),
+                child: ImageWithTextAndIcon(
+                    name: widget.users[0].firstName,
+                    image: widget.users[0].avatar,
+                    icon: Icons.heart_broken),
+              ),
+              InkWell(
+                onTap: () => goSingle(widget.users[1]),
+                child: ImageWithTextAndIcon(
+                    name: widget.users[1].firstName,
+                    image: widget.users[1].avatar,
+                    icon: Icons.heart_broken),
+              ),
+            ],
+          );
   }
 }

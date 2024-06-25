@@ -129,7 +129,7 @@ class _LikesState extends State<Likes> {
                               CircularProgressIndicator(
                                 valueColor:
                                     AlwaysStoppedAnimation<Color>(Colors.pink),
-                                strokeWidth: 6.0,
+                                strokeWidth: 3.0,
                               ),
                               SizedBox(height: 20),
                               Text(
