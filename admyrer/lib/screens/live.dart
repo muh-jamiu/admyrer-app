@@ -21,6 +21,10 @@ class _StartVidState extends State<StartVid> {
   final ApiService _apiService = ApiService();
   bool isLoading = true;
   String token = "";
+  bool _isMuted = false;
+  bool _isVideoMuted = false;
+  bool _remoteAudioMuted = false;
+  bool _remoteVideoMuted = false;
 
   void showErrorToast(String message) {
     Fluttertoast.showToast(
@@ -59,7 +63,6 @@ class _StartVidState extends State<StartVid> {
     }
   }
 
-
   Future<void> _initAgora() async {
     await getToken();
 
@@ -93,6 +96,20 @@ class _StartVidState extends State<StartVid> {
             _remoteUid = 0;
           });
         },
+        onUserMuteAudio: (RtcConnection connection, int remoteUid,
+            bool value) {
+          showErrorToast("User with ID: $remoteUid mute/unmute audio");
+         setState(() {
+          _remoteAudioMuted = value;
+        });
+        },
+      onUserMuteVideo: (RtcConnection connection, int remoteUid,
+            bool value){
+          showErrorToast("User with ID: $remoteUid turn off/on camera");
+        setState(() {
+          _remoteVideoMuted = value;
+        });
+      },
       ),
     );
 
@@ -103,6 +120,24 @@ class _StartVidState extends State<StartVid> {
       uid: 0,
       options: ChannelMediaOptions(),
     );
+  }
+
+  void _toggleVideoMute() {
+    setState(() {
+      _isVideoMuted = !_isVideoMuted;
+    });
+    _engine.muteLocalVideoStream(_isVideoMuted);
+  }
+
+  void _toggleMute() {
+    setState(() {
+      _isMuted = !_isMuted;
+    });
+    _engine.muteLocalAudioStream(_isMuted);
+  }
+
+  void _switchCamera() {
+    _engine.switchCamera();
   }
 
   @override
@@ -138,7 +173,7 @@ class _StartVidState extends State<StartVid> {
             child: Stack(
               children: [
                 LocalVideoWidget(
-                    engine: _engine, localUserJoined: _localUserJoined),
+                    engine: _engine, localUserJoined: _localUserJoined, isCam: _isVideoMuted,),
                 RemoteVideoWidget(engine: _engine, remoteUid: _remoteUid),
                 _toolbar(),
               ],
@@ -155,6 +190,18 @@ class _StartVidState extends State<StartVid> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          RawMaterialButton(
+            onPressed: _toggleMute,
+            shape: const CircleBorder(),
+            elevation: 2.0,
+            fillColor: _isMuted ? Colors.pink[400] : Colors.white,
+            padding: const EdgeInsets.all(12.0),
+            child: Icon(
+              _isMuted ? Icons.mic_off : Icons.mic,
+              color: _isMuted ? Colors.white : Colors.pink[400],
+              size: 20.0,
+            ),
+          ),
           IconButton(
             icon: const Icon(Icons.call_end),
             color: Colors.red,
@@ -163,55 +210,97 @@ class _StartVidState extends State<StartVid> {
               Navigator.pop(context);
             },
           ),
+          RawMaterialButton(
+            onPressed: _toggleVideoMute,
+            shape: const CircleBorder(),
+            elevation: 2.0,
+            fillColor: _isVideoMuted ? Colors.pink[400] : Colors.white,
+            padding: const EdgeInsets.all(12.0),
+            child: Icon(
+              _isVideoMuted ? Icons.videocam_off : Icons.videocam,
+              color: _isVideoMuted ? Colors.white : Colors.pink[400],
+              size: 20.0,
+            ),
+          ),
+          RawMaterialButton(
+            onPressed: _switchCamera,
+            shape: const CircleBorder(),
+            elevation: 2.0,
+            fillColor: Colors.white,
+            padding: const EdgeInsets.all(12.0),
+            child: Icon(
+              Icons.switch_camera,
+              color: Colors.pink[400],
+              size: 20.0,
+            ),
+          ),
         ],
       ),
     );
   }
 }
 
-class LocalVideoWidget extends StatelessWidget {
+class LocalVideoWidget extends StatefulWidget {
   final RtcEngine engine;
   final bool localUserJoined;
+  final bool isCam;
 
-  LocalVideoWidget({required this.engine, required this.localUserJoined});
+  LocalVideoWidget({required this.engine, required this.localUserJoined, required this.isCam});
 
   @override
+  State<LocalVideoWidget> createState() => _LocalVideoWidgetState();
+}
+
+class _LocalVideoWidgetState extends State<LocalVideoWidget> {
+  @override
   Widget build(BuildContext context) {
-    if (localUserJoined) {
+    if (widget.localUserJoined) {
+      if(widget.isCam){
+        return const Center(child: Text('You turn off camera'));
+      } else{
       return Align(
         alignment: Alignment.topLeft,
         child: AgoraVideoView(
           controller: VideoViewController(
-            rtcEngine: engine,
+            rtcEngine: widget.engine,
             canvas: const VideoCanvas(uid: 0),
           ),
         ),
-      );
+      );}
     } else {
       return const Center(child: CircularProgressIndicator());
     }
   }
 }
 
-class RemoteVideoWidget extends StatelessWidget {
+class RemoteVideoWidget extends StatefulWidget {
   final RtcEngine engine;
   final int remoteUid;
+  final bool isCam;
 
-  RemoteVideoWidget({required this.engine, required this.remoteUid});
+  RemoteVideoWidget({required this.engine, required this.remoteUid, required this.isCam});
 
   @override
+  State<RemoteVideoWidget> createState() => _RemoteVideoWidgetState();
+}
+
+class _RemoteVideoWidgetState extends State<RemoteVideoWidget> {
+  @override
   Widget build(BuildContext context) {
-    if (remoteUid != 0) {
+    if (widget.remoteUid != 0) {
+      if(widget.isCam){
+        return const Center(child: Text('This user turn of their camera'));
+      }else{
       return Align(
         alignment: Alignment.topRight,
         child: AgoraVideoView(
           controller: VideoViewController.remote(
-            rtcEngine: engine,
-            canvas: VideoCanvas(uid: remoteUid),
+            rtcEngine: widget.engine,
+            canvas: VideoCanvas(uid: widget.remoteUid),
             connection: const RtcConnection(channelId: 'main'),
           ),
         ),
-      );
+      );}
     } else {
       return const Center(child: Text('Waiting for other user to join...'));
     }
