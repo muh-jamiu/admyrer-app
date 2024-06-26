@@ -169,16 +169,16 @@ class _LoginState extends State<Login> {
                       const SizedBox(
                         height: 20,
                       ),
-                      Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            GoogleLogin(onPressed: _handleSignIn),
-                            // Facebook(onPressed: () => {}),
-                            // Facebook(onPressed: () => {}),
-                          ]),
-                      const SizedBox(
-                        height: 30,
-                      ),
+                      // Row(
+                      //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //     children: [
+                      //       GoogleLogin(onPressed: _handleSignIn),
+                      //       Facebook(onPressed: () => {}),
+                      //       Facebook(onPressed: () => {}),
+                      //     ]),
+                      // const SizedBox(
+                      //   height: 30,
+                      // ),
                       Center(
                         child: InkWell(
                           onTap: register,

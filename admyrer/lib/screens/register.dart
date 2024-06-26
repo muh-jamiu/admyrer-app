@@ -130,13 +130,13 @@ class _LoginState extends State<Register> {
                         thickness: 1.0,
                       ),
                       const SizedBox(height: 20,),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          GoogleLogin(onPressed: _handleSignIn),
-                        ]
-                      ),
-                      const SizedBox(height: 30,),                    
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //   children: [
+                      //     GoogleLogin(onPressed: _handleSignIn),
+                      //   ]
+                      // ),
+                      // const SizedBox(height: 30,),                    
                       Center(
                         child:  InkWell(
                           onTap: login,
