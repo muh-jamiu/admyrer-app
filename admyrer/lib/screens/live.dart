@@ -16,7 +16,7 @@ class StartVid extends StatefulWidget {
 class _StartVidState extends State<StartVid> {
   final String appId = 'b76f67d420d2486699d05d28cf678251';
   String token = "";
-  late String channelId = widget.username + token;
+  late String channelId = widget.username;
   late RtcEngine _engine = createAgoraRtcEngine();
   int _remoteUid = 0;
   bool _localUserJoined = false;
@@ -31,7 +31,7 @@ class _StartVidState extends State<StartVid> {
     try {
       final response = await _apiService.postRequest("live", {
         "username": widget.username,
-        "channel": widget.username + token,
+        "channel": widget.username,
         "token": token,
         "avatar": widget.avatar,
       });
@@ -62,7 +62,9 @@ class _StartVidState extends State<StartVid> {
 
   Future<void> getToken() async {
     try {
-      final response = await _apiService.getRequest("token");
+      final response = await _apiService.postRequest("token", {
+        "channel": widget.username,
+      });
       var data = json.decode(response.body);
       String token = data["data"];
 

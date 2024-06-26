@@ -15,7 +15,7 @@ class SpeedDate extends StatefulWidget {
 
 class _SpeedDateState extends State<SpeedDate> {
   final String appId = 'b76f67d420d2486699d05d28cf678251';
-  late String channelId = widget.username + token;
+  late String channelId = widget.username;
   late RtcEngine _engine = createAgoraRtcEngine();
   int _remoteUid = 0;
   bool _localUserJoined = false;
@@ -47,7 +47,9 @@ class _SpeedDateState extends State<SpeedDate> {
 
   Future<void> getToken() async {
     try {
-      final response = await _apiService.getRequest("token");
+      final response = await _apiService.postRequest("token", {
+        "channel": widget.username,
+      });
       var data = json.decode(response.body);
       String token = data["data"];
 

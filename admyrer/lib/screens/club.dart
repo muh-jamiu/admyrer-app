@@ -15,7 +15,7 @@ class Club extends StatefulWidget {
 
 class _ClubState extends State<Club> {
   final String appId = 'b76f67d420d2486699d05d28cf678251';
-  late String channelId = widget.username + token;
+  late String channelId = widget.username;
   late RtcEngine _engine = createAgoraRtcEngine();
   int _remoteUid = 0;
   bool _localUserJoined = false;
@@ -50,7 +50,7 @@ class _ClubState extends State<Club> {
     try {
       final response = await _apiService.postRequest("club", {
         "username": widget.username,
-        "channel": widget.username + token,
+        "channel": widget.username,
         "token": token,
         "avatar": widget.avatar,
       });
@@ -63,7 +63,9 @@ class _ClubState extends State<Club> {
 
   Future<void> getToken() async {
     try {
-      final response = await _apiService.getRequest("token");
+      final response = await _apiService.postRequest("token",{
+        "channel": widget.username,
+      });
       var data = json.decode(response.body);
       String token = data["data"];
 
