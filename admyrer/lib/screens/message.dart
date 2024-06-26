@@ -11,6 +11,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:admyrer/screens/single.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:pusher_client/pusher_client.dart';
 
 class Message extends StatefulWidget {
   final UserModel user;
@@ -28,7 +29,42 @@ class _MessageState extends State<Message> {
   bool isLoading = true;
   late String _authToken;
   PickedFile? _imageFile;
-  final ImagePicker _picker = ImagePicker();
+  final ImagePicker _picker = ImagePicker();  
+  late PusherClient pusher;
+  late Channel channel;
+
+  void _pusher(){
+    PusherOptions options = PusherOptions(
+      cluster: "mt1",
+      encrypted: true,
+    );
+
+    pusher = PusherClient(
+      "61cbedc7014185332c2d",
+      options,
+      autoConnect: true,
+    );
+
+    pusher.connect();
+    channel = pusher.subscribe("app_event");
+
+    channel.bind("app_event", (PusherEvent? event) {
+      print(event?.data);
+    });
+  }
+
+  Future<void> triggerPuser() async {
+    try {
+      final response = await _apiService.postRequest("notify", {
+        "username": "jamiu",
+        "title": "You have a new message from Jamiu",
+        "message":_controller.text,
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
 
   Future<void> _pickImage() async {
     // Request storage permission
