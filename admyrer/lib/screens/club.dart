@@ -28,6 +28,9 @@ class _ClubState extends State<Club> {
   bool _remoteVideoMuted = false;
   List<int> remoteUids = [];
   var userId = 0;
+  bool _isCommenting = false;
+  List<String> messages = [];
+  final TextEditingController _messageController = TextEditingController();
 
   void showErrorToast(String message) {
     Fluttertoast.showToast(
@@ -76,10 +79,9 @@ class _ClubState extends State<Club> {
     }
   }
 
-
   Future<void> getToken() async {
     try {
-      final response = await _apiService.postRequest("token",{
+      final response = await _apiService.postRequest("token", {
         "channel": widget.username,
       });
       var data = json.decode(response.body);
@@ -108,7 +110,7 @@ class _ClubState extends State<Club> {
     _engine = createAgoraRtcEngine();
     await _engine.initialize(RtcEngineContext(appId: appId));
     await _engine.enableVideo();
-    await _engine.startPreview(); 
+    await _engine.startPreview();
 
     // Set event handlers
     _engine.registerEventHandler(
@@ -133,18 +135,16 @@ class _ClubState extends State<Club> {
             _remoteUid = 0;
           });
         },
-        onUserMuteAudio: (RtcConnection connection, int remoteUid,
-            bool value) {
-         setState(() {
-          _remoteAudioMuted = value;
-        });
+        onUserMuteAudio: (RtcConnection connection, int remoteUid, bool value) {
+          setState(() {
+            _remoteAudioMuted = value;
+          });
         },
-      onUserMuteVideo: (RtcConnection connection, int remoteUid,
-            bool value){
-        setState(() {
-          _remoteVideoMuted = value;
-        });
-      },
+        onUserMuteVideo: (RtcConnection connection, int remoteUid, bool value) {
+          setState(() {
+            _remoteVideoMuted = value;
+          });
+        },
       ),
     );
 
@@ -173,6 +173,20 @@ class _ClubState extends State<Club> {
 
   void _switchCamera() {
     _engine.switchCamera();
+  }
+
+  void _toggleCommenting() {
+    setState(() {
+      _isCommenting = !_isCommenting;
+    });
+  }
+
+  void _sendMessage() {
+    setState(() {
+      messages.add(_messageController.text);
+      _messageController.clear();
+      _isCommenting = false;
+    });
   }
 
   @override
@@ -204,24 +218,35 @@ class _ClubState extends State<Club> {
             ),
             child: Column(
               children: [
-              const SizedBox(height: 20,),
+                const SizedBox(
+                  height: 20,
+                ),
                 _topBar(),
                 Expanded(
-                  child: GridView.builder(
-                     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        childAspectRatio: 3 / 4, 
-                      ),
-                    itemCount: remoteUids.length + 1,
-                    itemBuilder: (context, index) {
-                      if (index == 0) {
+                    child: GridView.builder(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    childAspectRatio: 3 / 4,
+                  ),
+                  itemCount: remoteUids.length + 1,
+                  itemBuilder: (context, index) {
+                    if (index == 0) {
                       return LocalVideoWidget(
-                      engine: _engine, localUserJoined: _localUserJoined, isCam: _isVideoMuted,);
-                      } else {
-                        return RemoteVideoWidget(engine: _engine, remoteUid: remoteUids[index - 1], isCam: _remoteVideoMuted, channelId: channelId);
-                      }
-                    },
-                  )),
+                        engine: _engine,
+                        localUserJoined: _localUserJoined,
+                        isCam: _isVideoMuted,
+                      );
+                    } else {
+                      return RemoteVideoWidget(
+                          engine: _engine,
+                          remoteUid: remoteUids[index - 1],
+                          isCam: _remoteVideoMuted,
+                          channelId: channelId);
+                    }
+                  },
+                )),
+                if (_isCommenting) _buildCommentInput(),
+                _buildMessageList(),
                 _toolbar(),
               ],
             ),
@@ -231,16 +256,68 @@ class _ClubState extends State<Club> {
     );
   }
 
+  Widget _buildCommentInput() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        children: [
+          Expanded(
+            child: TextField(
+              controller: _messageController,
+              decoration: const InputDecoration(
+                hintText: 'Type your message',
+                border: OutlineInputBorder(),
+              ),
+            ),
+          ),
+          IconButton(
+            icon: Icon(Icons.send),
+            onPressed: _sendMessage,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMessageList() {
+    return Container(
+      height: 400,
+      color: Colors.purple,
+      width: 300,
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
+      child: Expanded(
+        child: ListView.builder(
+          itemCount: messages.length,
+          itemBuilder: (context, index) {
+            return ListTile(
+              title: Text(
+                messages[index],
+                style: TextStyle(color: Colors.white),
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+
   Widget _topBar() {
     return const Align(
       alignment: Alignment.topLeft,
-      child: Row(children: [
-        Padding(
-          padding: EdgeInsets.all(18.0),
-          child: Text("Night Club Party", style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold,color: Colors.white)),
-        )
-      ],),
-    );}
+      child: Row(
+        children: [
+          Padding(
+            padding: EdgeInsets.all(18.0),
+            child: Text("Night Club Party",
+                style: TextStyle(
+                    fontSize: 25,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white)),
+          )
+        ],
+      ),
+    );
+  }
 
   Widget _toolbar() {
     return Padding(
@@ -295,6 +372,18 @@ class _ClubState extends State<Club> {
                 size: 20.0,
               ),
             ),
+            RawMaterialButton(
+              onPressed: _toggleCommenting,
+              shape: const CircleBorder(),
+              elevation: 2.0,
+              fillColor: Colors.white,
+              padding: const EdgeInsets.all(12.0),
+              child: const Icon(
+                Icons.comment,
+                color: Colors.blueAccent,
+                size: 20.0,
+              ),
+            ),
           ],
         ),
       ),
@@ -307,7 +396,10 @@ class LocalVideoWidget extends StatefulWidget {
   final bool localUserJoined;
   final bool isCam;
 
-  LocalVideoWidget({required this.engine, required this.localUserJoined, required this.isCam});
+  LocalVideoWidget(
+      {required this.engine,
+      required this.localUserJoined,
+      required this.isCam});
 
   @override
   State<LocalVideoWidget> createState() => _LocalVideoWidgetState();
@@ -320,27 +412,34 @@ class _LocalVideoWidgetState extends State<LocalVideoWidget> {
       return Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-      color: widget.isCam ? Colors.black : null,
+          color: widget.isCam ? Colors.black : null,
         ),
-      margin: const EdgeInsets.all(8),
-      // color: widget.isCam ? Colors.black : null,
-      child: widget.isCam
-          ? const Center(child: Text('You turn off your camera', style: TextStyle(color: Colors.white),))
-          : AgoraVideoView(
-              controller: VideoViewController(
-                rtcEngine: widget.engine,
-                canvas: VideoCanvas(uid: 0),
+        margin: const EdgeInsets.all(8),
+        // color: widget.isCam ? Colors.black : null,
+        child: widget.isCam
+            ? const Center(
+                child: Text(
+                'You turn off your camera',
+                style: TextStyle(color: Colors.white),
+              ))
+            : AgoraVideoView(
+                controller: VideoViewController(
+                  rtcEngine: widget.engine,
+                  canvas: VideoCanvas(uid: 0),
+                ),
               ),
-            ),
-    );
+      );
     } else {
       return Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-      color: Colors.black,
-        ),
-      margin:const EdgeInsets.all(8),
-        child: const Center(child: CircularProgressIndicator(color: Colors.white,)));
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: Colors.black,
+          ),
+          margin: const EdgeInsets.all(8),
+          child: const Center(
+              child: CircularProgressIndicator(
+            color: Colors.white,
+          )));
     }
   }
 }
@@ -351,7 +450,11 @@ class RemoteVideoWidget extends StatefulWidget {
   final bool isCam;
   final String channelId;
 
-  RemoteVideoWidget({required this.engine, required this.remoteUid, required this.isCam, required this.channelId});
+  RemoteVideoWidget(
+      {required this.engine,
+      required this.remoteUid,
+      required this.isCam,
+      required this.channelId});
 
   @override
   State<RemoteVideoWidget> createState() => _RemoteVideoWidgetState();
@@ -361,23 +464,28 @@ class _RemoteVideoWidgetState extends State<RemoteVideoWidget> {
   @override
   Widget build(BuildContext context) {
     if (widget.remoteUid != 0) {
-        if(widget.isCam){
-        return const Center(child: Text('This user turn of their camera', style: TextStyle(color: Colors.white),));
-      }else{
-      return Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-      color: widget.isCam ? Colors.black : null,
-        ),
-      margin: const EdgeInsets.all(8),
-      child: AgoraVideoView(
-        controller: VideoViewController.remote(
-          rtcEngine: widget.engine,
-          canvas: VideoCanvas(uid: widget.remoteUid),
-          connection: RtcConnection(channelId: widget.channelId),
-        ),
-      ),
-    );}
+      if (widget.isCam) {
+        return const Center(
+            child: Text(
+          'This user turn of their camera',
+          style: TextStyle(color: Colors.white),
+        ));
+      } else {
+        return Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: widget.isCam ? Colors.black : null,
+          ),
+          margin: const EdgeInsets.all(8),
+          child: AgoraVideoView(
+            controller: VideoViewController.remote(
+              rtcEngine: widget.engine,
+              canvas: VideoCanvas(uid: widget.remoteUid),
+              connection: RtcConnection(channelId: widget.channelId),
+            ),
+          ),
+        );
+      }
     } else {
       return Container();
     }
