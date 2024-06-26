@@ -204,6 +204,7 @@ class _ClubState extends State<Club> {
             ),
             child: Column(
               children: [
+              const SizedBox(height: 20,),
                 _topBar(),
                 Expanded(
                   child: GridView.builder(

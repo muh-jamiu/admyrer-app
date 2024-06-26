@@ -205,6 +205,7 @@ class _StartVidState extends State<StartVid> {
             ),
             child: Stack(
               children: [
+              const SizedBox(height: 20,),
                 _topBar(),
                 LocalVideoWidget(
                     engine: _engine, localUserJoined: _localUserJoined, isCam: _isVideoMuted,),
