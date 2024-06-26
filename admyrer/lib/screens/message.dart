@@ -179,6 +179,7 @@ class _MessageState extends State<Message> {
   void initState() {
     super.initState();
     getMessage();
+    triggerPuser();
   }
 
   void _sendMessage() {
