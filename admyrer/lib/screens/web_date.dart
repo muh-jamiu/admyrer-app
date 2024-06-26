@@ -64,7 +64,6 @@ class _WebDatesState extends State<WebDates> {
 
   Future<void> _initAgora() async {
     await getToken();
-
     // Request camera and microphone permissions
     await [Permission.camera, Permission.microphone].request();
 
@@ -169,19 +168,18 @@ class _WebDatesState extends State<WebDates> {
             child: Column(
               children: [
                 _topBar(),
-                Expanded(
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: remoteUids.length + 1,
-                    itemBuilder: (context, index) {
-                      if (index == 0) {
-                      return LocalVideoWidget(
-                      engine: _engine, localUserJoined: _localUserJoined, isCam: _isVideoMuted,);
-                      } else {
-                        return RemoteVideoWidget(engine: _engine, remoteUid: remoteUids[index - 1], isCam: _remoteVideoMuted,);
-                      }
-                    },
-                  )),
+                ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: remoteUids.length + 1,
+                  itemBuilder: (context, index) {
+                    if (index == 0) {
+                    return LocalVideoWidget(
+                    engine: _engine, localUserJoined: _localUserJoined, isCam: _isVideoMuted,);
+                    } else {
+                      return RemoteVideoWidget(engine: _engine, remoteUid: remoteUids[index - 1], isCam: _remoteVideoMuted,);
+                    }
+                  },
+                ),
                 _toolbar(),
               ],
             ),
@@ -293,8 +291,8 @@ class _LocalVideoWidgetState extends State<LocalVideoWidget> {
     } else {
       return Container(
       margin:const EdgeInsets.all(8),
-      width: 120,
-      height: 160,
+      width: 160,
+      height: 100,
       color: Colors.black,
         child: const Center(child: CircularProgressIndicator(color: Colors.white,)));
     }

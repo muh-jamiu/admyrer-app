@@ -921,7 +921,7 @@ class _WebDateState extends State<WebDate> {
             ),
             TextButton(
               child: const Text('Start', style: TextStyle(color: Colors.red)),
-              onPressed: () => widget.goWeb(),
+              onPressed: () {widget.goWeb(); Navigator.of(context).pop();},
             ),
           ],
         );
@@ -1019,7 +1019,7 @@ class _SelectOneState extends State<SelectOne> {
             ),
             TextButton(
               child: const Text('Start', style: TextStyle(color: Colors.red)),
-              onPressed: () => widget.goSpeed(),
+              onPressed: () {widget.goSpeed();  Navigator.of(context).pop();},
             ),
           ],
         );
