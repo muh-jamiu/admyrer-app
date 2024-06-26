@@ -168,18 +168,22 @@ class _WebDatesState extends State<WebDates> {
             child: Column(
               children: [
                 _topBar(),
-                ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: remoteUids.length + 1,
-                  itemBuilder: (context, index) {
-                    if (index == 0) {
-                    return LocalVideoWidget(
-                    engine: _engine, localUserJoined: _localUserJoined, isCam: _isVideoMuted,);
-                    } else {
-                      return RemoteVideoWidget(engine: _engine, remoteUid: remoteUids[index - 1], isCam: _remoteVideoMuted,);
-                    }
-                  },
-                ),
+                Expanded(
+                  child: GridView.builder(
+                     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        childAspectRatio: 3 / 4, 
+                      ),
+                    itemCount: remoteUids.length + 1,
+                    itemBuilder: (context, index) {
+                      if (index == 0) {
+                      return LocalVideoWidget(
+                      engine: _engine, localUserJoined: _localUserJoined, isCam: _isVideoMuted,);
+                      } else {
+                        return RemoteVideoWidget(engine: _engine, remoteUid: remoteUids[index - 1], isCam: _remoteVideoMuted,);
+                      }
+                    },
+                  )),
                 _toolbar(),
               ],
             ),
@@ -276,8 +280,6 @@ class _LocalVideoWidgetState extends State<LocalVideoWidget> {
     if (widget.localUserJoined) {
       return Container(
       margin: const EdgeInsets.all(8),
-      width: 120,
-      height: 160,
       color: widget.isCam ? Colors.black : null,
       child: widget.isCam
           ? const Center(child: Text('You turn off your camera'))
@@ -291,8 +293,6 @@ class _LocalVideoWidgetState extends State<LocalVideoWidget> {
     } else {
       return Container(
       margin:const EdgeInsets.all(8),
-      width: 160,
-      height: 100,
       color: Colors.black,
         child: const Center(child: CircularProgressIndicator(color: Colors.white,)));
     }
@@ -319,8 +319,6 @@ class _RemoteVideoWidgetState extends State<RemoteVideoWidget> {
       }else{
       return Container(
       margin: const EdgeInsets.all(8),
-      width: 120,
-      height: 160,
       child: AgoraVideoView(
         controller: VideoViewController.remote(
           rtcEngine: widget.engine,
