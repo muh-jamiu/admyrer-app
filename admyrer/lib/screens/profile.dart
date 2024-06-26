@@ -26,6 +26,7 @@ import 'package:admyrer/widget/bottom_open.dart';
 import 'package:admyrer/widget/custom_sheet.dart';
 import 'package:admyrer/screens/search_page.dart';
 import 'package:admyrer/screens/web_date.dart';
+import 'package:admyrer/screens/club.dart';
 import 'package:admyrer/screens/speed_date.dart';
 
 
@@ -61,6 +62,10 @@ class _ProfileState extends State<Profile> {
       context, MaterialPageRoute(builder: (context) => WebDates(username: user.username , avatar: user.avatar,)));
   }
 
+  void goClub() {
+    Navigator.push(
+      context, MaterialPageRoute(builder: (context) => Club(username: user.username , avatar: user.avatar,)));
+  }
     
   Future<void> getFollows() async {
      SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -231,7 +236,7 @@ class _ProfileState extends State<Profile> {
                   const SizedBox(
                     height: 10,
                   ),
-                  Expanded(child: MyGridList(user: user, goPolls: goPolls, goQuiz: goQuiz, follows: follows, goLive: goLive, goWeb: goWeb, goSpeed: goSpeed,))
+                  Expanded(child: MyGridList(user: user, goPolls: goPolls, goQuiz: goQuiz, follows: follows, goLive: goLive, goWeb: goWeb, goSpeed: goSpeed, goClub: goClub))
                 ],
               ),
             )
@@ -425,6 +430,7 @@ class MyGridList extends StatefulWidget {
   final Function goLive;
   final Function goSpeed;
   final Function goWeb;
+  final Function goClub;
   const MyGridList(
     {super.key, 
     required this.user,
@@ -434,6 +440,7 @@ class MyGridList extends StatefulWidget {
     required this.goLive,
     required this.goSpeed,
     required this.goWeb,
+    required this.goClub,
     }
     );
 
@@ -493,7 +500,7 @@ class _MyGridListState extends State<MyGridList> {
               child: const Text('Start', style: TextStyle(color: Colors.red)),
               onPressed: () {
                 Navigator.of(context).pop(); // Dismiss the dialog
-                logOutUser(); // Proceed with logout
+                widget.goClub(); // Proceed with logout
               },
             ),
           ],
