@@ -28,9 +28,6 @@ class _ClubState extends State<Club> {
   bool _remoteVideoMuted = false;
   List<int> remoteUids = [];
   var userId = 0;
-  bool _isCommenting = false;
-  List<String> messages = [];
-  final TextEditingController _messageController = TextEditingController();
 
   void showErrorToast(String message) {
     Fluttertoast.showToast(
@@ -175,20 +172,6 @@ class _ClubState extends State<Club> {
     _engine.switchCamera();
   }
 
-  void _toggleCommenting() {
-    setState(() {
-      _isCommenting = !_isCommenting;
-    });
-  }
-
-  void _sendMessage() {
-    setState(() {
-      messages.add(_messageController.text);
-      _messageController.clear();
-      _isCommenting = false;
-    });
-  }
-
   @override
   void dispose() {
     _engine.leaveChannel();
@@ -245,57 +228,11 @@ class _ClubState extends State<Club> {
                     }
                   },
                 )),
-                if (_isCommenting) _buildCommentInput(),
-                _buildMessageList(),
+
                 _toolbar(),
               ],
             ),
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildCommentInput() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
-        children: [
-          Expanded(
-            child: TextField(
-              controller: _messageController,
-              decoration: const InputDecoration(
-                hintText: 'Type your message',
-                border: OutlineInputBorder(),
-              ),
-            ),
-          ),
-          IconButton(
-            icon: Icon(Icons.send),
-            onPressed: _sendMessage,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildMessageList() {
-    return Container(
-      height: 400,
-      color: Colors.purple,
-      width: 300,
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
-      child: Expanded(
-        child: ListView.builder(
-          itemCount: messages.length,
-          itemBuilder: (context, index) {
-            return ListTile(
-              title: Text(
-                messages[index],
-                style: TextStyle(color: Colors.white),
-              ),
-            );
-          },
         ),
       ),
     );
@@ -373,7 +310,7 @@ class _ClubState extends State<Club> {
               ),
             ),
             RawMaterialButton(
-              onPressed: _toggleCommenting,
+              onPressed: (){},
               shape: const CircleBorder(),
               elevation: 2.0,
               fillColor: Colors.white,
