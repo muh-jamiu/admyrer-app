@@ -20,29 +20,29 @@ class MyApp extends StatelessWidget {
   late PusherClient pusher;
   late Channel channel;
   
-  void _pusher(){
-    PusherOptions options = PusherOptions(
-      cluster: "mt1",
-      encrypted: true,
-    );
+  // void _pusher(){
+  //   PusherOptions options = PusherOptions(
+  //     cluster: "mt1",
+  //     encrypted: true,
+  //   );
 
-    pusher = PusherClient(
-      "61cbedc7014185332c2d",
-      options,
-      autoConnect: true,
-    );
+  //   pusher = PusherClient(
+  //     "61cbedc7014185332c2d",
+  //     options,
+  //     autoConnect: true,
+  //   );
 
-    pusher.connect();
-    channel = pusher.subscribe("app_event");
+  //   pusher.connect();
+  //   channel = pusher.subscribe("app_event");
 
-    channel.bind("app_event", (PusherEvent? event) {
-      print("from main");
-    });
-  }
+  //   channel.bind("app_event", (PusherEvent? event) {
+  //     print("from main");
+  //   });
+  // }
 
-  void initState() {
-    _pusher();
-  }
+  // void initState() {
+  //   _pusher();
+  // }
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
   MyApp() {

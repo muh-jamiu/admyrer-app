@@ -39,8 +39,8 @@ class _LocationsState extends State<Locations> {
 
     await flutterLocalNotificationsPlugin.show(
       0,
-      'Test Notification',
-      'This is the body of the notification',
+      'Welcome Back',
+      'We have made it easy for you to have fun while you use our Admyrer Platform.',
       platformDetails,
     );
   }
