@@ -11,8 +11,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:admyrer/screens/single.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
-// import 'package:pusher_client/pusher_client.dart';
-import 'package:pusher_channels_flutter/pusher_channels_flutter.dart';
+import 'package:pusher_client/pusher_client.dart';
 
 class Message extends StatefulWidget {
   final UserModel user;
@@ -31,29 +30,28 @@ class _MessageState extends State<Message> {
   late String _authToken;
   PickedFile? _imageFile;
   final ImagePicker _picker = ImagePicker();  
-  // late PusherClient pusher;
-  // late Channel channel;
-  late PusherChannelsFlutter pusher;
-  late String channelName;
-  late String eventName;
+  late PusherClient pusher;
+  late Channel channel;
 
-  void _pusher() async{
-    pusher = PusherChannelsFlutter.getInstance();
-    
-    pusher.init(
-      apiKey: '61cbedc7014185332c2d',
-      cluster: 'mt1',
-      onSubscriptionError: (String channel, dynamic e) {
-        print("Subscription Error: ${e.message}");
-      },
-      onEvent: (PusherEvent event) {
-        print("onEvent: $event");
-      }
+  void _pusher(){
+    PusherOptions options = PusherOptions(
+      cluster: "mt1",
+      encrypted: true,
     );
-    
-    await pusher.subscribe(channelName: "app_event");
-    await pusher.connect();
-  
+
+    pusher = PusherClient(
+      "61cbedc7014185332c2d",
+      options,
+      autoConnect: false,
+    );
+
+    pusher.connect();
+    channel = pusher.subscribe("app_event");
+
+    channel.bind("app_event", (PusherEvent? event) {
+      print(event?.data);
+      print("from location");
+    });
   }
 
   Future<void> triggerPuser() async {
