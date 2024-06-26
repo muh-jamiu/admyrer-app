@@ -50,7 +50,7 @@ class _StartVidState extends State<StartVid> {
 
   Future<void> deleteLive() async {
     try {
-      await _apiService.postRequest("delete-club", {
+      await _apiService.postRequest("delete-live", {
         "id": userId,
       });
     } catch (e) {
