@@ -8,7 +8,6 @@ import './screens/onboarding_screen.dart';
 import './screens/home.dart';
 import './screens/step_Sceen.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:pusher_client/pusher_client.dart';
 
 void main() async {
   runApp(MyApp());
@@ -17,32 +16,6 @@ void main() async {
 class MyApp extends StatelessWidget {
   // const MyApp({super.key});
 
-  late PusherClient pusher;
-  late Channel channel;
-  
-  // void _pusher(){
-  //   PusherOptions options = PusherOptions(
-  //     cluster: "mt1",
-  //     encrypted: true,
-  //   );
-
-  //   pusher = PusherClient(
-  //     "61cbedc7014185332c2d",
-  //     options,
-  //     autoConnect: true,
-  //   );
-
-  //   pusher.connect();
-  //   channel = pusher.subscribe("app_event");
-
-  //   channel.bind("app_event", (PusherEvent? event) {
-  //     print("from main");
-  //   });
-  // }
-
-  // void initState() {
-  //   _pusher();
-  // }
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
   MyApp() {

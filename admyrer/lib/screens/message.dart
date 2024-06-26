@@ -11,7 +11,6 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:admyrer/screens/single.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:pusher_client/pusher_client.dart';
 
 class Message extends StatefulWidget {
   final UserModel user;
@@ -30,41 +29,6 @@ class _MessageState extends State<Message> {
   late String _authToken;
   PickedFile? _imageFile;
   final ImagePicker _picker = ImagePicker();  
-  late PusherClient pusher;
-  late Channel channel;
-
-  void _pusher(){
-    PusherOptions options = PusherOptions(
-      cluster: "mt1",
-      encrypted: true,
-    );
-
-    pusher = PusherClient(
-      "61cbedc7014185332c2d",
-      options,
-      autoConnect: false,
-    );
-
-    pusher.connect();
-
-    pusher.onConnectionStateChange((state) {
-      showErrorToast(state?.currentState ?? "");
-        print("previousState: ${state?.previousState}, currentState: ${state?.currentState}");
-    });
-
-    pusher.onConnectionError((error) {
-      showErrorToast(error?.message ?? "");
-        print("error: ${error?.message}");
-    });
-
-    channel = pusher.subscribe("app_event");
-
-    channel.bind("app_event", (PusherEvent? event) {
-      print(event?.data);
-      print("from location");
-      showErrorToast("pusher is connected");
-    });
-  }
 
   Future<void> triggerPuser() async {
     try {
@@ -192,7 +156,6 @@ class _MessageState extends State<Message> {
   void initState() {
     super.initState();
     getMessage();
-    _pusher();
     triggerPuser();
   }
 
