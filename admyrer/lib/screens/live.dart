@@ -102,7 +102,7 @@ class _StartVidState extends State<StartVid> {
     await getToken();
 
     // Request camera and microphone permissions
-    // await [Permission.camera, Permission.microphone].request();
+    await [Permission.camera, Permission.microphone].request();
 
     // Create the engine
     _engine = createAgoraRtcEngine();
