@@ -46,11 +46,23 @@ class _MessageState extends State<Message> {
     );
 
     pusher.connect();
+
+    pusher.onConnectionStateChange((state) {
+      showErrorToast(state?.currentState ?? "");
+        print("previousState: ${state?.previousState}, currentState: ${state?.currentState}");
+    });
+
+    pusher.onConnectionError((error) {
+      showErrorToast(error?.message ?? "");
+        print("error: ${error?.message}");
+    });
+
     channel = pusher.subscribe("app_event");
 
     channel.bind("app_event", (PusherEvent? event) {
       print(event?.data);
       print("from location");
+      showErrorToast("pusher is connected");
     });
   }
 
