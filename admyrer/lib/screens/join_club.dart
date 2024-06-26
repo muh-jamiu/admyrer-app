@@ -259,6 +259,7 @@ class _LocalVideoWidgetState extends State<LocalVideoWidget> {
   Widget build(BuildContext context) {
     if (widget.localUserJoined) {
       return Container(
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
       margin: const EdgeInsets.all(8),
       color: widget.isCam ? Colors.black : null,
       child: widget.isCam
@@ -299,6 +300,7 @@ class _RemoteVideoWidgetState extends State<RemoteVideoWidget> {
         return const Center(child: Text('This user turn of their camera'));
       }else{
       return Container(
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
       margin: const EdgeInsets.all(8),
       child: AgoraVideoView(
         controller: VideoViewController.remote(
