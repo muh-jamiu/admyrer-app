@@ -118,9 +118,6 @@ class _JoinStreamState extends State<JoinStream> {
           ),
         ),
         child: Scaffold(
-          appBar: AppBar(
-            title: Text(widget.username),
-          ),
           body: Container(
             decoration: const BoxDecoration(
               gradient: const LinearGradient(
@@ -131,6 +128,7 @@ class _JoinStreamState extends State<JoinStream> {
             ),
             child: Stack(
               children: [
+               _topBar(widget.username),
                 RemoteVideoWidget(engine: _engine, remoteUid: _remoteUid, isCam: _remoteVideoMuted, channelId: channelId),
                 _toolbar(),
               ],
@@ -140,6 +138,19 @@ class _JoinStreamState extends State<JoinStream> {
       ),
     );
   }
+  
+
+   Widget _topBar(String name) {
+    return Align(
+      alignment: Alignment.topLeft,
+      child: Row(children: [
+        Padding(
+          padding: const EdgeInsets.all(18.0),
+          child: Text(name, style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold,color: Colors.white)),
+        )
+      ],),
+    );}
+
 
   Widget _toolbar() {
     return Align(

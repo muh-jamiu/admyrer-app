@@ -5,42 +5,28 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:admyrer/services/api_service.dart';
 import 'dart:convert';
 
-class StartVid extends StatefulWidget {
+class Club extends StatefulWidget {
   final String username;
   final String avatar;
-  const StartVid({super.key, required this.username, required this.avatar});
+  const Club({super.key, required this.username, required this.avatar});
   @override
-  _StartVidState createState() => _StartVidState();
+  _ClubState createState() => _ClubState();
 }
 
-class _StartVidState extends State<StartVid> {
+class _ClubState extends State<Club> {
   final String appId = 'b76f67d420d2486699d05d28cf678251';
-  String token = "";
   late String channelId = widget.username + token;
   late RtcEngine _engine = createAgoraRtcEngine();
   int _remoteUid = 0;
   bool _localUserJoined = false;
   final ApiService _apiService = ApiService();
   bool isLoading = true;
+  String token = "";
   bool _isMuted = false;
   bool _isVideoMuted = false;
   bool _remoteAudioMuted = false;
   bool _remoteVideoMuted = false;
-
-  Future<void> saveLive() async {
-    try {
-      final response = await _apiService.postRequest("live", {
-        "username": widget.username,
-        "channel": widget.username + token,
-        "token": token,
-        "avatar": widget.avatar,
-      });
-      print(response);
-    } catch (e) {
-      print(e);
-    }
-  }
-
+  List<int> remoteUids = [];
 
   void showErrorToast(String message) {
     Fluttertoast.showToast(
@@ -60,6 +46,21 @@ class _StartVidState extends State<StartVid> {
     _initAgora();
   }
 
+  Future<void> saveClub() async {
+    try {
+      final response = await _apiService.postRequest("club", {
+        "username": widget.username,
+        "channel": widget.username + token,
+        "token": token,
+        "avatar": widget.avatar,
+      });
+      print(response);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+
   Future<void> getToken() async {
     try {
       final response = await _apiService.getRequest("token");
@@ -70,7 +71,7 @@ class _StartVidState extends State<StartVid> {
         this.token = token;
         isLoading = false;
       });
-      saveLive();
+      saveClub();
     } catch (e) {
       showErrorToast('An error occurred: $e');
       print(e);
@@ -82,9 +83,8 @@ class _StartVidState extends State<StartVid> {
 
   Future<void> _initAgora() async {
     await getToken();
-
     // Request camera and microphone permissions
-    // await [Permission.camera, Permission.microphone].request();
+    await [Permission.camera, Permission.microphone].request();
 
     // Create the engine
     _engine = createAgoraRtcEngine();
@@ -96,34 +96,33 @@ class _StartVidState extends State<StartVid> {
     _engine.registerEventHandler(
       RtcEngineEventHandler(
         onJoinChannelSuccess: (RtcConnection connection, int uid) {
-          showErrorToast("You start video call with ID: $uid");
+          showErrorToast("Call ID: $uid");
           setState(() {
             _localUserJoined = true;
           });
         },
         onUserJoined: (RtcConnection connection, int remoteUid, int elapsed) {
-          showErrorToast("User with ID: $remoteUid join video call");
+          showErrorToast("User join with ID: $remoteUid");
           setState(() {
             _remoteUid = remoteUid;
+            remoteUids.add(remoteUid);
           });
         },
         onUserOffline: (RtcConnection connection, int remoteUid,
             UserOfflineReasonType reason) {
-          showErrorToast("User with ID: $remoteUid left video call");
+          showErrorToast("User left with ID: $remoteUid");
           setState(() {
             _remoteUid = 0;
           });
         },
         onUserMuteAudio: (RtcConnection connection, int remoteUid,
             bool value) {
-          showErrorToast("User with ID: $remoteUid mute/unmute audio");
          setState(() {
           _remoteAudioMuted = value;
         });
         },
       onUserMuteVideo: (RtcConnection connection, int remoteUid,
             bool value){
-          showErrorToast("User with ID: $remoteUid turn off/on camera");
         setState(() {
           _remoteVideoMuted = value;
         });
@@ -185,12 +184,25 @@ class _StartVidState extends State<StartVid> {
                 end: Alignment.centerRight,
               ),
             ),
-            child: Stack(
+            child: Column(
               children: [
                 _topBar(),
-                LocalVideoWidget(
-                    engine: _engine, localUserJoined: _localUserJoined, isCam: _isVideoMuted,),
-                RemoteVideoWidget(engine: _engine, remoteUid: _remoteUid, isCam: _remoteVideoMuted, channelId: channelId),
+                Expanded(
+                  child: GridView.builder(
+                     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        childAspectRatio: 3 / 4, 
+                      ),
+                    itemCount: remoteUids.length + 1,
+                    itemBuilder: (context, index) {
+                      if (index == 0) {
+                      return LocalVideoWidget(
+                      engine: _engine, localUserJoined: _localUserJoined, isCam: _isVideoMuted,);
+                      } else {
+                        return RemoteVideoWidget(engine: _engine, remoteUid: remoteUids[index - 1], isCam: _remoteVideoMuted, channelId: channelId);
+                      }
+                    },
+                  )),
                 _toolbar(),
               ],
             ),
@@ -206,7 +218,7 @@ class _StartVidState extends State<StartVid> {
       child: Row(children: [
         Padding(
           padding: EdgeInsets.all(18.0),
-          child: Text("Live Stream", style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold,color: Colors.white)),
+          child: Text("Night Club Party", style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold,color: Colors.white)),
         )
       ],),
     );}
@@ -285,20 +297,23 @@ class _LocalVideoWidgetState extends State<LocalVideoWidget> {
   @override
   Widget build(BuildContext context) {
     if (widget.localUserJoined) {
-      if(widget.isCam){
-        return const Center(child: Text('You turn off camera'));
-      } else{
-      return Align(
-        alignment: Alignment.topLeft,
-        child: AgoraVideoView(
-          controller: VideoViewController(
-            rtcEngine: widget.engine,
-            canvas: const VideoCanvas(uid: 0),
-          ),
-        ),
-      );}
+      return Container(
+      margin: const EdgeInsets.all(8),
+      color: widget.isCam ? Colors.black : null,
+      child: widget.isCam
+          ? const Center(child: Text('You turn off your camera'))
+          : AgoraVideoView(
+              controller: VideoViewController(
+                rtcEngine: widget.engine,
+                canvas: VideoCanvas(uid: 0),
+              ),
+            ),
+    );
     } else {
-      return const Center(child: CircularProgressIndicator());
+      return Container(
+      margin:const EdgeInsets.all(8),
+      color: Colors.black,
+        child: const Center(child: CircularProgressIndicator(color: Colors.white,)));
     }
   }
 }
@@ -319,21 +334,21 @@ class _RemoteVideoWidgetState extends State<RemoteVideoWidget> {
   @override
   Widget build(BuildContext context) {
     if (widget.remoteUid != 0) {
-      if(widget.isCam){
+        if(widget.isCam){
         return const Center(child: Text('This user turn of their camera'));
       }else{
-      return Align(
-        alignment: Alignment.topRight,
-        child: AgoraVideoView(
-          controller: VideoViewController.remote(
-            rtcEngine: widget.engine,
-            canvas: VideoCanvas(uid: widget.remoteUid),
-            connection: RtcConnection(channelId: widget.channelId),
-          ),
+      return Container(
+      margin: const EdgeInsets.all(8),
+      child: AgoraVideoView(
+        controller: VideoViewController.remote(
+          rtcEngine: widget.engine,
+          canvas: VideoCanvas(uid: widget.remoteUid),
+          connection: RtcConnection(channelId: widget.channelId),
         ),
-      );}
+      ),
+    );}
     } else {
-      return const Center(child: Text('Waiting for other user to join...'));
+      return Container();
     }
   }
 }

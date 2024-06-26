@@ -138,9 +138,6 @@ class _JoinClubState extends State<JoinClub> {
           ),
         ),
         child: Scaffold(
-          appBar: AppBar(
-            title: const Text('Night Club Party'),
-          ),
           body: Container(
             decoration: const BoxDecoration(
               gradient: const LinearGradient(
@@ -151,6 +148,7 @@ class _JoinClubState extends State<JoinClub> {
             ),
             child: Stack(
               children: [
+                _topBar('Night Club Party'),
                 LocalVideoWidget(
                     engine: _engine, localUserJoined: _localUserJoined, isCam: _isVideoMuted,),
                 RemoteVideoWidget(engine: _engine, remoteUid: _remoteUid, isCam: _remoteVideoMuted, channelId: channelId),
@@ -162,6 +160,17 @@ class _JoinClubState extends State<JoinClub> {
       ),
     );
   }
+
+   Widget _topBar(String name) {
+    return Align(
+      alignment: Alignment.topLeft,
+      child: Row(children: [
+        Padding(
+          padding: const EdgeInsets.all(18.0),
+          child: Text(name, style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold,color: Colors.white)),
+        )
+      ],),
+    );}
 
   Widget _toolbar() {
     return Align(
