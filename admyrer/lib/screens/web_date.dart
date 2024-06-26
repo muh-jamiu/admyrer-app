@@ -177,7 +177,7 @@ class _WebDatesState extends State<WebDates> {
                 Expanded(
                   child: GridView.builder(
                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
+                        crossAxisCount: 1,
                         childAspectRatio: 3 / 4, 
                       ),
                     itemCount: remoteUids.length + 1,
