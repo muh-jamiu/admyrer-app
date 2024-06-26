@@ -5,12 +5,12 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:admyrer/services/api_service.dart';
 import 'dart:convert';
 
-class WebDate extends StatefulWidget {
+class WebDates extends StatefulWidget {
   @override
-  _WebDateState createState() => _WebDateState();
+  _WebDatesState createState() => _WebDatesState();
 }
 
-class _WebDateState extends State<WebDate> {
+class _WebDatesState extends State<WebDates> {
   final String appId = 'b76f67d420d2486699d05d28cf678251';
   final String channelId = 'main';
   late RtcEngine _engine = createAgoraRtcEngine();

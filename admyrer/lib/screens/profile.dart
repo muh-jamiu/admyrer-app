@@ -25,6 +25,8 @@ import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:admyrer/widget/bottom_open.dart';
 import 'package:admyrer/widget/custom_sheet.dart';
 import 'package:admyrer/screens/search_page.dart';
+import 'package:admyrer/screens/web_date.dart';
+import 'package:admyrer/screens/speed_date.dart';
 
 
 class Profile extends StatefulWidget {
@@ -48,6 +50,16 @@ class _ProfileState extends State<Profile> {
       context, MaterialPageRoute(builder: (context) => StartVid()));
   }
 
+  
+  void goSpeed() {
+    Navigator.push(
+      context, MaterialPageRoute(builder: (context) => SpeedDate()));
+  }
+  
+  void goWeb() {
+    Navigator.push(
+      context, MaterialPageRoute(builder: (context) => WebDates()));
+  }
 
     
   Future<void> getFollows() async {
@@ -219,7 +231,7 @@ class _ProfileState extends State<Profile> {
                   const SizedBox(
                     height: 10,
                   ),
-                  Expanded(child: MyGridList(user: user, goPolls: goPolls, goQuiz: goQuiz, follows: follows, goLive: goLive))
+                  Expanded(child: MyGridList(user: user, goPolls: goPolls, goQuiz: goQuiz, follows: follows, goLive: goLive, goWeb: goWeb, goSpeed: goSpeed,))
                 ],
               ),
             )
@@ -411,13 +423,17 @@ class MyGridList extends StatefulWidget {
   final Function goPolls;
   final Function goQuiz;
   final Function goLive;
+  final Function goSpeed;
+  final Function goWeb;
   const MyGridList(
     {super.key, 
     required this.user,
     required this.goQuiz, 
     required this.goPolls, 
     required this.follows,
-    required this.goLive
+    required this.goLive,
+    required this.goSpeed,
+    required this.goWeb,
     }
     );
 
@@ -530,6 +546,7 @@ class _MyGridListState extends State<MyGridList> {
         return SelectOne(
           users: widget.follows,
           initiallySelectedUser: selectedUserOne,
+          goSpeed: widget.goSpeed
         );
       },
     );
@@ -549,6 +566,7 @@ class _MyGridListState extends State<MyGridList> {
         return WebDate(
           users: widget.follows,
           initiallySelectedUsers: selectedUsers,
+          goWeb: widget.goWeb,
         );
       },
     );
@@ -869,9 +887,10 @@ class _MyGridListState extends State<MyGridList> {
 
 class WebDate extends StatefulWidget {
   final List<UserModel> users;
+  final Function goWeb;
   final List<String> initiallySelectedUsers;
 
-  WebDate({required this.users, required this.initiallySelectedUsers});
+  WebDate({required this.users, required this.initiallySelectedUsers, required this.goWeb});
 
   @override
   _WebDateState createState() => _WebDateState();
@@ -902,7 +921,7 @@ class _WebDateState extends State<WebDate> {
             ),
             TextButton(
               child: const Text('Start', style: TextStyle(color: Colors.red)),
-              onPressed: () {},
+              onPressed: () => widget.goWeb(),
             ),
           ],
         );
@@ -960,9 +979,10 @@ class _WebDateState extends State<WebDate> {
 
 class SelectOne extends StatefulWidget {
   final List<UserModel> users;
+  final Function goSpeed;
   final String? initiallySelectedUser;
 
-  SelectOne({required this.users, this.initiallySelectedUser});
+  SelectOne({required this.users, this.initiallySelectedUser, required this.goSpeed});
 
   @override
   _SelectOneState createState() => _SelectOneState();
@@ -999,7 +1019,7 @@ class _SelectOneState extends State<SelectOne> {
             ),
             TextButton(
               child: const Text('Start', style: TextStyle(color: Colors.red)),
-              onPressed: () {},
+              onPressed: () => widget.goSpeed(),
             ),
           ],
         );
