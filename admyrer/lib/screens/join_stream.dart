@@ -8,7 +8,8 @@ import 'dart:convert';
 class JoinStream extends StatefulWidget {
   final String token;
   final String channel;
-  const JoinStream({super.key, required this.token, required this.channel});
+  final String username;
+  const JoinStream({super.key, required this.token, required this.channel, required this.username});
   @override
   _JoinStreamState createState() => _JoinStreamState();
 }
@@ -118,7 +119,7 @@ class _JoinStreamState extends State<JoinStream> {
         ),
         child: Scaffold(
           appBar: AppBar(
-            title: Text('Live Stream'),
+            title: Text(widget.username),
           ),
           body: Container(
             decoration: const BoxDecoration(

@@ -139,9 +139,9 @@ class _HotState extends State<Hot> {
     getClubs();
   }
 
-  void goStream(token, channel) {
+  void goStream(token, channel, username) {
     Navigator.push(context,
-        MaterialPageRoute(builder: (context) => JoinStream(token: token, channel: channel )));
+        MaterialPageRoute(builder: (context) => JoinStream(token: token, channel: channel, username: username)));
   }
 
     void goClub(token, channel) {
@@ -890,7 +890,7 @@ class _LiveUsersState extends State<LiveUsers> {
       mainAxisSpacing: 15,
       children: [
         InkWell(
-          onTap: () => widget.goStream(widget.users[0].token, widget.users[0].channel),
+          onTap: () => widget.goStream(widget.users[0].token, widget.users[0].channel, widget.users[0].username),
           child: ImageWithTextAndIcon(
               name: widget.users[0].username ?? "",
               image: widget.users[0].avatar ?? "",
@@ -898,7 +898,7 @@ class _LiveUsersState extends State<LiveUsers> {
         ),
         widget.users.length > 1 ? 
         InkWell(
-          onTap: () => widget.goStream(widget.users[1].token, widget.users[1].channel),
+          onTap: () => widget.goStream(widget.users[1].token, widget.users[1].channel, widget.users[0].username),
           child: ImageWithTextAndIcon(
               name: widget.users[1].username ?? "",
               image: widget.users[1].avatar ?? "",

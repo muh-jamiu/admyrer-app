@@ -15,7 +15,7 @@ class StartVid extends StatefulWidget {
 
 class _StartVidState extends State<StartVid> {
   final String appId = 'b76f67d420d2486699d05d28cf678251';
-  final String channelId = 'main';
+  late String channelId = widget.username + token;
   late RtcEngine _engine = createAgoraRtcEngine();
   int _remoteUid = 0;
   bool _localUserJoined = false;
