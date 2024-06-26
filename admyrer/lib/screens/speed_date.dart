@@ -171,6 +171,7 @@ class _SpeedDateState extends State<SpeedDate> {
             ),
             child: Stack(
               children: [
+              const SizedBox(height: 20,),
                 _topBar(),
                 LocalVideoWidget(
                     engine: _engine, localUserJoined: _localUserJoined, isCam: _isVideoMuted, isRemote: _remoteUid),

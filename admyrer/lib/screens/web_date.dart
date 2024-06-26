@@ -172,6 +172,7 @@ class _WebDatesState extends State<WebDates> {
             ),
             child: Column(
               children: [
+              const SizedBox(height: 20,),
                 _topBar(),
                 Expanded(
                   child: GridView.builder(
