@@ -1,3 +1,5 @@
+import 'package:admyrer/screens/all_clubs.dart';
+import 'package:admyrer/screens/all_live.dart';
 import 'package:admyrer/widget/backgrounds.dart';
 import 'package:admyrer/widget/gradient_button.dart';
 import 'package:admyrer/widget/bootstrap_textfield.dart';
@@ -154,6 +156,16 @@ class _HotState extends State<Hot> {
   void goAll() {
     Navigator.push(context,
         MaterialPageRoute(builder: (context) => AllUsers(users: users)));
+  }
+
+  void goAllClub() {
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => AllClubs(users: clubs)));
+  }
+
+   void goAllLive() {
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => AllLive(users: lives)));
   }
 
   void goAllUser() {
@@ -317,7 +329,7 @@ class _HotState extends State<Hot> {
                                           fontSize: 20,
                                           fontWeight: FontWeight.w600)),
                                   InkWell(
-                                    onTap: () => {},
+                                    onTap: goAllLive,
                                     child: Text(
                                       "See All",
                                       style: TextStyle(
@@ -356,7 +368,7 @@ class _HotState extends State<Hot> {
                                           fontSize: 20,
                                           fontWeight: FontWeight.w600)),
                                   InkWell(
-                                    onTap: () => {},
+                                    onTap: goAllClub,
                                     child: Text(
                                       "See All",
                                       style: TextStyle(
