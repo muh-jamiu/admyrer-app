@@ -7,13 +7,24 @@ import 'package:flutter/material.dart';
 import './screens/onboarding_screen.dart';
 import './screens/home.dart';
 import './screens/step_Sceen.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
 
 void main() async {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  // const MyApp({super.key});
+
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
+  MyApp() {
+    const InitializationSettings initializationSettings =   InitializationSettings(
+      android: AndroidInitializationSettings('@mipmap/ic_launcher'),
+    );
+    flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  }
 
   @override
   Widget build(BuildContext context) {

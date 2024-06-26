@@ -9,6 +9,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:admyrer/screens/single.dart';
 import 'package:admyrer/screens/search_page.dart';
 import 'package:admyrer/widget/custom_sheet.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
 
 class Locations extends StatefulWidget {
   bool isLoading;
@@ -19,10 +21,29 @@ class Locations extends StatefulWidget {
 }
 
 class _LocationsState extends State<Locations> {
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
   final ApiService _apiService = ApiService();
   List<UserModel> users = [];
   bool isLoading = true;
   String token = "";
+
+  Future<void> _showNotification() async {
+    const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
+      'channel_id',
+      'channel_name',
+      channelDescription: 'channel_description',
+      importance: Importance.max,
+      priority: Priority.high,
+    );
+    const NotificationDetails platformDetails = NotificationDetails(android: androidDetails);
+
+    await flutterLocalNotificationsPlugin.show(
+      0,
+      'Test Notification',
+      'This is the body of the notification',
+      platformDetails,
+    );
+  }
 
   void showErrorToast(String message) {
     Fluttertoast.showToast(
@@ -75,6 +96,7 @@ class _LocationsState extends State<Locations> {
   void initState() {
     super.initState();
     getUsers();
+    _showNotification();
   }
 
   Future<void> getUsersByCountry(country) async {
