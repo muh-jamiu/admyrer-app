@@ -6,13 +6,16 @@ import 'package:admyrer/services/api_service.dart';
 import 'dart:convert';
 
 class SpeedDate extends StatefulWidget {
+  final String username;
+  final String avatar;
+  const SpeedDate({super.key, required this.username, required this.avatar});
   @override
   _SpeedDateState createState() => _SpeedDateState();
 }
 
 class _SpeedDateState extends State<SpeedDate> {
   final String appId = 'b76f67d420d2486699d05d28cf678251';
-  final String channelId = 'main';
+  late String channelId = widget.username + token;
   late RtcEngine _engine = createAgoraRtcEngine();
   int _remoteUid = 0;
   bool _localUserJoined = false;
@@ -169,7 +172,7 @@ class _SpeedDateState extends State<SpeedDate> {
                 _topBar(),
                 LocalVideoWidget(
                     engine: _engine, localUserJoined: _localUserJoined, isCam: _isVideoMuted, isRemote: _remoteUid),
-                RemoteVideoWidget(engine: _engine, remoteUid: _remoteUid, isCam: _remoteVideoMuted,),
+                RemoteVideoWidget(engine: _engine, remoteUid: _remoteUid, isCam: _remoteVideoMuted, channelId: channelId),
                 _toolbar(),
               ],
             ),
@@ -328,8 +331,9 @@ class RemoteVideoWidget extends StatefulWidget {
   final RtcEngine engine;
   final int remoteUid;
   final bool isCam;
+  final String channelId;
 
-  RemoteVideoWidget({required this.engine, required this.remoteUid, required this.isCam});
+  RemoteVideoWidget({required this.engine, required this.remoteUid, required this.isCam, required this.channelId});
 
   @override
   State<RemoteVideoWidget> createState() => _RemoteVideoWidgetState();
@@ -348,7 +352,7 @@ class _RemoteVideoWidgetState extends State<RemoteVideoWidget> {
           controller: VideoViewController.remote(
             rtcEngine: widget.engine,
             canvas: VideoCanvas(uid: widget.remoteUid),
-            connection: const RtcConnection(channelId: 'main'),
+            connection: RtcConnection(channelId: widget.channelId),
           ),
         ),
       );}

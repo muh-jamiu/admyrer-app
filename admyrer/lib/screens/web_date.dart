@@ -6,13 +6,16 @@ import 'package:admyrer/services/api_service.dart';
 import 'dart:convert';
 
 class WebDates extends StatefulWidget {
+  final String username;
+  final String avatar;
+  const WebDates({super.key, required this.username, required this.avatar});
   @override
   _WebDatesState createState() => _WebDatesState();
 }
 
 class _WebDatesState extends State<WebDates> {
   final String appId = 'b76f67d420d2486699d05d28cf678251';
-  final String channelId = 'main';
+  late String channelId = widget.username + token;
   late RtcEngine _engine = createAgoraRtcEngine();
   int _remoteUid = 0;
   bool _localUserJoined = false;
@@ -180,7 +183,7 @@ class _WebDatesState extends State<WebDates> {
                       return LocalVideoWidget(
                       engine: _engine, localUserJoined: _localUserJoined, isCam: _isVideoMuted,);
                       } else {
-                        return RemoteVideoWidget(engine: _engine, remoteUid: remoteUids[index - 1], isCam: _remoteVideoMuted,);
+                        return RemoteVideoWidget(engine: _engine, remoteUid: remoteUids[index - 1], isCam: _remoteVideoMuted, channelId: channelId);
                       }
                     },
                   )),
@@ -303,8 +306,9 @@ class RemoteVideoWidget extends StatefulWidget {
   final RtcEngine engine;
   final int remoteUid;
   final bool isCam;
+  final String channelId;
 
-  RemoteVideoWidget({required this.engine, required this.remoteUid, required this.isCam});
+  RemoteVideoWidget({required this.engine, required this.remoteUid, required this.isCam, required this.channelId});
 
   @override
   State<RemoteVideoWidget> createState() => _RemoteVideoWidgetState();
@@ -323,7 +327,7 @@ class _RemoteVideoWidgetState extends State<RemoteVideoWidget> {
         controller: VideoViewController.remote(
           rtcEngine: widget.engine,
           canvas: VideoCanvas(uid: widget.remoteUid),
-          connection: RtcConnection(channelId: "main"),
+          connection: RtcConnection(channelId: widget.channelId),
         ),
       ),
     );}

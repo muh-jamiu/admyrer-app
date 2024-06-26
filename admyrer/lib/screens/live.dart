@@ -190,7 +190,7 @@ class _StartVidState extends State<StartVid> {
                 _topBar(),
                 LocalVideoWidget(
                     engine: _engine, localUserJoined: _localUserJoined, isCam: _isVideoMuted,),
-                RemoteVideoWidget(engine: _engine, remoteUid: _remoteUid, isCam: _remoteVideoMuted,),
+                RemoteVideoWidget(engine: _engine, remoteUid: _remoteUid, isCam: _remoteVideoMuted, channelId: channelId),
                 _toolbar(),
               ],
             ),
@@ -307,8 +307,9 @@ class RemoteVideoWidget extends StatefulWidget {
   final RtcEngine engine;
   final int remoteUid;
   final bool isCam;
+  final String channelId;
 
-  RemoteVideoWidget({required this.engine, required this.remoteUid, required this.isCam});
+  RemoteVideoWidget({required this.engine, required this.remoteUid, required this.isCam, required this.channelId});
 
   @override
   State<RemoteVideoWidget> createState() => _RemoteVideoWidgetState();
@@ -327,7 +328,7 @@ class _RemoteVideoWidgetState extends State<RemoteVideoWidget> {
           controller: VideoViewController.remote(
             rtcEngine: widget.engine,
             canvas: VideoCanvas(uid: widget.remoteUid),
-            connection: const RtcConnection(channelId: 'main'),
+            connection: RtcConnection(channelId: widget.channelId),
           ),
         ),
       );}

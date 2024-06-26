@@ -53,12 +53,12 @@ class _ProfileState extends State<Profile> {
   
   void goSpeed() {
     Navigator.push(
-      context, MaterialPageRoute(builder: (context) => SpeedDate()));
+      context, MaterialPageRoute(builder: (context) => SpeedDate(username: user.username , avatar: user.avatar,)));
   }
   
   void goWeb() {
     Navigator.push(
-      context, MaterialPageRoute(builder: (context) => WebDates()));
+      context, MaterialPageRoute(builder: (context) => WebDates(username: user.username , avatar: user.avatar,)));
   }
 
     
