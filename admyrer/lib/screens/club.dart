@@ -317,10 +317,14 @@ class _LocalVideoWidgetState extends State<LocalVideoWidget> {
   Widget build(BuildContext context) {
     if (widget.localUserJoined) {
       return Container(
-      margin: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
       color: widget.isCam ? Colors.black : null,
+        ),
+      margin: const EdgeInsets.all(8),
+      // color: widget.isCam ? Colors.black : null,
       child: widget.isCam
-          ? const Center(child: Text('You turn off your camera'))
+          ? const Center(child: Text('You turn off your camera', style: TextStyle(color: Colors.white),))
           : AgoraVideoView(
               controller: VideoViewController(
                 rtcEngine: widget.engine,
@@ -330,8 +334,11 @@ class _LocalVideoWidgetState extends State<LocalVideoWidget> {
     );
     } else {
       return Container(
-      margin:const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
       color: Colors.black,
+        ),
+      margin:const EdgeInsets.all(8),
         child: const Center(child: CircularProgressIndicator(color: Colors.white,)));
     }
   }
@@ -354,9 +361,13 @@ class _RemoteVideoWidgetState extends State<RemoteVideoWidget> {
   Widget build(BuildContext context) {
     if (widget.remoteUid != 0) {
         if(widget.isCam){
-        return const Center(child: Text('This user turn of their camera'));
+        return const Center(child: Text('This user turn of their camera', style: TextStyle(color: Colors.white),));
       }else{
       return Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+      color: widget.isCam ? Colors.black : null,
+        ),
       margin: const EdgeInsets.all(8),
       child: AgoraVideoView(
         controller: VideoViewController.remote(
