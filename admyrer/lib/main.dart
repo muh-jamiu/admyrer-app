@@ -9,7 +9,6 @@ import './screens/home.dart';
 import './screens/step_Sceen.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-
 void main() async {
   runApp(MyApp());
 }

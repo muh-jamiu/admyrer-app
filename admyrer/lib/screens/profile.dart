@@ -29,7 +29,6 @@ import 'package:admyrer/screens/web_date.dart';
 import 'package:admyrer/screens/club.dart';
 import 'package:admyrer/screens/speed_date.dart';
 
-
 class Profile extends StatefulWidget {
   const Profile({super.key});
 
