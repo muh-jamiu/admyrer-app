@@ -45,9 +45,9 @@ class _ProfileState extends State<Profile> {
   List<UserModel>  likes = [];
   List<UserModel>  follows = [];
 
-  void goLive() {
+  void goLive(username, avatar) {
     Navigator.push(
-      context, MaterialPageRoute(builder: (context) => StartVid()));
+      context, MaterialPageRoute(builder: (context) => StartVid(username: username , avatar: avatar,)));
   }
 
   
@@ -587,7 +587,7 @@ class _MyGridListState extends State<MyGridList> {
       mainAxisSpacing: 10,
       children: [
         InkWell(
-          onTap: () => widget.goLive(),
+          onTap: () => widget.goLive(widget.user.username, widget.user.avatar),
           child: Container(
             width: 100,
             height: 150,

@@ -6,14 +6,15 @@ import 'package:admyrer/services/api_service.dart';
 import 'dart:convert';
 
 class StartVid extends StatefulWidget {
+  final String username;
+  final String avatar;
+  const StartVid({super.key, required this.username, required this.avatar});
   @override
   _StartVidState createState() => _StartVidState();
 }
 
 class _StartVidState extends State<StartVid> {
   final String appId = 'b76f67d420d2486699d05d28cf678251';
-  // final String token =
-  //     '007eJxTYMj8dcqtqobLlr9VccnPv3WPLePkDa7ndv9fwGehslqM20yBIcncLM3MPMXEyCDFyMTCzMzSMsXANMXIIhkoamFkavj8YHlaQyAjQ9MBIWZGBggE8VkYchMz8xgYANfMHac=';
   final String channelId = 'main';
   late RtcEngine _engine = createAgoraRtcEngine();
   int _remoteUid = 0;
@@ -25,6 +26,21 @@ class _StartVidState extends State<StartVid> {
   bool _isVideoMuted = false;
   bool _remoteAudioMuted = false;
   bool _remoteVideoMuted = false;
+
+  Future<void> saveLive() async {
+    try {
+      final response = await _apiService.postRequest("live", {
+        "username": widget.username,
+        "channel": widget.username + token,
+        "token": token,
+        "avatar": widget.avatar,
+      });
+      print(response);
+    } catch (e) {
+      print(e);
+    }
+  }
+
 
   void showErrorToast(String message) {
     Fluttertoast.showToast(
@@ -54,6 +70,7 @@ class _StartVidState extends State<StartVid> {
         this.token = token;
         isLoading = false;
       });
+      saveLive();
     } catch (e) {
       showErrorToast('An error occurred: $e');
       print(e);
@@ -67,7 +84,7 @@ class _StartVidState extends State<StartVid> {
     await getToken();
 
     // Request camera and microphone permissions
-    await [Permission.camera, Permission.microphone].request();
+    // await [Permission.camera, Permission.microphone].request();
 
     // Create the engine
     _engine = createAgoraRtcEngine();

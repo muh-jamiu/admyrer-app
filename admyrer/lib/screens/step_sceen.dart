@@ -18,9 +18,9 @@ class _StepSceenState extends State<StepSceen> {
   bool isLoading = false;
 
   void login() {
-    Navigator.push(
-      context, MaterialPageRoute(builder: (context) => WebDates()));
-    // Navigator.pushReplacementNamed(context, "/login");
+    // Navigator.push(
+    //   context, MaterialPageRoute(builder: (context) => WebDates()));
+    Navigator.pushReplacementNamed(context, "/login");
   }
 
   void register() {
