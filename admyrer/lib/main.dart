@@ -8,6 +8,8 @@ import './screens/onboarding_screen.dart';
 import './screens/home.dart';
 import './screens/step_Sceen.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+// import 'package:pusher_client/pusher_client.dart';
+import 'package:pusher_channels_flutter/pusher_channels_flutter.dart';
 
 void main() async {
   runApp(MyApp());
@@ -16,6 +18,61 @@ void main() async {
 class MyApp extends StatelessWidget {
   // const MyApp({super.key});
 
+  late PusherChannelsFlutter pusher;
+  late String channelName;
+  late String eventName;
+
+  Future<void> initPusher() async {
+    pusher = PusherChannelsFlutter.getInstance();
+    
+    pusher.init(
+      apiKey: '61cbedc7014185332c2d',
+      cluster: 'mt1',
+      onSubscriptionError: (String channel, dynamic e) {
+        print("Subscription Error: ${e.message}");
+      },
+      onEvent: (PusherEvent event) {
+        print("onEvent: $event");
+      }
+    );
+    
+    await pusher.subscribe(channelName: "app_event");
+
+
+    
+    // pusher.bind(channelName, eventName = 'my-event', (PusherEvent event) {
+    //   print("Event: ${event.data}");
+    // });
+
+    await pusher.connect();
+  }
+  
+  void _pusher() async{
+
+
+
+    // PusherOptions options = PusherOptions(
+    //   cluster: "mt1",
+    //   encrypted: true,
+    // );
+
+    // pusher = PusherClient(
+    //   "61cbedc7014185332c2d",
+    //   options,
+    //   autoConnect: true,
+    // );
+
+    // pusher.connect();
+    // channel = pusher.subscribe("app_event");
+
+    // channel.bind("app_event", (PusherEvent? event) {
+    //   print("from main");
+    // });
+  }
+
+  void initState() {
+    _pusher();
+  }
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
   MyApp() {
