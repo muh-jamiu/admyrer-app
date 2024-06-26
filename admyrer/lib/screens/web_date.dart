@@ -23,6 +23,7 @@ class _WebDateState extends State<WebDate> {
   bool _isVideoMuted = false;
   bool _remoteAudioMuted = false;
   bool _remoteVideoMuted = false;
+  List<int> remoteUids = [];
 
   void showErrorToast(String message) {
     Fluttertoast.showToast(
@@ -86,6 +87,7 @@ class _WebDateState extends State<WebDate> {
           showErrorToast("User join with ID: $remoteUid");
           setState(() {
             _remoteUid = remoteUid;
+            remoteUids.add(remoteUid);
           });
         },
         onUserOffline: (RtcConnection connection, int remoteUid,
@@ -164,12 +166,22 @@ class _WebDateState extends State<WebDate> {
                 end: Alignment.centerRight,
               ),
             ),
-            child: Stack(
+            child: Column(
               children: [
                 _topBar(),
-                LocalVideoWidget(
-                    engine: _engine, localUserJoined: _localUserJoined, isCam: _isVideoMuted,),
-                RemoteVideoWidget(engine: _engine, remoteUid: _remoteUid, isCam: _remoteVideoMuted,),
+                Expanded(
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: remoteUids.length + 1,
+                    itemBuilder: (context, index) {
+                      if (index == 0) {
+                      return LocalVideoWidget(
+                      engine: _engine, localUserJoined: _localUserJoined, isCam: _isVideoMuted,);
+                      } else {
+                        return RemoteVideoWidget(engine: _engine, remoteUid: remoteUids[index - 1], isCam: _remoteVideoMuted,);
+                      }
+                    },
+                  )),
                 _toolbar(),
               ],
             ),
@@ -264,20 +276,27 @@ class _LocalVideoWidgetState extends State<LocalVideoWidget> {
   @override
   Widget build(BuildContext context) {
     if (widget.localUserJoined) {
-      if(widget.isCam){
-        return const Center(child: Text('You turn off camera'));
-      } else{
-      return Align(
-        alignment: Alignment.topLeft,
-        child: AgoraVideoView(
-          controller: VideoViewController(
-            rtcEngine: widget.engine,
-            canvas: const VideoCanvas(uid: 0),
-          ),
-        ),
-      );}
+      return Container(
+      margin: const EdgeInsets.all(8),
+      width: 120,
+      height: 160,
+      color: widget.isCam ? Colors.black : null,
+      child: widget.isCam
+          ? const Center(child: Text('You turn off your camera'))
+          : AgoraVideoView(
+              controller: VideoViewController(
+                rtcEngine: widget.engine,
+                canvas: VideoCanvas(uid: 0),
+              ),
+            ),
+    );
     } else {
-      return const Center(child: CircularProgressIndicator());
+      return Container(
+      margin:const EdgeInsets.all(8),
+      width: 120,
+      height: 160,
+      color: Colors.black,
+        child: const Center(child: CircularProgressIndicator(color: Colors.white,)));
     }
   }
 }
@@ -297,21 +316,23 @@ class _RemoteVideoWidgetState extends State<RemoteVideoWidget> {
   @override
   Widget build(BuildContext context) {
     if (widget.remoteUid != 0) {
-      if(widget.isCam){
+        if(widget.isCam){
         return const Center(child: Text('This user turn of their camera'));
       }else{
-      return Align(
-        alignment: Alignment.topRight,
-        child: AgoraVideoView(
-          controller: VideoViewController.remote(
-            rtcEngine: widget.engine,
-            canvas: VideoCanvas(uid: widget.remoteUid),
-            connection: const RtcConnection(channelId: 'main'),
-          ),
+      return Container(
+      margin: const EdgeInsets.all(8),
+      width: 120,
+      height: 160,
+      child: AgoraVideoView(
+        controller: VideoViewController.remote(
+          rtcEngine: widget.engine,
+          canvas: VideoCanvas(uid: widget.remoteUid),
+          connection: RtcConnection(channelId: "main"),
         ),
-      );}
+      ),
+    );}
     } else {
-      return const Center(child: Text('Waiting for other user to join...'));
+      return Container();
     }
   }
 }
