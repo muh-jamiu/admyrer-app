@@ -27,6 +27,7 @@ class _ClubState extends State<Club> {
   bool _remoteAudioMuted = false;
   bool _remoteVideoMuted = false;
   List<int> remoteUids = [];
+  var userId = 0;
 
   void showErrorToast(String message) {
     Fluttertoast.showToast(
@@ -54,7 +55,22 @@ class _ClubState extends State<Club> {
         "token": token,
         "avatar": widget.avatar,
       });
-      print(response);
+      var data = json.decode(response.body);
+      var userId = data["data"];
+
+      setState(() {
+        this.userId = userId;
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> deleteClub() async {
+    try {
+      await _apiService.postRequest("delete-club", {
+        "id": userId,
+      });
     } catch (e) {
       print(e);
     }
@@ -251,6 +267,7 @@ class _ClubState extends State<Club> {
               onPressed: () {
                 _engine.leaveChannel();
                 Navigator.pop(context);
+                deleteClub();
               },
             ),
             RawMaterialButton(

@@ -26,6 +26,7 @@ class _StartVidState extends State<StartVid> {
   bool _isVideoMuted = false;
   bool _remoteAudioMuted = false;
   bool _remoteVideoMuted = false;
+  var userId = 0;
 
   Future<void> saveLive() async {
     try {
@@ -35,12 +36,27 @@ class _StartVidState extends State<StartVid> {
         "token": token,
         "avatar": widget.avatar,
       });
-      print(response);
+
+      var data = json.decode(response.body);
+      var userId = data["data"];
+
+      setState(() {
+        this.userId = userId;
+      });
     } catch (e) {
       print(e);
     }
   }
 
+  Future<void> deleteLive() async {
+    try {
+      await _apiService.postRequest("delete-club", {
+        "id": userId,
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
 
   void showErrorToast(String message) {
     Fluttertoast.showToast(
@@ -239,6 +255,7 @@ class _StartVidState extends State<StartVid> {
               onPressed: () {
                 _engine.leaveChannel();
                 Navigator.pop(context);
+                deleteLive();
               },
             ),
             RawMaterialButton(
