@@ -27,6 +27,16 @@ class _StartVidState extends State<StartVid> {
   bool _remoteAudioMuted = false;
   bool _remoteVideoMuted = false;
   var userId = 0;
+  bool isSidebarVisible = false;
+
+  final List<String> songs = [
+    'Song 1',
+    'Song 2',
+    'Song 3',
+    'Song 4',
+    'Song 5',
+  ];
+
 
   Future<void> saveLive() async {
     try {
@@ -176,6 +186,12 @@ class _StartVidState extends State<StartVid> {
     _engine.switchCamera();
   }
 
+  void toggleSidebar() {
+    setState(() {
+      isSidebarVisible = !isSidebarVisible;
+    });
+  }
+
   @override
   void dispose() {
     _engine.leaveChannel();
@@ -211,6 +227,7 @@ class _StartVidState extends State<StartVid> {
                     engine: _engine, localUserJoined: _localUserJoined, isCam: _isVideoMuted,),
                 RemoteVideoWidget(engine: _engine, remoteUid: _remoteUid, isCam: _remoteVideoMuted, channelId: channelId),
                 _toolbar(),
+              _song(context),
               ],
             ),
           ),
@@ -218,6 +235,52 @@ class _StartVidState extends State<StartVid> {
       ),
     );
   }
+
+  Widget _song(BuildContext context) {
+    return AnimatedPositioned(
+        duration: const Duration(milliseconds: 300),
+        left: isSidebarVisible ? 0 : -250,
+        top: 0,
+        bottom: 0,
+        child: Material(
+          elevation: 8,
+          child: Container(
+            width: 250,
+            height: MediaQuery.of(context).size.height,
+            color: Colors.white,
+            child: Column(
+              children: [
+                const Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text(
+                    'Songs List',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: songs.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        title: Text(songs[index]),
+                        trailing: IconButton(
+                          icon: Icon(Icons.play_arrow),
+                          onPressed: () {
+                            // Add your play song logic here
+                          },
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      
+    );
+  }
+
 
   Widget _topBar() {
     return const Align(
@@ -280,6 +343,30 @@ class _StartVidState extends State<StartVid> {
               child: Icon(
                 Icons.switch_camera,
                 color: Colors.pink[400],
+                size: 20.0,
+              ),
+            ),
+             RawMaterialButton(
+              onPressed: toggleSidebar,
+              shape: const CircleBorder(),
+              elevation: 2.0,
+              fillColor: Colors.white,
+              padding: const EdgeInsets.all(12.0),
+              child: Icon(
+                Icons.switch_camera,
+                color: Colors.pink[400],
+                size: 20.0,
+              ),
+            ),
+              RawMaterialButton(
+              onPressed: _switchCamera,
+              shape: const CircleBorder(),
+              elevation: 2.0,
+              fillColor: Colors.white,
+              padding: const EdgeInsets.all(12.0),
+              child: Icon(
+                Icons.music_note,
+                color: Colors.purple[400],
                 size: 20.0,
               ),
             ),
@@ -357,3 +444,4 @@ class _RemoteVideoWidgetState extends State<RemoteVideoWidget> {
     }
   }
 }
+

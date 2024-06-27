@@ -2,13 +2,10 @@ import 'package:admyrer/screens/password_text.dart';
 import 'package:admyrer/widget/backgrounds.dart';
 import 'package:admyrer/widget/gradient_button.dart';
 import 'package:admyrer/widget/bootstrap_textfield.dart';
-import 'package:admyrer/widget/google_login.dart';
-import 'package:admyrer/widget/facebook.dart';
 import 'package:admyrer/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:pusher_channels_flutter/pusher_channels_flutter.dart';
 
 
 class Login extends StatefulWidget {
@@ -26,49 +23,10 @@ class _LoginState extends State<Login> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool isLoading = false;
 
-  Future<void> triggerPuser() async {
-    try {
-      await _apiService.postRequest("notify", {
-        "username": "jamiu",
-        "title": "You have a new message from Jamiu",
-        "message":"testboy",
-      });
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  void _pusher() async{
-    PusherChannelsFlutter pusher = PusherChannelsFlutter.getInstance();
-    try {
-      await pusher.init(
-        apiKey: "be7a4955db605d26a6bc",
-        cluster: "mt1",
-        onConnectionStateChange: (String change, String e) async {
-          print("previousState: ${e}, currentState: ${change}");
-        },
-        onError: (String e, int? i, dynamic? d) {
-          print("pusher Error: ${e}");
-        },
-        onSubscriptionError: (String channel, dynamic e) {
-          print("Subscription Error: ${e.message}");
-        },
-        onEvent: (PusherEvent event){
-          print('pusher event ${event}');
-        },
-      );
-      await pusher.subscribe(channelName: "app_event");
-      await pusher.connect();
-    } catch (e) {
-      print("ERROR: $e");
-    }
-  }
 
   @override
   void initState(){
     super.initState();
-    _pusher();
-    triggerPuser();
   }
 
   void register() {
