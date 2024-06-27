@@ -42,7 +42,7 @@ class _LoginState extends State<Login> {
     PusherChannelsFlutter pusher = PusherChannelsFlutter.getInstance();
     try {
       await pusher.init(
-        apiKey: "API_KEY",
+        apiKey: "be7a4955db605d26a6bc",
         cluster: "mt1",
         onConnectionStateChange: (String change, String e) async {
           print("previousState: ${e}, currentState: ${change}");
@@ -54,7 +54,7 @@ class _LoginState extends State<Login> {
           print("Subscription Error: ${e.message}");
         },
         onEvent: (PusherEvent event){
-
+          print('pusher event ${event}');
         },
       );
       await pusher.subscribe(channelName: "app_event");

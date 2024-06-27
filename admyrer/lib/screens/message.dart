@@ -11,6 +11,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:admyrer/screens/single.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:pusher_channels_flutter/pusher_channels_flutter.dart';
 
 class Message extends StatefulWidget {
   final UserModel user;
@@ -39,6 +40,33 @@ class _MessageState extends State<Message> {
       });
     } catch (e) {
       print(e);
+    }
+  }
+
+   void _pusher() async{
+    PusherChannelsFlutter pusher = PusherChannelsFlutter.getInstance();
+    try {
+      await pusher.init(
+        apiKey: "be7a4955db605d26a6bc",
+        cluster: "mt1",
+        onConnectionStateChange: (String change, String e) async {
+          showErrorToast("previousState: ${e}, currentState: ${change}");
+        },
+        onError: (String e, int? i, dynamic? d) {
+          showErrorToast("pusher Error: ${e}");
+        },
+        onSubscriptionError: (String channel, dynamic e) {
+          showErrorToast("Subscription Error: ${e.message}");
+        },
+        onEvent: (PusherEvent event){
+          showErrorToast('pusher event ${event}');
+        },
+      );
+      await pusher.subscribe(channelName: "app_event");
+      await pusher.connect();
+    } catch (e) {
+      showErrorToast("ERROR: $e");
+      print("ERROR: $e");
     }
   }
 
@@ -130,6 +158,7 @@ class _MessageState extends State<Message> {
   }
 
   Future<void> postMessage(message) async {
+    triggerPuser();
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       _authToken = prefs.getString('authToken') ?? '';
@@ -156,7 +185,8 @@ class _MessageState extends State<Message> {
   void initState() {
     super.initState();
     getMessage();
-    triggerPuser();
+    _pusher();
+    // triggerPuser();
   }
 
   void _sendMessage() {
