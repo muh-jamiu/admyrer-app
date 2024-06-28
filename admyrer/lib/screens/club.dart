@@ -4,7 +4,7 @@ import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:admyrer/services/api_service.dart';
 import 'dart:convert';
-// import 'package:flutter_audio_query/flutter_audio_query.dart';
+import 'package:on_audio_query/on_audio_query.dart';
 
 class Club extends StatefulWidget {
   final String username;
@@ -31,28 +31,25 @@ class _ClubState extends State<Club> {
   var userId = 0;
   String? _currentlyPlaying;
   bool isSidebarVisible = false;
+  final OnAudioQuery _audioQuery = OnAudioQuery();
 
-  final List<String> songs = [
-    'Song 1',
-    'Song 2',
-    'Song 3',
-    'Song 4',
-    'Song 5',
-  ];
+  late List<SongModel> _songs = [];
 
   Future<void> requestStoragePermission() async {
     if (await Permission.storage.request().isGranted) {
-      // Permission granted
+      showErrorToast("Access to local music has been granted");
+      getLocalMusicFiles();
     } else {
-      // Permission denied
+      showErrorToast("Access to local music is declined");
     }
   }
 
-  // Future<List<SongInfo>> getLocalMusicFiles() async {
-  //   final FlutterAudioQuery audioQuery = FlutterAudioQuery();
-  //   final List<SongInfo> songs = await audioQuery.getSongs();
-  //   return songs;
-  // }
+  Future<void> getLocalMusicFiles() async {
+    final List<SongModel> songs = await _audioQuery.querySongs();
+    setState(() {
+      _songs = songs;
+    });
+  }
 
   void showErrorToast(String message) {
     Fluttertoast.showToast(
@@ -307,27 +304,33 @@ class _ClubState extends State<Club> {
                 ),
                 Expanded(
                   child: ListView.builder(
-                    itemCount: songs.length,
+                    itemCount: _songs.length,
                     itemBuilder: (context, index) {
-                    String track = songs[index];
+                    var track = _songs[index];
                     bool isPlaying = _currentlyPlaying == track;
-                      if(songs.length == 0){
-                        return const Center(
+                      if(_songs.length == 0){
+                        return Center(
                           child: Column(children: [
-                            Text("Empty", style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),),
-                            Text("There are no uploaded music at the moment",style: TextStyle(fontSize: 18),),
+                            const Text("Empty", style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),),
+                            const Text("There are no uploaded music at the moment", style: TextStyle(fontSize: 18),),
+                             TextButton(
+                              onPressed: requestStoragePermission,
+                              child: const Text('Upload Local Music', style: TextStyle(color: Colors.red)),
+                            ),
                           ],),
                         );
                       }else{
                       return ListTile(
-                        title: Text(songs[index]),
+                        selectedColor: Colors.pink[400],
+                        title: Text(_songs[index].title),
+                        subtitle: Text(_songs[index].artist ?? 'Unknown Artist'),  
                         trailing: IconButton(
                           icon:Icon(isPlaying ? Icons.pause : Icons.play_arrow, color: Colors.red,),
                           onPressed: () {
                              if (isPlaying) {
                                 _pauseMusic();
                               } else {
-                                _playMusic(track);
+                                _playMusic("$track");
                               }
                           },
                         ),
