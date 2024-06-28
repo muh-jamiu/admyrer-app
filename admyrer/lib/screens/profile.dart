@@ -72,10 +72,11 @@ class _ProfileState extends State<Profile> {
       _authToken = prefs.getString('authToken') ?? '';
     });
     
-    try {
-      final response = await _apiService.postRequest("get-follows", {
-        "id": _authToken,
+    try {      
+      final response = await _apiService.postRequest("buildPage", {
+        "id": 10,
       });
+
 
       var data = json.decode(response.body);
 
@@ -573,36 +574,30 @@ class _MyGridListState extends State<MyGridList> {
       context, MaterialPageRoute(builder: (context) => Follows()));
   }
 
-  List<String> users = [
-    'User 1',
-    'User 2',
-    'User 3',
-    'User 4',
-    'User 5',
-  ];
+  List<String> users = [];
 
   List<String> selectedUsers = [];
 
   String? selectedUserOne;
 
-  void _showUserSelectionOnlyOne() async {
-    final selected = await showDialog<String>(
-      context: context,
-      builder: (context) {
-        return SelectOne(
-          users: widget.follows,
-          initiallySelectedUser: selectedUserOne,
-          goSpeed: widget.goSpeed
-        );
-      },
-    );
+  // void _showUserSelectionOnlyOne() async {
+  //   final selected = await showDialog<String>(
+  //     context: context,
+  //     builder: (context) {
+  //       return SelectOne(
+  //         users: widget.follows,
+  //         initiallySelectedUser: selectedUserOne,
+  //         goSpeed: widget.goSpeed
+  //       );
+  //     },
+  //   );
 
-    if (selected != null) {
-      setState(() {
-        selectedUserOne = selected;
-      });
-    }
-  }
+  //   if (selected != null) {
+  //     setState(() {
+  //       selectedUserOne = selected;
+  //     });
+  //   }
+  // }
 
 
   void _showUserSelectionModal() async {
@@ -706,7 +701,7 @@ class _MyGridListState extends State<MyGridList> {
         ),
 
         InkWell(
-          onTap: _showUserSelectionOnlyOne,
+          onTap: () => widget.goSpeed(),
           child: Container(
             width: 100,
             height: 150,
@@ -717,7 +712,7 @@ class _MyGridListState extends State<MyGridList> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const FaIcon(
-                  FontAwesomeIcons.forwardFast,
+                  FontAwesomeIcons.heartCircleBolt,
                   color: Colors.purple,
                   size: 25,
                 ),
@@ -743,7 +738,7 @@ class _MyGridListState extends State<MyGridList> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const FaIcon(
-                  FontAwesomeIcons.moon,
+                  FontAwesomeIcons.lock,
                   color: Colors.purple,
                   size: 25,
                 ),
