@@ -43,7 +43,7 @@ class _SpeedDateState extends State<SpeedDate> {
           _remainingTime--;
         } else {
           _timer?.cancel();
-          showErrorToast("Speed has ended connecting you to another user");
+          showErrorToast("Speed Date has ended connecting you to another user");
         }
       });
     });
