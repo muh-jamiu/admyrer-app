@@ -1,3 +1,4 @@
+import 'package:admyrer/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
@@ -26,6 +27,53 @@ class _SpeedDateState extends State<SpeedDate> {
   bool _isVideoMuted = false;
   bool _remoteAudioMuted = false;
   bool _remoteVideoMuted = false;
+  List<UserModel> users = [];
+  int index = 0;
+  var fname = "";
+  var lname = "";
+
+  
+  Future<void> getUsers() async {
+    try {
+      final response = await _apiService.postRequest("buildPage", {
+        "id": 10,
+      });
+
+      var data = json.decode(response.body);
+
+      if (data["data"] == null || data["data"]["random"] == null) {
+        showErrorToast('Invalid response data');
+        return;
+      }
+
+      List<dynamic> userList = data["data"]["random"];
+      List<UserModel> users =
+          userList.map((user) => UserModel.fromJson(user)).toList();
+
+      List<dynamic> alluserList = data["data"]["all"];
+      List<UserModel> allusers =
+          alluserList.map((user) => UserModel.fromJson(user)).toList();
+
+      var fname = users[index].firstName;
+      var lname = users[index].lastName;
+      setState(() {
+        this.users = users;
+        this.fname = fname;
+        this.lname = lname;
+        isLoading = false;
+      });
+      showErrorToast('Speed Date connect you to $fname $lname');
+    } catch (e) {
+      showErrorToast('An error occurred: $e');
+      print(e);
+      setState(() {
+        isLoading = false;
+        this.fname = "Guest";
+        this.lname = "Guest";
+      });
+    }
+  }
+
 
   void showErrorToast(String message) {
     Fluttertoast.showToast(
@@ -42,6 +90,7 @@ class _SpeedDateState extends State<SpeedDate> {
   @override
   void initState() {
     super.initState();
+    getUsers();
     _initAgora();
   }
 
@@ -55,13 +104,11 @@ class _SpeedDateState extends State<SpeedDate> {
 
       setState(() {
         this.token = token;
-        isLoading = false;
       });
     } catch (e) {
       showErrorToast('An error occurred: $e');
       print(e);
       setState(() {
-        isLoading = false;
       });
     }
   }
@@ -186,12 +233,15 @@ class _SpeedDateState extends State<SpeedDate> {
   }
 
   Widget _topBar() {
-    return const Align(
+    return Align(
       alignment: Alignment.topLeft,
       child: Row(children: [
         Padding(
-          padding: EdgeInsets.all(18.0),
-          child: Text("Speed Date", style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold,color: Colors.white)),
+          padding:const EdgeInsets.all(18.0),
+          child: isLoading ? 
+          const Text("Connecting....", style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold,color: Colors.white))
+           :
+          Text("Speed Date with $fname", style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold,color: Colors.white)),
         )
       ],),
     );}
