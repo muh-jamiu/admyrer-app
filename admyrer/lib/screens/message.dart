@@ -52,7 +52,7 @@ class _MessageState extends State<Message> {
         onConnectionStateChange: (String change, String e) async {
           showErrorToast("previousState: ${e}, currentState: ${change}");
         },
-        onError: (String e, int? i, dynamic? d) {
+        onError: (String e, int? i, dynamic d) {
           showErrorToast("pusher Error: ${e}");
         },
         onSubscriptionError: (String channel, dynamic e) {
@@ -66,10 +66,9 @@ class _MessageState extends State<Message> {
 
       await pusher.subscribe(channelName: "app_event");
       await pusher.connect();      
-      var name = pusher.getChannel("app_event");
+      var name = pusher.getChannel("app_event")?.channelName;
       showErrorToast("pusher channel name: $name");
-      pusher.trigger(PusherEvent(channelName: "app_event", eventName: "app_event"));
-
+      pusher.onEvent!(PusherEvent(channelName: "app_event", eventName: "app_event"));
 
     } catch (e) {
       showErrorToast("ERROR: $e");
@@ -193,7 +192,6 @@ class _MessageState extends State<Message> {
     super.initState();
     getMessage();
     _pusher();
-    // triggerPuser();
   }
 
   void _sendMessage() {
