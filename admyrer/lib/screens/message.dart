@@ -59,9 +59,16 @@ class _MessageState extends State<Message> {
           showErrorToast("Subscription Error: ${e.message}");
         },
         onEvent: (PusherEvent event){
-          showErrorToast('pusher event ${event}');
+          showErrorToast('pusher event ${event.eventName}, ${event.channelName}, ${event.data}');
         },
       );
+      
+      PusherChannel channel = await pusher.subscribe(channelName: "app_event");
+      channel.onEvent!((PusherEvent event) {
+        channel.trigger(event);
+        showErrorToast('Received event: ${event.eventName}, Data: ${event.data}');
+      });
+
       await pusher.subscribe(channelName: "app_event");
       await pusher.connect();
     } catch (e) {

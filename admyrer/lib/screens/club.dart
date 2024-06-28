@@ -287,13 +287,13 @@ class _ClubState extends State<Club> {
   Widget _song() {
     return AnimatedPositioned(
       duration: const Duration(milliseconds: 200),
-      left: isSidebarVisible ? 0 : -250,
+      left: isSidebarVisible ? 0 : -300,
       top: 0,
       bottom: 0,
       child: Material(
         elevation: 8,
         child: Container(
-          width: 250,
+          width: 300,
           height: MediaQuery.of(context).size.height,
           color: Colors.white,
           child: Column(
