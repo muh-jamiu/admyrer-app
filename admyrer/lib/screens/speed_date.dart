@@ -32,7 +32,7 @@ class _SpeedDateState extends State<SpeedDate> {
   int index = 0;
   var fname = "";
   var lname = "";
-  static const int _initialTime = 10 * 60; // 10 minutes in seconds
+  static  int _initialTime = 10 * 60;
   int _remainingTime = _initialTime;
   Timer? _timer;
 
@@ -43,13 +43,12 @@ class _SpeedDateState extends State<SpeedDate> {
           _remainingTime--;
         } else {
           _timer?.cancel();
-          print("Countdown Finished!");
+          showErrorToast("Speed has ended connecting you to another user");
         }
       });
     });
   }
 
-  
   Future<void> getUsers() async {
     try {
       final response = await _apiService.postRequest("buildPage", {
@@ -80,6 +79,7 @@ class _SpeedDateState extends State<SpeedDate> {
         isLoading = false;
       });
       showErrorToast('Speed Date connect you to $fname $lname');
+      _startCountdown();
     } catch (e) {
       showErrorToast('An error occurred: $e');
       print(e);
@@ -109,6 +109,10 @@ class _SpeedDateState extends State<SpeedDate> {
     super.initState();
     getUsers();
     _initAgora();
+  }
+
+  void skipUser(String fname, String lname){
+    showErrorToast("Speed Date connect you to $fname $lname");
   }
 
   Future<void> getToken() async {
@@ -330,7 +334,16 @@ class _SpeedDateState extends State<SpeedDate> {
               ),
             ),
              RawMaterialButton(
-              onPressed: (){},
+              onPressed: (){
+                setState((){
+                  index += 1;
+                  _initialTime = 10 * 60;
+                   _remainingTime = _initialTime;
+                });
+                var fname = users[index].firstName;
+                var lname = users[index].lastName;
+                skipUser(fname, lname);
+              },
               shape: const CircleBorder(),
               elevation: 2.0,
               fillColor: Colors.red[400],
