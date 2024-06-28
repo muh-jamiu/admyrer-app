@@ -36,6 +36,47 @@ class _SpeedDateState extends State<SpeedDate> {
   int _remainingTime = _initialTime;
   Timer? _timer;
 
+    Future<void> _dialogAfter() async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Date has ended'),
+          content: Text('Will you like to go on a date with $fname or start a new speed date?'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop(); 
+                Navigator.pushReplacementNamed(context, "/tab");
+              },
+            ),
+            TextButton(
+              child: const Text('Speed Date', style: TextStyle(color: Colors.blue)),
+              onPressed: () {
+                Navigator.of(context).pop();                
+                setState((){
+                  _initialTime = 10 * 60;
+                  _remainingTime = _initialTime;
+                });
+                showErrorToast("You started new speed date with $fname");
+              },
+            ),
+            TextButton(
+              child: const Text('Web Date', style: TextStyle(color: Colors.red)),
+              onPressed: () {
+                Navigator.of(context).pop();
+                showErrorToast("Something went wrong, Please try again");
+                Navigator.pushReplacementNamed(context, "/tab");
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+
   void _startCountdown() {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
@@ -43,7 +84,8 @@ class _SpeedDateState extends State<SpeedDate> {
           _remainingTime--;
         } else {
           _timer?.cancel();
-          showErrorToast("Speed Date has ended connecting you to another user");
+          showErrorToast("Speed Date with $fname has ended");
+          _dialogAfter();
         }
       });
     });
@@ -267,73 +309,75 @@ class _SpeedDateState extends State<SpeedDate> {
   Widget _toolbar() {
     final minutes = _remainingTime ~/ 60;
     final seconds = _remainingTime % 60;
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 15),
-      child: Align(
-        alignment: Alignment.bottomCenter,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            RawMaterialButton(
-              onPressed: _toggleMute,
-              shape: const CircleBorder(),
-              elevation: 2.0,
-              fillColor: _isMuted ? Colors.pink[400] : Colors.white,
-              padding: const EdgeInsets.all(12.0),
-              child: Icon(
-                _isMuted ? Icons.mic_off : Icons.mic,
-                color: _isMuted ? Colors.white : Colors.pink[400],
-                size: 20.0,
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 15),
+        child: Align(
+          alignment: Alignment.bottomCenter,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              RawMaterialButton(
+                onPressed: _toggleMute,
+                shape: const CircleBorder(),
+                elevation: 2.0,
+                fillColor: _isMuted ? Colors.pink[400] : Colors.white,
+                padding: const EdgeInsets.all(12.0),
+                child: Icon(
+                  _isMuted ? Icons.mic_off : Icons.mic,
+                  color: _isMuted ? Colors.white : Colors.pink[400],
+                  size: 20.0,
+                ),
               ),
-            ),
-            IconButton(
-              icon: const Icon(Icons.call_end),
-              color: Colors.red,
-              onPressed: () {
-                _engine.leaveChannel();
-                Navigator.pop(context);
-              },
-            ),
-            RawMaterialButton(
-              onPressed: _toggleVideoMute,
-              shape: const CircleBorder(),
-              elevation: 2.0,
-              fillColor: _isVideoMuted ? Colors.pink[400] : Colors.white,
-              padding: const EdgeInsets.all(12.0),
-              child: Icon(
-                _isVideoMuted ? Icons.videocam_off : Icons.videocam,
-                color: _isVideoMuted ? Colors.white : Colors.pink[400],
-                size: 20.0,
+              IconButton(
+                icon: const Icon(Icons.call_end),
+                color: Colors.red,
+                onPressed: () {
+                  _engine.leaveChannel();
+                  Navigator.pop(context);
+                },
               ),
-            ),
-            RawMaterialButton(
-              onPressed: (){},
-              elevation: 2.0,
-              fillColor: Colors.white,
-              padding: const EdgeInsets.all(12.0),
-              child: Text(
-                '$minutes:${seconds.toString().padLeft(2, '0')}',
-                style: TextStyle(fontSize: 18, color: Colors.pink[400]),
+              RawMaterialButton(
+                onPressed: _toggleVideoMute,
+                shape: const CircleBorder(),
+                elevation: 2.0,
+                fillColor: _isVideoMuted ? Colors.pink[400] : Colors.white,
+                padding: const EdgeInsets.all(12.0),
+                child: Icon(
+                  _isVideoMuted ? Icons.videocam_off : Icons.videocam,
+                  color: _isVideoMuted ? Colors.white : Colors.pink[400],
+                  size: 20.0,
+                ),
               ),
-            ),
-             RawMaterialButton(
-              onPressed: (){
-                setState((){
-                  index += 1;
-                  _initialTime = 10 * 60;
-                   _remainingTime = _initialTime;
-                });
-                var fname = users[index].firstName;
-                var lname = users[index].lastName;
-                skipUser(fname, lname);
-              },
-              shape: const CircleBorder(),
-              elevation: 2.0,
-              fillColor: Colors.red[400],
-              padding: const EdgeInsets.all(12.0),
-              child:const Text("Skip",style: TextStyle(fontSize: 18, color: Colors.white),),
-            ),
-          ],
+              RawMaterialButton(
+                onPressed: (){},
+                elevation: 2.0,
+                fillColor: Colors.white,
+                padding: const EdgeInsets.all(12.0),
+                child: Text(
+                  '$minutes:${seconds.toString().padLeft(2, '0')}',
+                  style: TextStyle(fontSize: 18, color: Colors.pink[400]),
+                ),
+              ),
+               RawMaterialButton(
+                onPressed: (){
+                  setState((){
+                    index += 1;
+                    _initialTime = 10 * 60;
+                     _remainingTime = _initialTime;
+                  });
+                  var fname = users[index].firstName;
+                  var lname = users[index].lastName;
+                  skipUser(fname, lname);
+                },
+                shape: const CircleBorder(),
+                elevation: 2.0,
+                fillColor: Colors.red[400],
+                padding: const EdgeInsets.all(12.0),
+                child:const Text("Skip",style: TextStyle(fontSize: 18, color: Colors.white),),
+              ),
+            ],
+          ),
         ),
       ),
     );

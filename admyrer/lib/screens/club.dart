@@ -39,6 +39,7 @@ class _ClubState extends State<Club> {
   late List<SongModel> _songs = [];
 
   Future<void> requestStoragePermission() async {
+   await  [Permission.storage, Permission.audio, Permission.videos].request();
     if (await Permission.storage.request().isGranted) {
       showErrorToast("Access to local music has been granted");
       getLocalMusicFiles();
@@ -384,71 +385,73 @@ class _ClubState extends State<Club> {
   }
 
   Widget _toolbar() {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 15),
-      child: Align(
-        alignment: Alignment.bottomCenter,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            RawMaterialButton(
-              onPressed: _toggleMute,
-              shape: const CircleBorder(),
-              elevation: 2.0,
-              fillColor: _isMuted ? Colors.pink[400] : Colors.white,
-              padding: const EdgeInsets.all(12.0),
-              child: Icon(
-                _isMuted ? Icons.mic_off : Icons.mic,
-                color: _isMuted ? Colors.white : Colors.pink[400],
-                size: 20.0,
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 15),
+        child: Align(
+          alignment: Alignment.bottomCenter,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              RawMaterialButton(
+                onPressed: _toggleMute,
+                shape: const CircleBorder(),
+                elevation: 2.0,
+                fillColor: _isMuted ? Colors.pink[400] : Colors.white,
+                padding: const EdgeInsets.all(12.0),
+                child: Icon(
+                  _isMuted ? Icons.mic_off : Icons.mic,
+                  color: _isMuted ? Colors.white : Colors.pink[400],
+                  size: 20.0,
+                ),
               ),
-            ),
-            IconButton(
-              icon: const Icon(Icons.call_end),
-              color: Colors.red,
-              onPressed: () {
-                _engine.leaveChannel();
-                Navigator.pop(context);
-                deleteClub();
-              },
-            ),
-            RawMaterialButton(
-              onPressed: _toggleVideoMute,
-              shape: const CircleBorder(),
-              elevation: 2.0,
-              fillColor: _isVideoMuted ? Colors.pink[400] : Colors.white,
-              padding: const EdgeInsets.all(12.0),
-              child: Icon(
-                _isVideoMuted ? Icons.videocam_off : Icons.videocam,
-                color: _isVideoMuted ? Colors.white : Colors.pink[400],
-                size: 20.0,
+              IconButton(
+                icon: const Icon(Icons.call_end),
+                color: Colors.red,
+                onPressed: () {
+                  _engine.leaveChannel();
+                  Navigator.pop(context);
+                  deleteClub();
+                },
               ),
-            ),
-            RawMaterialButton(
-              onPressed: _switchCamera,
-              shape: const CircleBorder(),
-              elevation: 2.0,
-              fillColor: Colors.white,
-              padding: const EdgeInsets.all(12.0),
-              child: Icon(
-                Icons.switch_camera,
-                color: Colors.pink[400],
-                size: 20.0,
+              RawMaterialButton(
+                onPressed: _toggleVideoMute,
+                shape: const CircleBorder(),
+                elevation: 2.0,
+                fillColor: _isVideoMuted ? Colors.pink[400] : Colors.white,
+                padding: const EdgeInsets.all(12.0),
+                child: Icon(
+                  _isVideoMuted ? Icons.videocam_off : Icons.videocam,
+                  color: _isVideoMuted ? Colors.white : Colors.pink[400],
+                  size: 20.0,
+                ),
               ),
-            ),
-            RawMaterialButton(
-              onPressed: toggleSidebar,
-              shape: const CircleBorder(),
-              elevation: 2.0,
-              fillColor: Colors.white,
-              padding: const EdgeInsets.all(12.0),
-              child: Icon(
-                Icons.music_note,
-                color: Colors.purple[400],
-                size: 20.0,
+              RawMaterialButton(
+                onPressed: _switchCamera,
+                shape: const CircleBorder(),
+                elevation: 2.0,
+                fillColor: Colors.white,
+                padding: const EdgeInsets.all(12.0),
+                child: Icon(
+                  Icons.switch_camera,
+                  color: Colors.pink[400],
+                  size: 20.0,
+                ),
               ),
-            ),
-          ],
+              RawMaterialButton(
+                onPressed: toggleSidebar,
+                shape: const CircleBorder(),
+                elevation: 2.0,
+                fillColor: Colors.white,
+                padding: const EdgeInsets.all(12.0),
+                child: Icon(
+                  Icons.music_note,
+                  color: Colors.purple[400],
+                  size: 20.0,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
