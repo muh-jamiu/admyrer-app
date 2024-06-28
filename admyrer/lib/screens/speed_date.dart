@@ -5,6 +5,7 @@ import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:admyrer/services/api_service.dart';
 import 'dart:convert';
+import 'dart:async';
 
 class SpeedDate extends StatefulWidget {
   final String username;
@@ -31,6 +32,22 @@ class _SpeedDateState extends State<SpeedDate> {
   int index = 0;
   var fname = "";
   var lname = "";
+  static const int _initialTime = 10 * 60; // 10 minutes in seconds
+  int _remainingTime = _initialTime;
+  Timer? _timer;
+
+  void _startCountdown() {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      setState(() {
+        if (_remainingTime > 0) {
+          _remainingTime--;
+        } else {
+          _timer?.cancel();
+          print("Countdown Finished!");
+        }
+      });
+    });
+  }
 
   
   Future<void> getUsers() async {
@@ -193,6 +210,7 @@ class _SpeedDateState extends State<SpeedDate> {
   void dispose() {
     _engine.leaveChannel();
     _engine.release();
+    _timer?.cancel();
     super.dispose();
   }
 
@@ -247,6 +265,8 @@ class _SpeedDateState extends State<SpeedDate> {
     );}
 
   Widget _toolbar() {
+    final minutes = _remainingTime ~/ 60;
+    final seconds = _remainingTime % 60;
     return Padding(
       padding: const EdgeInsets.only(bottom: 15),
       child: Align(
@@ -297,6 +317,25 @@ class _SpeedDateState extends State<SpeedDate> {
                 color: Colors.pink[400],
                 size: 20.0,
               ),
+            ),
+            RawMaterialButton(
+              onPressed: (){},
+              // shape: const CircleBorder(),
+              elevation: 2.0,
+              fillColor: Colors.green[400],
+              padding: const EdgeInsets.all(12.0),
+              child: Text(
+                '$minutes:${seconds.toString().padLeft(2, '0')}',
+                style: const TextStyle(fontSize: 18, color: Colors.white),
+              ),
+            ),
+             RawMaterialButton(
+              onPressed: (){},
+              shape: const CircleBorder(),
+              elevation: 2.0,
+              fillColor: Colors.red[400],
+              padding: const EdgeInsets.all(12.0),
+              child:const Text("Skip",style: TextStyle(fontSize: 18, color: Colors.white),),
             ),
           ],
         ),
