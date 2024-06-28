@@ -369,11 +369,12 @@ class _SpeedDateState extends State<SpeedDate> {
   Widget _toolbar() {
     final minutes = _remainingTime ~/ 60;
     final seconds = _remainingTime % 60;
-    return Expanded(
-      child: Padding(
-        padding: const EdgeInsets.only(bottom: 15),
-        child: Align(
-          alignment: Alignment.bottomCenter,
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 15),
+      child: Align(
+        alignment: Alignment.bottomCenter,
+        child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

@@ -385,11 +385,12 @@ class _ClubState extends State<Club> {
   }
 
   Widget _toolbar() {
-    return Expanded(
-      child: Padding(
-        padding: const EdgeInsets.only(bottom: 15),
-        child: Align(
-          alignment: Alignment.bottomCenter,
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 15),
+      child: Align(
+        alignment: Alignment.bottomCenter,
+        child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

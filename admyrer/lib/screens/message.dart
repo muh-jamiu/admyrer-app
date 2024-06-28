@@ -64,14 +64,7 @@ class _MessageState extends State<Message> {
         },
       );
 
-      await pusher.subscribe(channelName: "app_event", 
-      onEvent: (event) {
-        showErrorToast("Got channel event: $event");
-      },
-       onSubscriptionSucceeded: (channelName, data) {
-          showErrorToast("Subscribed to $channelName");
-        },
-      );
+      await pusher.subscribe(channelName: "app_event");
 
       await pusher.connect();      
       await pusher.onEvent!(PusherEvent(channelName: "app_event", eventName: "app_event", data: "on event data"));
