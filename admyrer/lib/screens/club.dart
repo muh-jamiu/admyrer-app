@@ -28,6 +28,9 @@ class _ClubState extends State<Club> {
   bool _remoteVideoMuted = false;
   List<int> remoteUids = [];
   var userId = 0;
+  List<String> comments = [];
+  TextEditingController _commentController = TextEditingController();
+  bool isSidebarVisible = false;
 
   void showErrorToast(String message) {
     Fluttertoast.showToast(
@@ -179,6 +182,21 @@ class _ClubState extends State<Club> {
     super.dispose();
   }
 
+  void _sendComment() {
+    if (_commentController.text.isNotEmpty) {
+      setState(() {
+        comments.add(_commentController.text);
+        _commentController.clear();
+      });
+    }
+  }
+
+  void toggleSidebar() {
+    setState(() {
+      isSidebarVisible = !isSidebarVisible;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -228,14 +246,79 @@ class _ClubState extends State<Club> {
                     }
                   },
                 )),
-
                 _toolbar(),
+                _buildCommentSidebar(),
               ],
             ),
           ),
         ),
       ),
     );
+  }
+
+  Widget _buildCommentSidebar() {
+    return AnimatedPositioned(
+      duration: const Duration(milliseconds: 200),
+      left: isSidebarVisible ? 0 : -250,
+      top: 0,
+      bottom: 0,
+      child: Material(
+        elevation: 8,
+        child: Container(
+          width: 250,
+          height: MediaQuery.of(context).size.height,
+          color: Colors.white,
+          child: Column(
+            children: [
+              const SizedBox(
+                height: 20,
+              ),
+              const Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  'Comment',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+              ),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: comments.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: ChatBubble(isMe: false, text: comments[index],),
+                    );
+                  },
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _commentController,
+                        decoration: const InputDecoration(
+                          hintText: 'Type a comment',
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      icon: Icon(
+                        Icons.send,
+                        color: Colors.purple[400],
+                      ),
+                      onPressed: _sendComment,
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+    ;
   }
 
   Widget _topBar() {
@@ -310,7 +393,7 @@ class _ClubState extends State<Club> {
               ),
             ),
             RawMaterialButton(
-              onPressed: (){},
+              onPressed: toggleSidebar,
               shape: const CircleBorder(),
               elevation: 2.0,
               fillColor: Colors.white,
@@ -426,5 +509,83 @@ class _RemoteVideoWidgetState extends State<RemoteVideoWidget> {
     } else {
       return Container();
     }
+  }
+}
+
+
+class ChatBubble extends StatelessWidget {
+  final String text;
+  final bool isMe;
+
+  const ChatBubble({
+    required this.text,
+    required this.isMe,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+        child: Stack(
+          children: [
+            Container(
+              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 14),
+              decoration: BoxDecoration(
+                color: isMe ? Color.fromARGB(255, 104, 200, 163) : Colors.grey,
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: Text(
+                text,
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+            Positioned(
+              top: 0,
+              left: isMe ? null : -6,
+              right: isMe ? -6 : null,
+              child: CustomPaint(
+                painter: ChatBubbleTrianglePainter(isMe: isMe),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+
+class ChatBubbleTrianglePainter extends CustomPainter {
+  final bool isMe;
+
+  ChatBubbleTrianglePainter({required this.isMe});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    var paint = Paint()
+      ..color = isMe ? Color.fromARGB(255, 39, 176, 137) : Colors.grey
+      ..style = PaintingStyle.fill;
+
+    var path = Path();
+    if (isMe) {
+      path.moveTo(0, 0);
+      path.lineTo(-10, 0);
+      path.lineTo(0, 10);
+      path.close();
+    } else {
+      path.moveTo(0, 0);
+      path.lineTo(10, 0);
+      path.lineTo(0, 10);
+      path.close();
+    }
+
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) {
+    return false;
   }
 }

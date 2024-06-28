@@ -238,7 +238,7 @@ class _StartVidState extends State<StartVid> {
 
   Widget _song(BuildContext context) {
     return AnimatedPositioned(
-        duration: const Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 200),
         left: isSidebarVisible ? 0 : -250,
         top: 0,
         bottom: 0,
@@ -250,6 +250,7 @@ class _StartVidState extends State<StartVid> {
             color: Colors.white,
             child: Column(
               children: [
+                const SizedBox(height: 20,),
                 const Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Text(
@@ -261,15 +262,23 @@ class _StartVidState extends State<StartVid> {
                   child: ListView.builder(
                     itemCount: songs.length,
                     itemBuilder: (context, index) {
+                      if(songs.length == 0){
+                        return const Center(
+                          child: Column(children: [
+                            Text("Empty", style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),),
+                            Text("There are no uploaded music at the moment",style: TextStyle(fontSize: 18),),
+                          ],),
+                        );
+                      }else{
                       return ListTile(
                         title: Text(songs[index]),
                         trailing: IconButton(
-                          icon: Icon(Icons.play_arrow),
+                          icon:const Icon(Icons.play_arrow, color: Colors.red,),
                           onPressed: () {
                             // Add your play song logic here
                           },
                         ),
-                      );
+                      );}
                     },
                   ),
                 ),
@@ -348,18 +357,6 @@ class _StartVidState extends State<StartVid> {
             ),
              RawMaterialButton(
               onPressed: toggleSidebar,
-              shape: const CircleBorder(),
-              elevation: 2.0,
-              fillColor: Colors.white,
-              padding: const EdgeInsets.all(12.0),
-              child: Icon(
-                Icons.switch_camera,
-                color: Colors.pink[400],
-                size: 20.0,
-              ),
-            ),
-              RawMaterialButton(
-              onPressed: _switchCamera,
               shape: const CircleBorder(),
               elevation: 2.0,
               fillColor: Colors.white,
