@@ -35,6 +35,7 @@ class _SpeedDateState extends State<SpeedDate> {
   static int _initialTime = 10 * 60;
   int _remainingTime = _initialTime;
   Timer? _timer;
+  int checkTime = 0;
 
   Future<void> _dialogNoRemote() async {
     showDialog(
@@ -127,7 +128,7 @@ class _SpeedDateState extends State<SpeedDate> {
           _dialogAfter();
         }
 
-        if (_remainingTime <= 9 * 60) {
+        if (_remainingTime == 9 * 60) {
           if (_remoteUid == 0) {
             _dialogNoRemote();
           }
@@ -283,10 +284,6 @@ class _SpeedDateState extends State<SpeedDate> {
       _isMuted = !_isMuted;
     });
     _engine.muteLocalAudioStream(_isMuted);
-  }
-
-  void _switchCamera() {
-    _engine.switchCamera();
   }
 
   @override
