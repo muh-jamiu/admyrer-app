@@ -533,7 +533,7 @@ class _MyGridListState extends State<MyGridList> {
         TextButton(
           onPressed: () {
             var password = _passwordController.text;
-            if(password != null){
+            if(password != ""){
               Navigator.of(context).pop();
               widget.goClub();
             }
@@ -699,7 +699,7 @@ class _MyGridListState extends State<MyGridList> {
                 SizedBox(
                   height: 10,
                 ),
-                Text("Public Night Club")
+                Text("Night Club")
               ],
             ),
           ),
@@ -750,7 +750,7 @@ class _MyGridListState extends State<MyGridList> {
                 SizedBox(
                   height: 10,
                 ),
-                Text("Private Night Club")
+                Text("Private Club")
               ],
             ),
           ),

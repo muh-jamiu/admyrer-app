@@ -4,6 +4,7 @@ import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:admyrer/services/api_service.dart';
 import 'dart:convert';
+// import 'package:flutter_audio_query/flutter_audio_query.dart';
 
 class Club extends StatefulWidget {
   final String username;
@@ -28,9 +29,30 @@ class _ClubState extends State<Club> {
   bool _remoteVideoMuted = false;
   List<int> remoteUids = [];
   var userId = 0;
-  List<String> comments = [];
-  TextEditingController _commentController = TextEditingController();
+  String? _currentlyPlaying;
   bool isSidebarVisible = false;
+
+  final List<String> songs = [
+    'Song 1',
+    'Song 2',
+    'Song 3',
+    'Song 4',
+    'Song 5',
+  ];
+
+  Future<void> requestStoragePermission() async {
+    if (await Permission.storage.request().isGranted) {
+      // Permission granted
+    } else {
+      // Permission denied
+    }
+  }
+
+  // Future<List<SongInfo>> getLocalMusicFiles() async {
+  //   final FlutterAudioQuery audioQuery = FlutterAudioQuery();
+  //   final List<SongInfo> songs = await audioQuery.getSongs();
+  //   return songs;
+  // }
 
   void showErrorToast(String message) {
     Fluttertoast.showToast(
@@ -173,6 +195,20 @@ class _ClubState extends State<Club> {
 
   void _switchCamera() {
     _engine.switchCamera();
+  }  
+
+  void _playMusic(String track) {
+    setState(() {
+      _currentlyPlaying = track;
+    });
+    // Code to play music
+  }
+
+  void _pauseMusic() {
+    setState(() {
+      _currentlyPlaying = null;
+    });
+    // Code to pause music
   }
 
   @override
@@ -180,15 +216,6 @@ class _ClubState extends State<Club> {
     _engine.leaveChannel();
     _engine.release();
     super.dispose();
-  }
-
-  void _sendComment() {
-    if (_commentController.text.isNotEmpty) {
-      setState(() {
-        comments.add(_commentController.text);
-        _commentController.clear();
-      });
-    }
   }
 
   void toggleSidebar() {
@@ -217,7 +244,7 @@ class _ClubState extends State<Club> {
                 end: Alignment.centerRight,
               ),
             ),
-            child: Column(
+            child: Stack(
               children: [
                 const SizedBox(
                   height: 20,
@@ -247,7 +274,7 @@ class _ClubState extends State<Club> {
                   },
                 )),
                 _toolbar(),
-                _buildCommentSidebar(),
+                _song(),
               ],
             ),
           ),
@@ -256,69 +283,64 @@ class _ClubState extends State<Club> {
     );
   }
 
-  Widget _buildCommentSidebar() {
+  Widget _song() {
     return AnimatedPositioned(
-      duration: const Duration(milliseconds: 200),
-      left: isSidebarVisible ? 0 : -250,
-      top: 0,
-      bottom: 0,
-      child: Material(
-        elevation: 8,
-        child: Container(
-          width: 250,
-          height: MediaQuery.of(context).size.height,
-          color: Colors.white,
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 20,
-              ),
-              const Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text(
-                  'Comment',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        duration: const Duration(milliseconds: 200),
+        left: isSidebarVisible ? 0 : -250,
+        top: 0,
+        bottom: 0,
+        child: Material(
+          elevation: 8,
+          child: Container(
+            width: 250,
+            height: MediaQuery.of(context).size.height,
+            color: Colors.white,
+            child: Column(
+              children: [
+                const SizedBox(height: 20,),
+                const Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text(
+                    'Songs List',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
                 ),
-              ),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: comments.length,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      title: ChatBubble(isMe: false, text: comments[index],),
-                    );
-                  },
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: _commentController,
-                        decoration: const InputDecoration(
-                          hintText: 'Type a comment',
-                          border: OutlineInputBorder(),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: songs.length,
+                    itemBuilder: (context, index) {
+                    String track = songs[index];
+                    bool isPlaying = _currentlyPlaying == track;
+                      if(songs.length == 0){
+                        return const Center(
+                          child: Column(children: [
+                            Text("Empty", style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),),
+                            Text("There are no uploaded music at the moment",style: TextStyle(fontSize: 18),),
+                          ],),
+                        );
+                      }else{
+                      return ListTile(
+                        title: Text(songs[index]),
+                        trailing: IconButton(
+                          icon:Icon(isPlaying ? Icons.pause : Icons.play_arrow, color: Colors.red,),
+                          onPressed: () {
+                             if (isPlaying) {
+                                _pauseMusic();
+                              } else {
+                                _playMusic(track);
+                              }
+                          },
                         ),
-                      ),
-                    ),
-                    IconButton(
-                      icon: Icon(
-                        Icons.send,
-                        color: Colors.purple[400],
-                      ),
-                      onPressed: _sendComment,
-                    ),
-                  ],
+                      );}
+                    },
+                  ),
                 ),
-              )
-            ],
+              ],
+            ),
           ),
         ),
-      ),
+      
     );
-    ;
   }
 
   Widget _topBar() {
@@ -398,9 +420,9 @@ class _ClubState extends State<Club> {
               elevation: 2.0,
               fillColor: Colors.white,
               padding: const EdgeInsets.all(12.0),
-              child: const Icon(
-                Icons.comment,
-                color: Colors.blueAccent,
+              child: Icon(
+                Icons.music_note,
+                color: Colors.purple[400],
                 size: 20.0,
               ),
             ),
@@ -509,83 +531,5 @@ class _RemoteVideoWidgetState extends State<RemoteVideoWidget> {
     } else {
       return Container();
     }
-  }
-}
-
-
-class ChatBubble extends StatelessWidget {
-  final String text;
-  final bool isMe;
-
-  const ChatBubble({
-    required this.text,
-    required this.isMe,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Align(
-      alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
-      child: Container(
-        margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-        child: Stack(
-          children: [
-            Container(
-              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 14),
-              decoration: BoxDecoration(
-                color: isMe ? Color.fromARGB(255, 104, 200, 163) : Colors.grey,
-                borderRadius: BorderRadius.circular(15),
-              ),
-              child: Text(
-                text,
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
-            Positioned(
-              top: 0,
-              left: isMe ? null : -6,
-              right: isMe ? -6 : null,
-              child: CustomPaint(
-                painter: ChatBubbleTrianglePainter(isMe: isMe),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-
-class ChatBubbleTrianglePainter extends CustomPainter {
-  final bool isMe;
-
-  ChatBubbleTrianglePainter({required this.isMe});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    var paint = Paint()
-      ..color = isMe ? Color.fromARGB(255, 39, 176, 137) : Colors.grey
-      ..style = PaintingStyle.fill;
-
-    var path = Path();
-    if (isMe) {
-      path.moveTo(0, 0);
-      path.lineTo(-10, 0);
-      path.lineTo(0, 10);
-      path.close();
-    } else {
-      path.moveTo(0, 0);
-      path.lineTo(10, 0);
-      path.lineTo(0, 10);
-      path.close();
-    }
-
-    canvas.drawPath(path, paint);
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) {
-    return false;
   }
 }

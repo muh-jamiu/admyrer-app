@@ -27,6 +27,8 @@ dependencies:
   firebase_messaging: ^14.0.3
   flutter_local_notifications: ^12.0.0
   pusher_channels_flutter: '^1.0.1'
+  path_provider: ^2.0.11
+  flutter_audio_query: ^0.3.4
   # flutter_web_plugins: any
 
 

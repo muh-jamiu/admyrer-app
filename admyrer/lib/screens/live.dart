@@ -27,8 +27,9 @@ class _StartVidState extends State<StartVid> {
   bool _remoteAudioMuted = false;
   bool _remoteVideoMuted = false;
   var userId = 0;
+  List<String> comments = [];
+  TextEditingController _commentController = TextEditingController();
   bool isSidebarVisible = false;
-  String? _currentlyPlaying;
 
   final List<String> songs = [
     'Song 1',
@@ -193,19 +194,16 @@ class _StartVidState extends State<StartVid> {
     });
   }
 
-  void _playMusic(String track) {
-    setState(() {
-      _currentlyPlaying = track;
-    });
-    // Code to play music
+  
+  void _sendComment() {
+    if (_commentController.text.isNotEmpty) {
+      setState(() {
+        comments.add(_commentController.text);
+        _commentController.clear();
+      });
+    }
   }
 
-  void _pauseMusic() {
-    setState(() {
-      _currentlyPlaying = null;
-    });
-    // Code to pause music
-  }
 
   @override
   void dispose() {
@@ -242,7 +240,7 @@ class _StartVidState extends State<StartVid> {
                     engine: _engine, localUserJoined: _localUserJoined, isCam: _isVideoMuted,),
                 RemoteVideoWidget(engine: _engine, remoteUid: _remoteUid, isCam: _remoteVideoMuted, channelId: channelId),
                 _toolbar(),
-              _song(context),
+              _buildCommentSidebar(),
               ],
             ),
           ),
@@ -251,66 +249,71 @@ class _StartVidState extends State<StartVid> {
     );
   }
 
-  Widget _song(BuildContext context) {
+  
+  Widget _buildCommentSidebar() {
     return AnimatedPositioned(
-        duration: const Duration(milliseconds: 200),
-        left: isSidebarVisible ? 0 : -250,
-        top: 0,
-        bottom: 0,
-        child: Material(
-          elevation: 8,
-          child: Container(
-            width: 250,
-            height: MediaQuery.of(context).size.height,
-            color: Colors.white,
-            child: Column(
-              children: [
-                const SizedBox(height: 20,),
-                const Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text(
-                    'Songs List',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
+      duration: const Duration(milliseconds: 200),
+      left: isSidebarVisible ? 0 : -300,
+      top: 0,
+      bottom: 0,
+      child: Material(
+        elevation: 8,
+        child: Container(
+          width: 300,
+          height: MediaQuery.of(context).size.height,
+          color: Colors.white,
+          child: Column(
+            children: [
+              const SizedBox(
+                height: 20,
+              ),
+              const Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  'Comment',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: songs.length,
-                    itemBuilder: (context, index) {
-                    String track = songs[index];
-                    bool isPlaying = _currentlyPlaying == track;
-                      if(songs.length == 0){
-                        return const Center(
-                          child: Column(children: [
-                            Text("Empty", style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),),
-                            Text("There are no uploaded music at the moment",style: TextStyle(fontSize: 18),),
-                          ],),
-                        );
-                      }else{
-                      return ListTile(
-                        title: Text(songs[index]),
-                        trailing: IconButton(
-                          icon:Icon(isPlaying ? Icons.pause : Icons.play_arrow, color: Colors.red,),
-                          onPressed: () {
-                             if (isPlaying) {
-                                _pauseMusic();
-                              } else {
-                                _playMusic(track);
-                              }
-                          },
+              ),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: comments.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: ChatBubble(isMe: false, text: comments[index],),
+                    );
+                  },
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _commentController,
+                        decoration: const InputDecoration(
+                          hintText: 'Type a comment',
+                          border: OutlineInputBorder(),
                         ),
-                      );}
-                    },
-                  ),
+                      ),
+                    ),
+                    IconButton(
+                      icon: Icon(
+                        Icons.send,
+                        color: Colors.purple[400],
+                      ),
+                      onPressed: _sendComment,
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              )
+            ],
           ),
         ),
-      
+      ),
     );
+    ;
   }
-
 
   Widget _topBar() {
     return const Align(
@@ -383,8 +386,8 @@ class _StartVidState extends State<StartVid> {
               fillColor: Colors.white,
               padding: const EdgeInsets.all(12.0),
               child: Icon(
-                Icons.music_note,
-                color: Colors.purple[400],
+                Icons.comment,
+                color: Colors.blue[400],
                 size: 20.0,
               ),
             ),
@@ -463,3 +466,80 @@ class _RemoteVideoWidgetState extends State<RemoteVideoWidget> {
   }
 }
 
+
+class ChatBubble extends StatelessWidget {
+  final String text;
+  final bool isMe;
+
+  const ChatBubble({
+    required this.text,
+    required this.isMe,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+        child: Stack(
+          children: [
+            Container(
+              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 14),
+              decoration: BoxDecoration(
+                color: isMe ? Color.fromARGB(255, 104, 200, 163) : Colors.grey,
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: Text(
+                text,
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+            Positioned(
+              top: 0,
+              left: isMe ? null : -6,
+              right: isMe ? -6 : null,
+              child: CustomPaint(
+                painter: ChatBubbleTrianglePainter(isMe: isMe),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+
+class ChatBubbleTrianglePainter extends CustomPainter {
+  final bool isMe;
+
+  ChatBubbleTrianglePainter({required this.isMe});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    var paint = Paint()
+      ..color = isMe ? Color.fromARGB(255, 39, 176, 137) : Colors.grey
+      ..style = PaintingStyle.fill;
+
+    var path = Path();
+    if (isMe) {
+      path.moveTo(0, 0);
+      path.lineTo(-10, 0);
+      path.lineTo(0, 10);
+      path.close();
+    } else {
+      path.moveTo(0, 0);
+      path.lineTo(10, 0);
+      path.lineTo(0, 10);
+      path.close();
+    }
+
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) {
+    return false;
+  }
+}
