@@ -47,7 +47,7 @@ class _MessageState extends State<Message> {
     PusherChannelsFlutter pusher = PusherChannelsFlutter.getInstance();
     try {
       await pusher.init(
-        apiKey: "be7a4955db605d26a6bc",
+        apiKey: "61cbedc7014185332c2d",
         cluster: "mt1",
         onConnectionStateChange: (String change, String e) async {
           showErrorToast("previousState: ${e}, currentState: ${change}");
