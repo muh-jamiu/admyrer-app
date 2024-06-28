@@ -252,11 +252,12 @@ class _ClubState extends State<Club> {
                 ),
                 _topBar(),
                 Expanded(
-                    child: GridView.builder(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    childAspectRatio: 3 / 4,
-                  ),
+                    child: ListView.builder(
+                  // child: GridView.builder(
+                  // gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  //   crossAxisCount: 2,
+                  //   childAspectRatio: 3 / 4,
+                  // ),
                   itemCount: remoteUids.length + 1,
                   itemBuilder: (context, index) {
                     if (index == 0) {
@@ -310,26 +311,10 @@ class _ClubState extends State<Club> {
               ),
               _songs.length == 0
                   ? Center(
-                      child: Column(
-                        children: [
-                          const Text(
-                            "Empty",
-                            style: TextStyle(
-                                fontSize: 25, fontWeight: FontWeight.bold),
-                          ),
-                          const Text(
-                            "There are no uploaded music at the moment",
-                            style: TextStyle(fontSize: 16),
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          TextButton(
-                            onPressed: requestStoragePermission,
-                            child: const Text('Upload Local Music',
-                                style: TextStyle(color: Colors.red)),
-                          ),
-                        ],
+                      child: TextButton(
+                        onPressed: requestStoragePermission,
+                        child: const Text('Upload Local Music',
+                            style: TextStyle(color: Colors.red)),
                       ),
                     )
                   : Expanded(
