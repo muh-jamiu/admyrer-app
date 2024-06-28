@@ -413,7 +413,7 @@ class _SpeedDateState extends State<SpeedDate> {
                 onPressed: () {},
                 elevation: 2.0,
                 fillColor: Colors.white,
-                padding: const EdgeInsets.all(12.0),
+                padding: const EdgeInsets.all(8.0),
                 child: Text(
                   '$minutes:${seconds.toString().padLeft(2, '0')}',
                   style: TextStyle(fontSize: 18, color: Colors.pink[400]),
