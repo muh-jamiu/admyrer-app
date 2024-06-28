@@ -27,7 +27,7 @@ dependencies:
   firebase_messaging: ^14.0.3
   flutter_local_notifications: ^12.0.0
   pusher_channels_flutter: '^1.0.1'
-  flutter_web_plugins: any
+  # flutter_web_plugins: any
 
 
   # The following adds the Cupertino Icons font to your application.

@@ -448,6 +448,7 @@ class MyGridList extends StatefulWidget {
 }
 
 class _MyGridListState extends State<MyGridList> {
+  final TextEditingController _passwordController = TextEditingController();
   void logOutUser() async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.remove('authToken');
@@ -507,6 +508,45 @@ class _MyGridListState extends State<MyGridList> {
       },
     );
   }
+
+  Future<void> _showPrivateNightCLub() async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+      title: const Text('Enter Password'),
+      content: TextField(
+        controller: _passwordController,
+        obscureText: true,
+        decoration: const InputDecoration(
+          labelText: 'Password',
+          border: OutlineInputBorder(),
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop(); 
+          },
+          child: const Text('Cancel'),
+        ),
+        TextButton(
+          onPressed: () {
+            var password = _passwordController.text;
+            if(password != null){
+              Navigator.of(context).pop();
+              widget.goClub();
+            }
+          },
+          child: const Text('Start Club', style: TextStyle(color: Colors.red)),
+        ),
+      ],
+    );
+ 
+      },
+    );
+  }
+
 
   void goVisists() {
     Navigator.push(
@@ -659,7 +699,7 @@ class _MyGridListState extends State<MyGridList> {
                 SizedBox(
                   height: 10,
                 ),
-                Text("Night Club")
+                Text("Public Night Club")
               ],
             ),
           ),
@@ -685,6 +725,32 @@ class _MyGridListState extends State<MyGridList> {
                   height: 10,
                 ),
                 Text("Speed Date")
+              ],
+            ),
+          ),
+        ),
+
+        
+        InkWell(
+          onTap: _showPrivateNightCLub,
+          child: Container(
+            width: 100,
+            height: 150,
+            decoration: BoxDecoration(
+                color: Color.fromARGB(33, 176, 160, 39),
+                borderRadius: BorderRadius.circular(10)),
+            child: const Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const FaIcon(
+                  FontAwesomeIcons.moon,
+                  color: Colors.purple,
+                  size: 25,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Text("Private Night Club")
               ],
             ),
           ),
@@ -1070,3 +1136,4 @@ class _SelectOneState extends State<SelectOne> {
     );
   }
 }
+
