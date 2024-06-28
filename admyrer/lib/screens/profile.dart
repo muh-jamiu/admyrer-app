@@ -85,7 +85,7 @@ class _ProfileState extends State<Profile> {
         return;
       }
 
-      List<dynamic> userList = data["data"];
+      List<dynamic> userList = data["data"]["random"];
       List<UserModel> follows =
           userList.map((user) => UserModel.fromJson(user)).toList();
 

@@ -66,10 +66,6 @@ class _SpeedDateState extends State<SpeedDate> {
       List<UserModel> users =
           userList.map((user) => UserModel.fromJson(user)).toList();
 
-      List<dynamic> alluserList = data["data"]["all"];
-      List<UserModel> allusers =
-          alluserList.map((user) => UserModel.fromJson(user)).toList();
-
       var fname = users[index].firstName;
       var lname = users[index].lastName;
       setState(() {
@@ -311,26 +307,13 @@ class _SpeedDateState extends State<SpeedDate> {
               ),
             ),
             RawMaterialButton(
-              onPressed: _switchCamera,
-              shape: const CircleBorder(),
+              onPressed: (){},
               elevation: 2.0,
               fillColor: Colors.white,
               padding: const EdgeInsets.all(12.0),
-              child: Icon(
-                Icons.switch_camera,
-                color: Colors.pink[400],
-                size: 20.0,
-              ),
-            ),
-            RawMaterialButton(
-              onPressed: (){},
-              // shape: const CircleBorder(),
-              elevation: 2.0,
-              fillColor: Colors.green[400],
-              padding: const EdgeInsets.all(12.0),
               child: Text(
                 '$minutes:${seconds.toString().padLeft(2, '0')}',
-                style: const TextStyle(fontSize: 18, color: Colors.white),
+                style: TextStyle(fontSize: 18, color: Colors.pink[400]),
               ),
             ),
              RawMaterialButton(
