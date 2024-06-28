@@ -32,30 +32,69 @@ class _SpeedDateState extends State<SpeedDate> {
   int index = 0;
   var fname = "";
   var lname = "";
-  static  int _initialTime = 10 * 60;
+  static int _initialTime = 10 * 60;
   int _remainingTime = _initialTime;
   Timer? _timer;
 
-    Future<void> _dialogAfter() async {
+  Future<void> _dialogNoRemote() async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('$fname not connected'),
+          content: Text(
+              '$fname is not connected within 1 minute, connect to another user?'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.pushReplacementNamed(context, "/tab");
+              },
+            ),
+            TextButton(
+              child:
+                  const Text('Connect', style: TextStyle(color: Colors.blue)),
+              onPressed: () {
+                setState(() {
+                  index += 1;
+                  _initialTime = 10 * 60;
+                  _remainingTime = _initialTime;
+                });
+                var fname = users[index].firstName;
+                var lname = users[index].lastName;
+                Navigator.of(context).pop();
+                showErrorToast("You started new speed date with $fname $lname");
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _dialogAfter() async {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Date has ended'),
-          content: Text('Will you like to go on a date with $fname or start a new speed date?'),
+          content: Text(
+              'Will you like to go on a date with $fname or start a new speed date?'),
           actions: <Widget>[
             TextButton(
               child: const Text('Cancel'),
               onPressed: () {
-                Navigator.of(context).pop(); 
+                Navigator.of(context).pop();
                 Navigator.pushReplacementNamed(context, "/tab");
               },
             ),
             TextButton(
-              child: const Text('Speed Date', style: TextStyle(color: Colors.blue)),
+              child: const Text('Speed Date',
+                  style: TextStyle(color: Colors.blue)),
               onPressed: () {
-                Navigator.of(context).pop();                
-                setState((){
+                Navigator.of(context).pop();
+                setState(() {
                   _initialTime = 10 * 60;
                   _remainingTime = _initialTime;
                 });
@@ -63,7 +102,8 @@ class _SpeedDateState extends State<SpeedDate> {
               },
             ),
             TextButton(
-              child: const Text('Web Date', style: TextStyle(color: Colors.red)),
+              child:
+                  const Text('Web Date', style: TextStyle(color: Colors.red)),
               onPressed: () {
                 Navigator.of(context).pop();
                 showErrorToast("Something went wrong, Please try again");
@@ -76,7 +116,6 @@ class _SpeedDateState extends State<SpeedDate> {
     );
   }
 
-
   void _startCountdown() {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
@@ -86,6 +125,12 @@ class _SpeedDateState extends State<SpeedDate> {
           _timer?.cancel();
           showErrorToast("Speed Date with $fname has ended");
           _dialogAfter();
+        }
+
+        if (_remainingTime <= 9 * 60) {
+          if (_remoteUid == 0) {
+            _dialogNoRemote();
+          }
         }
       });
     });
@@ -129,7 +174,6 @@ class _SpeedDateState extends State<SpeedDate> {
     }
   }
 
-
   void showErrorToast(String message) {
     Fluttertoast.showToast(
       msg: "$message",
@@ -149,7 +193,7 @@ class _SpeedDateState extends State<SpeedDate> {
     _initAgora();
   }
 
-  void skipUser(String fname, String lname){
+  void skipUser(String fname, String lname) {
     showErrorToast("Speed Date connect you to $fname $lname");
   }
 
@@ -167,8 +211,7 @@ class _SpeedDateState extends State<SpeedDate> {
     } catch (e) {
       showErrorToast('An error occurred: $e');
       print(e);
-      setState(() {
-      });
+      setState(() {});
     }
   }
 
@@ -182,7 +225,7 @@ class _SpeedDateState extends State<SpeedDate> {
     _engine = createAgoraRtcEngine();
     await _engine.initialize(RtcEngineContext(appId: appId));
     await _engine.enableVideo();
-    await _engine.startPreview(); 
+    await _engine.startPreview();
 
     // Set event handlers
     _engine.registerEventHandler(
@@ -206,18 +249,16 @@ class _SpeedDateState extends State<SpeedDate> {
             _remoteUid = 0;
           });
         },
-        onUserMuteAudio: (RtcConnection connection, int remoteUid,
-            bool value) {
-         setState(() {
-          _remoteAudioMuted = value;
-        });
+        onUserMuteAudio: (RtcConnection connection, int remoteUid, bool value) {
+          setState(() {
+            _remoteAudioMuted = value;
+          });
         },
-      onUserMuteVideo: (RtcConnection connection, int remoteUid,
-            bool value){
-        setState(() {
-          _remoteVideoMuted = value;
-        });
-      },
+        onUserMuteVideo: (RtcConnection connection, int remoteUid, bool value) {
+          setState(() {
+            _remoteVideoMuted = value;
+          });
+        },
       ),
     );
 
@@ -278,11 +319,20 @@ class _SpeedDateState extends State<SpeedDate> {
             ),
             child: Stack(
               children: [
-              const SizedBox(height: 20,),
+                const SizedBox(
+                  height: 20,
+                ),
                 _topBar(),
                 LocalVideoWidget(
-                    engine: _engine, localUserJoined: _localUserJoined, isCam: _isVideoMuted, isRemote: _remoteUid),
-                RemoteVideoWidget(engine: _engine, remoteUid: _remoteUid, isCam: _remoteVideoMuted, channelId: channelId),
+                    engine: _engine,
+                    localUserJoined: _localUserJoined,
+                    isCam: _isVideoMuted,
+                    isRemote: _remoteUid),
+                RemoteVideoWidget(
+                    engine: _engine,
+                    remoteUid: _remoteUid,
+                    isCam: _remoteVideoMuted,
+                    channelId: channelId),
                 _toolbar(),
               ],
             ),
@@ -295,16 +345,26 @@ class _SpeedDateState extends State<SpeedDate> {
   Widget _topBar() {
     return Align(
       alignment: Alignment.topLeft,
-      child: Row(children: [
-        Padding(
-          padding:const EdgeInsets.all(18.0),
-          child: isLoading ? 
-          const Text("Connecting....", style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold,color: Colors.white))
-           :
-          Text("Speed Date with $fname", style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold,color: Colors.white)),
-        )
-      ],),
-    );}
+      child: Row(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(18.0),
+            child: isLoading
+                ? const Text("Connecting....",
+                    style: const TextStyle(
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white))
+                : Text("Speed Date with $fname",
+                    style: const TextStyle(
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white)),
+          )
+        ],
+      ),
+    );
+  }
 
   Widget _toolbar() {
     final minutes = _remainingTime ~/ 60;
@@ -350,7 +410,7 @@ class _SpeedDateState extends State<SpeedDate> {
                 ),
               ),
               RawMaterialButton(
-                onPressed: (){},
+                onPressed: () {},
                 elevation: 2.0,
                 fillColor: Colors.white,
                 padding: const EdgeInsets.all(12.0),
@@ -359,12 +419,12 @@ class _SpeedDateState extends State<SpeedDate> {
                   style: TextStyle(fontSize: 18, color: Colors.pink[400]),
                 ),
               ),
-               RawMaterialButton(
-                onPressed: (){
-                  setState((){
+              RawMaterialButton(
+                onPressed: () {
+                  setState(() {
                     index += 1;
                     _initialTime = 10 * 60;
-                     _remainingTime = _initialTime;
+                    _remainingTime = _initialTime;
                   });
                   var fname = users[index].firstName;
                   var lname = users[index].lastName;
@@ -374,7 +434,10 @@ class _SpeedDateState extends State<SpeedDate> {
                 elevation: 2.0,
                 fillColor: Colors.red[400],
                 padding: const EdgeInsets.all(12.0),
-                child:const Text("Skip",style: TextStyle(fontSize: 18, color: Colors.white),),
+                child: const Text(
+                  "Skip",
+                  style: TextStyle(fontSize: 18, color: Colors.white),
+                ),
               ),
             ],
           ),
@@ -390,7 +453,11 @@ class LocalVideoWidget extends StatefulWidget {
   final int isRemote;
   final bool isCam;
 
-  LocalVideoWidget({required this.engine, required this.localUserJoined, required this.isCam, required this.isRemote});
+  LocalVideoWidget(
+      {required this.engine,
+      required this.localUserJoined,
+      required this.isCam,
+      required this.isRemote});
 
   @override
   State<LocalVideoWidget> createState() => _LocalVideoWidgetState();
@@ -399,63 +466,67 @@ class LocalVideoWidget extends StatefulWidget {
 class _LocalVideoWidgetState extends State<LocalVideoWidget> {
   @override
   Widget build(BuildContext context) {
-    if(widget.isRemote == 0){
-     if(widget.localUserJoined){
-       if(widget.isCam){
-        return const Center(child: Text('You turn off camera'));
-      }else{
-      return Align(
-        alignment: Alignment.center,
-        child:AgoraVideoView(
-          controller: VideoViewController(
-            rtcEngine: widget.engine,
-            canvas: VideoCanvas(uid: 0),
-          ),
-        ),
-      );}
-     }else{
-      return const Center(child: CircularProgressIndicator());
-     }
-    }else{
-    if (widget.localUserJoined) {
-      return Container(
-        decoration: BoxDecoration(
-          color: Colors.black,
-          borderRadius: BorderRadius.circular(10)
-        ),
-        child: Positioned(
-        right: 16,
-        top: 16,
-        width: 120,
-        height: 160,
-        child: widget.isCam
-            ? Container(
-                color: Colors.black,
-                child: const Center(child: Text('User turn off camera', style: TextStyle(color: Colors.white),)),
-              )
-            : AgoraVideoView(
-                controller: VideoViewController(
-                  rtcEngine: widget.engine,
-                  canvas: VideoCanvas(uid: 0),
-                ),
+    if (widget.isRemote == 0) {
+      if (widget.localUserJoined) {
+        if (widget.isCam) {
+          return const Center(child: Text('You turn off camera'));
+        } else {
+          return Align(
+            alignment: Alignment.center,
+            child: AgoraVideoView(
+              controller: VideoViewController(
+                rtcEngine: widget.engine,
+                canvas: VideoCanvas(uid: 0),
               ),
             ),
-      );
+          );
+        }
+      } else {
+        return const Center(child: CircularProgressIndicator());
+      }
     } else {
-      return Container(
-        decoration: BoxDecoration(
-          color: Colors.black,
-          borderRadius: BorderRadius.circular(10)
-        ),
-        child: const Positioned(
-        right: 16,
-        top: 16,
-        width: 120,
-        height: 160,
-          child: Center(child: CircularProgressIndicator(color: Colors.white,))),
-      )
-        ;
-    }}
+      if (widget.localUserJoined) {
+        return Container(
+          decoration: BoxDecoration(
+              color: Colors.black, borderRadius: BorderRadius.circular(10)),
+          child: Positioned(
+            right: 16,
+            top: 16,
+            width: 120,
+            height: 160,
+            child: widget.isCam
+                ? Container(
+                    color: Colors.black,
+                    child: const Center(
+                        child: Text(
+                      'User turn off camera',
+                      style: TextStyle(color: Colors.white),
+                    )),
+                  )
+                : AgoraVideoView(
+                    controller: VideoViewController(
+                      rtcEngine: widget.engine,
+                      canvas: VideoCanvas(uid: 0),
+                    ),
+                  ),
+          ),
+        );
+      } else {
+        return Container(
+          decoration: BoxDecoration(
+              color: Colors.black, borderRadius: BorderRadius.circular(10)),
+          child: const Positioned(
+              right: 16,
+              top: 16,
+              width: 120,
+              height: 160,
+              child: Center(
+                  child: CircularProgressIndicator(
+                color: Colors.white,
+              ))),
+        );
+      }
+    }
   }
 }
 
@@ -465,7 +536,11 @@ class RemoteVideoWidget extends StatefulWidget {
   final bool isCam;
   final String channelId;
 
-  RemoteVideoWidget({required this.engine, required this.remoteUid, required this.isCam, required this.channelId});
+  RemoteVideoWidget(
+      {required this.engine,
+      required this.remoteUid,
+      required this.isCam,
+      required this.channelId});
 
   @override
   State<RemoteVideoWidget> createState() => _RemoteVideoWidgetState();
@@ -475,19 +550,20 @@ class _RemoteVideoWidgetState extends State<RemoteVideoWidget> {
   @override
   Widget build(BuildContext context) {
     if (widget.remoteUid != 0) {
-      if(widget.isCam){
+      if (widget.isCam) {
         return const Center(child: Text('This user turn off their camera'));
-      }else{
-      return Align(
-        alignment: Alignment.center,
-        child: AgoraVideoView(
-          controller: VideoViewController.remote(
-            rtcEngine: widget.engine,
-            canvas: VideoCanvas(uid: widget.remoteUid),
-            connection: RtcConnection(channelId: widget.channelId),
+      } else {
+        return Align(
+          alignment: Alignment.center,
+          child: AgoraVideoView(
+            controller: VideoViewController.remote(
+              rtcEngine: widget.engine,
+              canvas: VideoCanvas(uid: widget.remoteUid),
+              connection: RtcConnection(channelId: widget.channelId),
+            ),
           ),
-        ),
-      );}
+        );
+      }
     } else {
       return const Center(child: Text('Waiting for other user to join...'));
     }
