@@ -28,6 +28,7 @@ class _StartVidState extends State<StartVid> {
   bool _remoteVideoMuted = false;
   var userId = 0;
   bool isSidebarVisible = false;
+  String? _currentlyPlaying;
 
   final List<String> songs = [
     'Song 1',
@@ -192,6 +193,20 @@ class _StartVidState extends State<StartVid> {
     });
   }
 
+  void _playMusic(String track) {
+    setState(() {
+      _currentlyPlaying = track;
+    });
+    // Code to play music
+  }
+
+  void _pauseMusic() {
+    setState(() {
+      _currentlyPlaying = null;
+    });
+    // Code to pause music
+  }
+
   @override
   void dispose() {
     _engine.leaveChannel();
@@ -262,6 +277,8 @@ class _StartVidState extends State<StartVid> {
                   child: ListView.builder(
                     itemCount: songs.length,
                     itemBuilder: (context, index) {
+                    String track = songs[index];
+                    bool isPlaying = _currentlyPlaying == track;
                       if(songs.length == 0){
                         return const Center(
                           child: Column(children: [
@@ -273,9 +290,13 @@ class _StartVidState extends State<StartVid> {
                       return ListTile(
                         title: Text(songs[index]),
                         trailing: IconButton(
-                          icon:const Icon(Icons.play_arrow, color: Colors.red,),
+                          icon:Icon(isPlaying ? Icons.pause : Icons.play_arrow, color: Colors.red,),
                           onPressed: () {
-                            // Add your play song logic here
+                             if (isPlaying) {
+                                _pauseMusic();
+                              } else {
+                                _playMusic(track);
+                              }
                           },
                         ),
                       );}
