@@ -5,6 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:admyrer/services/api_service.dart';
 import 'dart:convert';
 import 'package:on_audio_query/on_audio_query.dart';
+import 'package:just_audio/just_audio.dart';
 
 class Club extends StatefulWidget {
   final String username;
@@ -29,9 +30,11 @@ class _ClubState extends State<Club> {
   bool _remoteVideoMuted = false;
   List<int> remoteUids = [];
   var userId = 0;
-  String? _currentlyPlaying;
+  // String? _currentlyPlaying;
+  SongModel? _currentlyPlaying;
   bool isSidebarVisible = false;
   final OnAudioQuery _audioQuery = OnAudioQuery();
+  final AudioPlayer _audioPlayer = AudioPlayer();
 
   late List<SongModel> _songs = [];
 
@@ -192,20 +195,21 @@ class _ClubState extends State<Club> {
 
   void _switchCamera() {
     _engine.switchCamera();
-  }  
-
-  void _playMusic(String track) {
-    setState(() {
-      _currentlyPlaying = track;
-    });
-    // Code to play music
   }
 
-  void _pauseMusic() {
-    setState(() {
-      _currentlyPlaying = null;
-    });
-    // Code to pause music
+  void _playPauseSong(SongModel song) async {
+    if (_currentlyPlaying == song) {
+      if (_audioPlayer.playing) {
+        await _audioPlayer.pause();
+      } else {
+        await _audioPlayer.play();
+      }
+    } else {
+      _currentlyPlaying = song;
+      await _audioPlayer.setAudioSource(AudioSource.uri(Uri.parse(song.uri!)));
+      await _audioPlayer.play();
+    }
+    setState(() {});
   }
 
   @override
@@ -282,67 +286,78 @@ class _ClubState extends State<Club> {
 
   Widget _song() {
     return AnimatedPositioned(
-        duration: const Duration(milliseconds: 200),
-        left: isSidebarVisible ? 0 : -250,
-        top: 0,
-        bottom: 0,
-        child: Material(
-          elevation: 8,
-          child: Container(
-            width: 250,
-            height: MediaQuery.of(context).size.height,
-            color: Colors.white,
-            child: Column(
-              children: [
-                const SizedBox(height: 20,),
-                const Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text(
-                    'Songs List',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
+      duration: const Duration(milliseconds: 200),
+      left: isSidebarVisible ? 0 : -250,
+      top: 0,
+      bottom: 0,
+      child: Material(
+        elevation: 8,
+        child: Container(
+          width: 250,
+          height: MediaQuery.of(context).size.height,
+          color: Colors.white,
+          child: Column(
+            children: [
+              const SizedBox(
+                height: 20,
+              ),
+              const Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  'Songs List',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: _songs.length,
-                    itemBuilder: (context, index) {
-                    var track = _songs[index];
-                    bool isPlaying = _currentlyPlaying == track;
-                      if(_songs.length == 0){
-                        return Center(
-                          child: Column(children: [
-                            const Text("Empty", style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),),
-                            const Text("There are no uploaded music at the moment", style: TextStyle(fontSize: 18),),
-                             TextButton(
-                              onPressed: requestStoragePermission,
-                              child: const Text('Upload Local Music', style: TextStyle(color: Colors.red)),
+              ),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: _songs.length,
+                  itemBuilder: (context, index) {
+                    final song = _songs[index];
+                    if (_songs.length == 0) {
+                      return Center(
+                        child: Column(
+                          children: [
+                            const Text(
+                              "Empty",
+                              style: TextStyle(
+                                  fontSize: 25, fontWeight: FontWeight.bold),
                             ),
-                          ],),
-                        );
-                      }else{
+                            const Text(
+                              "There are no uploaded music at the moment",
+                              style: TextStyle(fontSize: 18),
+                            ),
+                            TextButton(
+                              onPressed: requestStoragePermission,
+                              child: const Text('Upload Local Music',
+                                  style: TextStyle(color: Colors.red)),
+                            ),
+                          ],
+                        ),
+                      );
+                    } else {
                       return ListTile(
                         selectedColor: Colors.pink[400],
                         title: Text(_songs[index].title),
-                        subtitle: Text(_songs[index].artist ?? 'Unknown Artist'),  
+                        subtitle:
+                            Text(_songs[index].artist ?? 'Unknown Artist'),
                         trailing: IconButton(
-                          icon:Icon(isPlaying ? Icons.pause : Icons.play_arrow, color: Colors.red,),
-                          onPressed: () {
-                             if (isPlaying) {
-                                _pauseMusic();
-                              } else {
-                                _playMusic("$track");
-                              }
-                          },
+                          icon: Icon(
+                            _currentlyPlaying == song && _audioPlayer.playing
+                                ? Icons.pause
+                                : Icons.play_arrow,
+                                color: Colors.red,
+                          ),
+                          onPressed: () => _playPauseSong(song),
                         ),
-                      );}
-                    },
-                  ),
+                      );
+                    }
+                  },
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
-      
+      ),
     );
   }
 
