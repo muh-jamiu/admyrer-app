@@ -308,52 +308,54 @@ class _ClubState extends State<Club> {
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
               ),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: _songs.length,
-                  itemBuilder: (context, index) {
-                    final song = _songs[index];
-                    if (_songs.length == 0) {
-                      return Center(
-                        child: Column(
-                          children: [
-                            const Text(
-                              "Empty",
-                              style: TextStyle(
-                                  fontSize: 25, fontWeight: FontWeight.bold),
-                            ),
-                            const Text(
-                              "There are no uploaded music at the moment",
-                              style: TextStyle(fontSize: 18),
-                            ),
-                            TextButton(
-                              onPressed: requestStoragePermission,
-                              child: const Text('Upload Local Music',
-                                  style: TextStyle(color: Colors.red)),
-                            ),
-                          ],
-                        ),
-                      );
-                    } else {
-                      return ListTile(
-                        selectedColor: Colors.pink[400],
-                        title: Text(_songs[index].title),
-                        subtitle:
-                            Text(_songs[index].artist ?? 'Unknown Artist'),
-                        trailing: IconButton(
-                          icon: Icon(
-                            _currentlyPlaying == song && _audioPlayer.playing
-                                ? Icons.pause
-                                : Icons.play_arrow,
-                                color: Colors.red,
+              _songs.length == 0
+                  ? Center(
+                      child: Column(
+                        children: [
+                          const Text(
+                            "Empty",
+                            style: TextStyle(
+                                fontSize: 25, fontWeight: FontWeight.bold),
                           ),
-                          onPressed: () => _playPauseSong(song),
-                        ),
-                      );
-                    }
-                  },
-                ),
-              ),
+                          const Text(
+                            "There are no uploaded music at the moment",
+                            style: TextStyle(fontSize: 16),
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          TextButton(
+                            onPressed: requestStoragePermission,
+                            child: const Text('Upload Local Music',
+                                style: TextStyle(color: Colors.red)),
+                          ),
+                        ],
+                      ),
+                    )
+                  : Expanded(
+                      child: ListView.builder(
+                        itemCount: _songs.length,
+                        itemBuilder: (context, index) {
+                          final song = _songs[index];
+                          return ListTile(
+                            selectedColor: Colors.pink[400],
+                            title: Text(_songs[index].title),
+                            subtitle:
+                                Text(_songs[index].artist ?? 'Unknown Artist'),
+                            trailing: IconButton(
+                              icon: Icon(
+                                _currentlyPlaying == song &&
+                                        _audioPlayer.playing
+                                    ? Icons.pause
+                                    : Icons.play_arrow,
+                                color: Colors.red,
+                              ),
+                              onPressed: () => _playPauseSong(song),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
             ],
           ),
         ),
