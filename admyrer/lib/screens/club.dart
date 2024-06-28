@@ -39,12 +39,13 @@ class _ClubState extends State<Club> {
   late List<SongModel> _songs = [];
 
   Future<void> requestStoragePermission() async {
-   await  [Permission.storage, Permission.audio, Permission.videos].request();
+   await  [Permission.storage, Permission.audio, Permission.videos, Permission.notification].request();
     if (await Permission.storage.request().isGranted) {
       showErrorToast("Access to local music has been granted");
       getLocalMusicFiles();
     } else {
       showErrorToast("Access to local music is declined");
+      getLocalMusicFiles();
     }
   }
 
@@ -311,54 +312,60 @@ class _ClubState extends State<Club> {
               ),
               _songs.length == 0
                   ? Center(
-                      child: Column(
-                        children: [
-                          const Text(
-                            "Empty",
-                            style: TextStyle(
-                                fontSize: 25, fontWeight: FontWeight.bold),
-                          ),
-                          const Center(
-                            child: Text(
-                              "There are no uploaded music at the moment",
-                              style: TextStyle(fontSize: 16),
+                      child: SingleChildScrollView(
+                    scrollDirection: Axis.vertical,
+                        child: Column(
+                          children: [
+                            const Text(
+                              "Empty",
+                              style: TextStyle(
+                                  fontSize: 25, fontWeight: FontWeight.bold),
                             ),
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          TextButton(
-                            onPressed: requestStoragePermission,
-                            child: const Text('Upload Local Music',
-                                style: TextStyle(color: Colors.red)),
-                          ),
-                        ],
+                            const Center(
+                              child: Text(
+                                "There are no uploaded music at the moment",
+                                style: TextStyle(fontSize: 16),
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            TextButton(
+                              onPressed: requestStoragePermission,
+                              child: const Text('Upload Local Music',
+                                  style: TextStyle(color: Colors.red)),
+                            ),
+                          ],
+                        ),
                       ),
                     )
-                  : Expanded(
-                      child: ListView.builder(
-                        itemCount: _songs.length,
-                        itemBuilder: (context, index) {
-                          final song = _songs[index];
-                          return ListTile(
-                            selectedColor: Colors.pink[400],
-                            title: Text(_songs[index].title),
-                            subtitle:
-                                Text(_songs[index].artist ?? 'Unknown Artist'),
-                            trailing: IconButton(
-                              icon: Icon(
-                                _currentlyPlaying == song &&
-                                        _audioPlayer.playing
-                                    ? Icons.pause
-                                    : Icons.play_arrow,
-                                color: Colors.red,
+                  : SingleChildScrollView(
+                    scrollDirection: Axis.vertical,
+                    child: Expanded(
+                        child: ListView.builder(
+                          itemCount: _songs.length,
+                          itemBuilder: (context, index) {
+                            final song = _songs[index];
+                            return ListTile(
+                              selectedColor: Colors.pink[400],
+                              title: Text(_songs[index].title),
+                              subtitle:
+                                  Text(_songs[index].artist ?? 'Unknown Artist'),
+                              trailing: IconButton(
+                                icon: Icon(
+                                  _currentlyPlaying == song &&
+                                          _audioPlayer.playing
+                                      ? Icons.pause
+                                      : Icons.play_arrow,
+                                  color: Colors.red,
+                                ),
+                                onPressed: () => _playPauseSong(song),
                               ),
-                              onPressed: () => _playPauseSong(song),
-                            ),
-                          );
-                        },
+                            );
+                          },
+                        ),
                       ),
-                    ),
+                  ),
             ],
           ),
         ),
