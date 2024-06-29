@@ -414,11 +414,6 @@ class _LocationsState extends State<Locations> {
                             child: Icon(Icons.more_vert_outlined,
                                 color: Colors.pink[300]),
                           ),
-                          const SizedBox(width: 15),
-                          InkWell(
-                              onTap: () {},
-                              child: Icon(Icons.diamond_rounded,
-                                  color: Colors.blue[300])),
                         ],
                       ),
                     ],

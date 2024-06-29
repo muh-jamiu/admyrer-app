@@ -216,7 +216,7 @@ class _MessageState extends State<Message> {
   }
 
   Future<void> postMessage(message) async {
-    // triggerPuser();
+    triggerPuser();
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       _authToken = prefs.getString('authToken') ?? '';

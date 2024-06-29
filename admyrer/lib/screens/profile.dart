@@ -399,22 +399,6 @@ class _SettingsState extends State<Settings> {
                 ),
               ],
             ),
-            const Row(
-              children: [
-                Icon(
-                  Icons.share,
-                  color: Color.fromARGB(255, 63, 63, 63),
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-                Text(
-                  "Share",
-                  style: TextStyle(
-                      fontSize: 15, color: Color.fromARGB(255, 63, 63, 63)),
-                ),
-              ],
-            )
           ],
         ),
       ],

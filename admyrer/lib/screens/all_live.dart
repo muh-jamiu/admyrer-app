@@ -86,8 +86,6 @@ class _AllLiveState extends State<AllLive> {
                             Icons.more_vert_outlined,
                             color: Colors.grey[800],
                           ),
-                          const SizedBox(width: 15),
-                          Icon(Icons.diamond_rounded, color: Colors.blue[300]),
                         ],
                       ),
                     ],
