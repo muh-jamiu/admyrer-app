@@ -4,8 +4,8 @@ import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:admyrer/services/api_service.dart';
 import 'dart:convert';
-import 'package:on_audio_query/on_audio_query.dart';
-import 'package:just_audio/just_audio.dart';
+// import 'package:on_audio_query/on_audio_query.dart';
+// import 'package:just_audio/just_audio.dart';
 
 class Club extends StatefulWidget {
   final String username;
@@ -31,12 +31,12 @@ class _ClubState extends State<Club> {
   List<int> remoteUids = [];
   var userId = 0;
   // String? _currentlyPlaying;
-  SongModel? _currentlyPlaying;
+  // SongModel? _currentlyPlaying;
   bool isSidebarVisible = false;
-  final OnAudioQuery _audioQuery = OnAudioQuery();
-  final AudioPlayer _audioPlayer = AudioPlayer();
+  // final OnAudioQuery _audioQuery = OnAudioQuery();
+  // final AudioPlayer _audioPlayer = AudioPlayer();
 
-  late List<SongModel> _songs = [];
+  // final List<SongModel> _songs = [];
 
   // Future<void> requestStoragePermission() async {
   //  await  [Permission.storage, Permission.audio, Permission.videos, Permission.notification].request();
@@ -199,20 +199,20 @@ class _ClubState extends State<Club> {
     _engine.switchCamera();
   }
 
-  void _playPauseSong(SongModel song) async {
-    if (_currentlyPlaying == song) {
-      if (_audioPlayer.playing) {
-        await _audioPlayer.pause();
-      } else {
-        await _audioPlayer.play();
-      }
-    } else {
-      _currentlyPlaying = song;
-      await _audioPlayer.setAudioSource(AudioSource.uri(Uri.parse(song.uri!)));
-      await _audioPlayer.play();
-    }
-    setState(() {});
-  }
+  // void _playPauseSong(SongModel song) async {
+  //   if (_currentlyPlaying == song) {
+  //     if (_audioPlayer.playing) {
+  //       await _audioPlayer.pause();
+  //     } else {
+  //       await _audioPlayer.play();
+  //     }
+  //   } else {
+  //     _currentlyPlaying = song;
+  //     await _audioPlayer.setAudioSource(AudioSource.uri(Uri.parse(song.uri!)));
+  //     await _audioPlayer.play();
+  //   }
+  //   setState(() {});
+  // }
 
   @override
   void dispose() {
@@ -247,7 +247,7 @@ class _ClubState extends State<Club> {
                 end: Alignment.centerRight,
               ),
             ),
-            child: Stack(
+            child: Column(
               children: [
                 const SizedBox(
                   height: 20,
@@ -286,92 +286,92 @@ class _ClubState extends State<Club> {
     );
   }
 
-  Widget _song() {
-    return AnimatedPositioned(
-      duration: const Duration(milliseconds: 200),
-      left: isSidebarVisible ? 0 : -300,
-      top: 0,
-      bottom: 0,
-      child: Material(
-        elevation: 8,
-        child: Container(
-          width: 300,
-          height: MediaQuery.of(context).size.height,
-          color: Colors.white,
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 20,
-              ),
-              const Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text(
-                  'Songs List',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-              ),
-              _songs.length == 0
-                  ? Center(
-                      child: SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                        child: Column(
-                          children: [
-                            const Text(
-                              "Empty",
-                              style: TextStyle(
-                                  fontSize: 25, fontWeight: FontWeight.bold),
-                            ),
-                            const Center(
-                              child: Text(
-                                "There are no uploaded music at the moment",
-                                style: TextStyle(fontSize: 16),
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            TextButton(
-                              onPressed: () {},//requestStoragePermission,
-                              child: const Text('Upload Local Music',
-                                  style: TextStyle(color: Colors.red)),
-                            ),
-                          ],
-                        ),
-                      ),
-                    )
-                  : SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                    child: Expanded(
-                        child: ListView.builder(
-                          itemCount: _songs.length,
-                          itemBuilder: (context, index) {
-                            final song = _songs[index];
-                            return ListTile(
-                              selectedColor: Colors.pink[400],
-                              title: Text(_songs[index].title),
-                              subtitle:
-                                  Text(_songs[index].artist ?? 'Unknown Artist'),
-                              trailing: IconButton(
-                                icon: Icon(
-                                  _currentlyPlaying == song &&
-                                          _audioPlayer.playing
-                                      ? Icons.pause
-                                      : Icons.play_arrow,
-                                  color: Colors.red,
-                                ),
-                                onPressed: () => _playPauseSong(song),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                  ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+  // Widget _song() {
+  //   return AnimatedPositioned(
+  //     duration: const Duration(milliseconds: 200),
+  //     left: isSidebarVisible ? 0 : -300,
+  //     top: 0,
+  //     bottom: 0,
+  //     child: Material(
+  //       elevation: 8,
+  //       child: Container(
+  //         width: 300,
+  //         height: MediaQuery.of(context).size.height,
+  //         color: Colors.white,
+  //         child: Column(
+  //           children: [
+  //             const SizedBox(
+  //               height: 20,
+  //             ),
+  //             const Padding(
+  //               padding: const EdgeInsets.all(16.0),
+  //               child: Text(
+  //                 'Songs List',
+  //                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+  //               ),
+  //             ),
+  //             _songs.length == 0
+  //                 ? Center(
+  //                     child: SingleChildScrollView(
+  //                   scrollDirection: Axis.vertical,
+  //                       child: Column(
+  //                         children: [
+  //                           const Text(
+  //                             "Empty",
+  //                             style: TextStyle(
+  //                                 fontSize: 25, fontWeight: FontWeight.bold),
+  //                           ),
+  //                           const Center(
+  //                             child: Text(
+  //                               "There are no uploaded music at the moment",
+  //                               style: TextStyle(fontSize: 16),
+  //                             ),
+  //                           ),
+  //                           const SizedBox(
+  //                             height: 20,
+  //                           ),
+  //                           TextButton(
+  //                             onPressed: () {},//requestStoragePermission,
+  //                             child: const Text('Upload Local Music',
+  //                                 style: TextStyle(color: Colors.red)),
+  //                           ),
+  //                         ],
+  //                       ),
+  //                     ),
+  //                   )
+  //                 : SingleChildScrollView(
+  //                   scrollDirection: Axis.vertical,
+  //                   child: Expanded(
+  //                       child: ListView.builder(
+  //                         itemCount: _songs.length,
+  //                         itemBuilder: (context, index) {
+  //                           final song = _songs[index];
+  //                           return ListTile(
+  //                             selectedColor: Colors.pink[400],
+  //                             title: Text(_songs[index].title),
+  //                             subtitle:
+  //                                 Text(_songs[index].artist ?? 'Unknown Artist'),
+  //                             trailing: IconButton(
+  //                               icon: Icon(
+  //                                 _currentlyPlaying == song &&
+  //                                         _audioPlayer.playing
+  //                                     ? Icons.pause
+  //                                     : Icons.play_arrow,
+  //                                 color: Colors.red,
+  //                               ),
+  //                               onPressed: () => _playPauseSong(song),
+  //                             ),
+  //                           );
+  //                         },
+  //                       ),
+  //                     ),
+  //                 ),
+  //           ],
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Widget _topBar() {
     return const Align(
