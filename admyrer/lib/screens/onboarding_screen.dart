@@ -1,3 +1,4 @@
+import 'package:admyrer/screens/update.dart';
 import 'package:admyrer/widget/background.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -30,6 +31,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       ),
       (){
          Navigator.pushReplacementNamed(context, "/step");
+    // Navigator.push(
+    //   context, MaterialPageRoute(builder: (context) => Update()));
       });
     }
   }

@@ -108,14 +108,14 @@ class _MessageState extends State<Message> {
           // showErrorToast("Subscription Error: ${e.message}");
         },
         onEvent: (PusherEvent event){          
-          var fname = loginUser.firstName;
-          var msg = event.data.message;
+          // var fname = loginUser.firstName;
+          // var msg = event.data.message;
           pusher.trigger(event);
-          if(event.data.to == user.username){
-            showErrorToast('Message received from $fname: $msg');
-          }
+          // if(event.data.to == user.username){
+          //   showErrorToast('Message received from $fname: $msg');
+          // }
           showErrorToast('pusher event: ${event.data}');
-          _showNotification(event.data.username, msg);
+          _showNotification(event.data.username, "msg");
         },
       );
 
@@ -127,7 +127,6 @@ class _MessageState extends State<Message> {
       print("ERROR: $e");
     }
   }
-
 
   Future<void> _pickImage() async {
     // Request storage permission
