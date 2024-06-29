@@ -12,6 +12,7 @@ import 'package:admyrer/screens/single.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pusher_channels_flutter/pusher_channels_flutter.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class Message extends StatefulWidget {
   final UserModel user;
@@ -33,6 +34,26 @@ class _MessageState extends State<Message> {
   final ImagePicker _picker = ImagePicker();  
 
   
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  Future<void> _showNotification(String from, String msg) async {
+    const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
+      'messaging',
+      'message channel',
+      channelDescription: 'this channel is for messaging in the app',
+      importance: Importance.max,
+      priority: Priority.high,
+    );
+    const NotificationDetails platformDetails = NotificationDetails(android: androidDetails);
+
+    await flutterLocalNotificationsPlugin.show(
+      0,
+      from,
+      msg,
+      platformDetails,
+    );
+  }
+
+
   Future<void> getLoginUser() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -94,6 +115,7 @@ class _MessageState extends State<Message> {
             showErrorToast('Message received from $fname: $msg');
           }
           showErrorToast('pusher event: ${event.data}');
+          _showNotification(event.data.username, msg);
         },
       );
 
