@@ -55,7 +55,7 @@ class _LoginState extends State<Register> {
         }else{
           showErrorToast("Account signup successfully", const Color.fromARGB(255, 100, 246, 190));
           SharedPreferences prefs = await SharedPreferences.getInstance();
-          await prefs.setString('authToken', user.body);
+          // await prefs.setString('authToken', user.body);
           Future.delayed( const Duration(seconds:2), () {
             Navigator.pushReplacementNamed(context, "/verify");
           });
@@ -82,7 +82,9 @@ class _LoginState extends State<Register> {
     return MaterialApp(
       home: Scaffold(
         body: ListView(
-          children: [Stack(
+          children: [
+              const Backgrounds(),
+            Stack(
             // padding: const EdgeInsets.all(15.0),
             children: [
               const Backgrounds(),

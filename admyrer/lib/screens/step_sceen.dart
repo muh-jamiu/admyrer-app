@@ -5,7 +5,8 @@ import 'package:admyrer/widget/normal_button.dart';
 import 'package:flutter/material.dart';
 import 'package:admyrer/screens/live.dart';
 import 'package:admyrer/screens/quiz.dart';
-import 'package:admyrer/screens/web_date.dart';
+import 'package:admyrer/screens/register.dart';
+import 'package:admyrer/screens/login.dart';
 
 class StepSceen extends StatefulWidget {
   const StepSceen({super.key});
@@ -18,13 +19,15 @@ class _StepSceenState extends State<StepSceen> {
   bool isLoading = false;
 
   void login() {
-    // Navigator.push(
-    //   context, MaterialPageRoute(builder: (context) => WebDates()));
-    Navigator.pushReplacementNamed(context, "/login");
+    Navigator.pushReplacement(
+      context, MaterialPageRoute(builder: (context) => Login()));
+    // Navigator.pushReplacementNamed(context, "/login");
   }
 
   void register() {
-    Navigator.pushReplacementNamed(context, "/register");
+    Navigator.pushReplacement(
+      context, MaterialPageRoute(builder: (context) => Register()));
+    // Navigator.pushReplacementNamed(context, "/register");
   }
 
   @override
