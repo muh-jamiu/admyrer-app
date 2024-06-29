@@ -38,23 +38,23 @@ class _ClubState extends State<Club> {
 
   late List<SongModel> _songs = [];
 
-  Future<void> requestStoragePermission() async {
-   await  [Permission.storage, Permission.audio, Permission.videos, Permission.notification].request();
-    if (await Permission.storage.request().isGranted) {
-      showErrorToast("Access to local music has been granted");
-      getLocalMusicFiles();
-    } else {
-      showErrorToast("Access to local music is declined");
-      getLocalMusicFiles();
-    }
-  }
+  // Future<void> requestStoragePermission() async {
+  //  await  [Permission.storage, Permission.audio, Permission.videos, Permission.notification].request();
+  //   if (await Permission.storage.request().isGranted) {
+  //     showErrorToast("Access to local music has been granted");
+  //     getLocalMusicFiles();
+  //   } else {
+  //     showErrorToast("Access to local music is declined");
+  //     getLocalMusicFiles();
+  //   }
+  // }
 
-  Future<void> getLocalMusicFiles() async {
-    final List<SongModel> songs = await _audioQuery.querySongs();
-    setState(() {
-      _songs = songs;
-    });
-  }
+  // Future<void> getLocalMusicFiles() async {
+    // final List<SongModel> songs = await _audioQuery.querySongs();
+    // setState(() {
+    //   _songs = songs;
+    // });
+  // }
 
   void showErrorToast(String message) {
     Fluttertoast.showToast(
@@ -277,7 +277,7 @@ class _ClubState extends State<Club> {
                   },
                 )),
                 _toolbar(),
-                _song(),
+                // _song(),
               ],
             ),
           ),
@@ -331,7 +331,7 @@ class _ClubState extends State<Club> {
                               height: 20,
                             ),
                             TextButton(
-                              onPressed: requestStoragePermission,
+                              onPressed: () {},//requestStoragePermission,
                               child: const Text('Upload Local Music',
                                   style: TextStyle(color: Colors.red)),
                             ),
@@ -446,18 +446,18 @@ class _ClubState extends State<Club> {
                   size: 20.0,
                 ),
               ),
-              RawMaterialButton(
-                onPressed: toggleSidebar,
-                shape: const CircleBorder(),
-                elevation: 2.0,
-                fillColor: Colors.white,
-                padding: const EdgeInsets.all(12.0),
-                child: Icon(
-                  Icons.music_note,
-                  color: Colors.purple[400],
-                  size: 20.0,
-                ),
-              ),
+              // RawMaterialButton(
+              //   onPressed: toggleSidebar,
+              //   shape: const CircleBorder(),
+              //   elevation: 2.0,
+              //   fillColor: Colors.white,
+              //   padding: const EdgeInsets.all(12.0),
+              //   child: Icon(
+              //     Icons.music_note,
+              //     color: Colors.purple[400],
+              //     size: 20.0,
+              //   ),
+              // ),
             ],
           ),
         ),

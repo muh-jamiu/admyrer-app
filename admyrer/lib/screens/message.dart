@@ -24,6 +24,7 @@ class _MessageState extends State<Message> {
   final List<Map<String, dynamic>> _messages = [];
   final TextEditingController _controller = TextEditingController();
   late UserModel user = widget.user;
+  late UserModel loginUser = widget.user;
   List<ChatModel> conversation = [];
   final ApiService _apiService = ApiService();
   bool isLoading = true;
@@ -31,11 +32,38 @@ class _MessageState extends State<Message> {
   PickedFile? _imageFile;
   final ImagePicker _picker = ImagePicker();  
 
-  Future<void> triggerPuser() async {
+  
+  Future<void> getLoginUser() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _authToken = prefs.getString('authToken') ?? '';
+    });
     try {
-      final response = await _apiService.postRequest("notify", {
-        "username": "jamiu",
-        "title": "You have a new message from Jamiu",
+      final response = await _apiService.postRequest("single-user", {
+        "id": _authToken,
+      });
+
+      var data = json.decode(response.body);
+      var userList = data["data"]["user"];
+      UserModel loginUser = UserModel.fromJson(userList);
+
+      setState(() {
+        this.loginUser = loginUser;
+      });
+    } catch (e) {
+      showErrorToast('An error occurred: $e');
+    }
+  }
+
+
+  Future<void> triggerPuser() async {
+    var fname = loginUser.firstName;
+    var lname = loginUser.lastName;
+    try {
+      await _apiService.postRequest("notify", {
+        "username": "$fname $lname" ?? "Guest",
+        "to": user.username ?? "Guest",
+        "title": "You have a new message from $fname $lname",
         "message":_controller.text,
       });
     } catch (e) {
@@ -43,33 +71,37 @@ class _MessageState extends State<Message> {
     }
   }
 
-   void _pusher() async{
+  void _pusher() async{
     PusherChannelsFlutter pusher = PusherChannelsFlutter.getInstance();
     try {
       await pusher.init(
         apiKey: "61cbedc7014185332c2d",
         cluster: "mt1",
         onConnectionStateChange: (String change, String e) async {
-          showErrorToast("previousState: ${e}, currentState: ${change}");
+          // showErrorToast("previousState: ${e}, currentState: ${change}");
         },
         onError: (String e, int? i, dynamic d) {
-          showErrorToast("pusher Error: ${e}");
+          // showErrorToast("pusher Error: ${e}");
         },
         onSubscriptionError: (String channel, dynamic e) {
-          showErrorToast("Subscription Error: ${e.message}");
+          // showErrorToast("Subscription Error: ${e.message}");
         },
-        onEvent: (PusherEvent event){
+        onEvent: (PusherEvent event){          
+          var fname = loginUser.firstName;
+          var msg = event.data.message;
           pusher.trigger(event);
-          showErrorToast('pusher event ${event.eventName}, ${event.channelName}, ${event.data}');
+          if(event.data.to == user.username){
+            showErrorToast('Message received from $fname: $msg');
+          }
+          showErrorToast('pusher event: ${event.data}');
         },
       );
 
       await pusher.subscribe(channelName: "app_event");
-      await pusher.connect();      
-      
+      await pusher.connect();           
 
     } catch (e) {
-      showErrorToast("ERROR: $e");
+      // showErrorToast("ERROR: $e");
       print("ERROR: $e");
     }
   }
@@ -189,7 +221,8 @@ class _MessageState extends State<Message> {
   void initState() {
     super.initState();
     getMessage();
-    // _pusher();
+    getLoginUser();
+    _pusher();
   }
 
   void _sendMessage() {
