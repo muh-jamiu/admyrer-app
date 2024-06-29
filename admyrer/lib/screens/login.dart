@@ -1,4 +1,6 @@
+import 'package:admyrer/screens/forgot.dart';
 import 'package:admyrer/screens/password_text.dart';
+import 'package:admyrer/screens/register.dart';
 import 'package:admyrer/widget/backgrounds.dart';
 import 'package:admyrer/widget/gradient_button.dart';
 import 'package:admyrer/widget/bootstrap_textfield.dart';
@@ -30,11 +32,13 @@ class _LoginState extends State<Login> {
   }
 
   void register() {
-    Navigator.pushNamed(context, "/register");
+    Navigator.push(
+      context, MaterialPageRoute(builder: (context) => Register()));
   }
 
   void forgot() {
-    Navigator.pushNamed(context, "/forgot");
+    Navigator.push(
+      context, MaterialPageRoute(builder: (context) => Forgot()));
   }
 
   void showErrorToast(String message, Color color) {

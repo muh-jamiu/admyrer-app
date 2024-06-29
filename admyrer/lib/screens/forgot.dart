@@ -1,3 +1,4 @@
+import 'package:admyrer/screens/register.dart';
 import 'package:admyrer/widget/backgrounds.dart';
 import 'package:admyrer/widget/gradient_button.dart';
 import 'package:admyrer/widget/bootstrap_textfield.dart';
@@ -12,7 +13,8 @@ class Forgot extends StatefulWidget {
 
 class _ForgotState extends State<Forgot> {
   void register() {
-    Navigator.pushNamed(context, "/register");
+    Navigator.push(
+      context, MaterialPageRoute(builder: (context) => Register()));
   }
 
   @override

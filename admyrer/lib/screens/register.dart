@@ -2,12 +2,11 @@ import 'package:admyrer/widget/backgrounds.dart';
 import 'package:admyrer/widget/gradient_button.dart';
 import 'package:admyrer/screens/password_text.dart';
 import 'package:admyrer/widget/bootstrap_textfield.dart';
-import 'package:admyrer/widget/google_login.dart';
-import 'package:admyrer/widget/facebook.dart';
 import 'package:admyrer/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:admyrer/screens/login.dart';
 
 class Register extends StatefulWidget {
   const Register({super.key});
@@ -28,7 +27,8 @@ class _LoginState extends State<Register> {
   bool isLoading = false;
 
   void login() {
-    Navigator.pushNamed(context, "/login");
+    Navigator.push(
+      context, MaterialPageRoute(builder: (context) => Login()));
   }
 
   
