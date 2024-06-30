@@ -238,6 +238,8 @@ class MyGridList extends StatefulWidget {
 }
 
 class _MyGridListState extends State<MyGridList> {
+  final TextEditingController _passwordController = TextEditingController();
+
   void showErrorToast(String message) {
     Fluttertoast.showToast(
       msg: message,
@@ -247,6 +249,95 @@ class _MyGridListState extends State<MyGridList> {
       textColor: Colors.white,
       backgroundColor: Color.fromARGB(255, 98, 240, 176),
       fontSize: 15.0,
+    );
+  }
+
+   Future<void> _showAllReviews() async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Reviews'),
+          content:ListView(
+            children: [
+              Text("reviews"),
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Close'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Dismiss the dialog
+              },
+            ),
+            TextButton(
+              child: const Text('Ok', style: TextStyle(color: Colors.red)),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+
+  Future<void> _makeReview() async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+      title: const Text('Make a review'),
+      content: Column(
+        children: [
+          TextField(
+            controller: _passwordController,
+            decoration: const InputDecoration(
+              labelText: 'FullName',
+              border: OutlineInputBorder(),
+            ),
+          ),
+          const SizedBox(height: 10,),
+          TextField(
+            controller: _passwordController,
+            decoration: const InputDecoration(
+              labelText: 'Review Title',
+              border: OutlineInputBorder(),
+            ),
+          ),
+          const SizedBox(height: 10,),
+          TextField(
+            maxLines: null,
+            controller: _passwordController,
+            decoration: const InputDecoration(
+              labelText: 'Review Comment',
+              border: OutlineInputBorder(),
+            ),
+          ),
+        ],
+      ),
+
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop(); 
+          },
+          child: const Text('Cancel'),
+        ),
+        TextButton(
+          onPressed: () {
+            var password = _passwordController.text;
+            if(password != ""){
+              Navigator.of(context).pop();
+            }
+          },
+          child: const Text('Submit review', style: TextStyle(color: Colors.red)),
+        ),
+      ],
+    );
+ 
+      },
     );
   }
 
@@ -380,6 +471,57 @@ class _MyGridListState extends State<MyGridList> {
             ),
           ),
         ),
+        
+        InkWell(
+          onTap: _makeReview,
+          child: Container(
+            width: 100,
+            height: 150,
+            decoration: BoxDecoration(
+                color: Color.fromARGB(33, 176, 119, 39),
+                borderRadius: BorderRadius.circular(10)),
+            child: const Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const FaIcon(
+                  FontAwesomeIcons.starHalfStroke,
+                  color: Colors.purple,
+                  size: 25,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Text("Make a Review")
+              ],
+            ),
+          ),
+        ),
+       
+        InkWell(
+          onTap: _showAllReviews,
+          child: Container(
+            width: 100,
+            height: 150,
+            decoration: BoxDecoration(
+                color: Color.fromARGB(33, 80, 176, 39),
+                borderRadius: BorderRadius.circular(10)),
+            child: const Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const FaIcon(
+                  FontAwesomeIcons.starHalfStroke,
+                  color: Colors.purple,
+                  size: 25,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Text("Reviews")
+              ],
+            ),
+          ),
+        ),
+       
        ],
     );
   }

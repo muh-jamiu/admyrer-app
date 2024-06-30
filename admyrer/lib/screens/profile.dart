@@ -44,6 +44,7 @@ class _ProfileState extends State<Profile> {
   List<UserModel>  visits = [];
   List<UserModel>  likes = [];
   List<UserModel>  follows = [];
+  List<UserModel>  friends = [];
 
   void goLive(username, avatar) {
     Navigator.push(
@@ -65,6 +66,41 @@ class _ProfileState extends State<Profile> {
     Navigator.push(
       context, MaterialPageRoute(builder: (context) => Club(username: user.username , avatar: user.avatar,)));
   }
+
+  
+  Future<void> getFriends() async {
+     SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _authToken = prefs.getString('authToken') ?? '';
+    });
+    
+    try {      
+      final response = await _apiService.postRequest("get-follows", {
+        "id": _authToken,
+      });
+
+
+      var data = json.decode(response.body);
+
+      if (data["data"] == null || data["data"] == null) {
+        showErrorToast('Invalid response data');
+        return;
+      }
+
+      List<dynamic> userList = data["data"];
+      List<UserModel> friends =
+          userList.map((user) => UserModel.fromJson(user)).toList();
+
+      setState(() {
+        this.friends = friends;
+      });
+
+    } catch (e) {
+      showErrorToast('An error occurred: $e');
+      print(e);
+    }
+  }
+
     
   Future<void> getFollows() async {
      SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -152,6 +188,7 @@ class _ProfileState extends State<Profile> {
     super.initState();
     getUsers();
     getFollows();
+    getFriends();
   }
 
   void goEdit() {
@@ -236,7 +273,7 @@ class _ProfileState extends State<Profile> {
                   const SizedBox(
                     height: 10,
                   ),
-                  Expanded(child: MyGridList(user: user, goPolls: goPolls, goQuiz: goQuiz, follows: follows, goLive: goLive, goWeb: goWeb, goSpeed: goSpeed, goClub: goClub))
+                  Expanded(child: MyGridList(friends: friends, user: user, goPolls: goPolls, goQuiz: goQuiz, follows: follows, goLive: goLive, goWeb: goWeb, goSpeed: goSpeed, goClub: goClub))
                 ],
               ),
             )
@@ -409,6 +446,7 @@ class _SettingsState extends State<Settings> {
 class MyGridList extends StatefulWidget {
   final UserModel user;
   final List<UserModel> follows;
+  final List<UserModel> friends;
   final Function goPolls;
   final Function goQuiz;
   final Function goLive;
@@ -421,6 +459,7 @@ class MyGridList extends StatefulWidget {
     required this.goQuiz, 
     required this.goPolls, 
     required this.follows,
+    required this.friends,
     required this.goLive,
     required this.goSpeed,
     required this.goWeb,
@@ -440,6 +479,7 @@ class _MyGridListState extends State<MyGridList> {
     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Login()));
   }
 
+  
   Future<void> _showLogoutConfirmationDialog() async {
     showDialog(
       context: context,
@@ -532,6 +572,23 @@ class _MyGridListState extends State<MyGridList> {
     );
   }
 
+  void _scheduleDate() async {
+    final selected = await showDialog<List<String>>(
+      context: context,
+      builder: (context) {
+        return ScheduleSelect(
+          users: widget.friends,
+          goSpeed: widget.goWeb,
+        );
+      },
+    );
+
+    if (selected != null) {
+      setState(() {
+        selectedUsers = selected;
+      });
+    }
+  }
 
   void goVisists() {
     Navigator.push(
@@ -564,32 +621,13 @@ class _MyGridListState extends State<MyGridList> {
 
   String? selectedUserOne;
 
-  // void _showUserSelectionOnlyOne() async {
-  //   final selected = await showDialog<String>(
-  //     context: context,
-  //     builder: (context) {
-  //       return SelectOne(
-  //         users: widget.follows,
-  //         initiallySelectedUser: selectedUserOne,
-  //         goSpeed: widget.goSpeed
-  //       );
-  //     },
-  //   );
-
-  //   if (selected != null) {
-  //     setState(() {
-  //       selectedUserOne = selected;
-  //     });
-  //   }
-  // }
-
 
   void _showUserSelectionModal() async {
     final selected = await showDialog<List<String>>(
       context: context,
       builder: (context) {
         return WebDate(
-          users: widget.follows,
+          users: widget.friends,
           initiallySelectedUsers: selectedUsers,
           goWeb: widget.goWeb,
         );
@@ -880,6 +918,31 @@ class _MyGridListState extends State<MyGridList> {
             ),
           ),
         ),
+
+          InkWell(
+          onTap: _scheduleDate,
+          child: Container(
+            width: 100,
+            height: 150,
+            decoration: BoxDecoration(
+                color: Color.fromARGB(33, 176, 39, 128),
+                borderRadius: BorderRadius.circular(10)),
+            child: const Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const FaIcon(
+                  FontAwesomeIcons.calendarAlt,
+                  color: Colors.purple,
+                  size: 25,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Text("Schedule Date")
+              ],
+            ),
+          ),
+        ),
           InkWell(
           onTap: () => widget.goQuiz(),
           child: Container(
@@ -1107,6 +1170,119 @@ class _SelectOneState extends State<SelectOne> {
         TextButton(
           onPressed: () {
             Navigator.of(context).pop(_selectedUser);
+            _showSpeedDate();
+          },
+          child: Text('Confirm'),
+        ),
+      ],
+    );
+  }
+}
+
+class ScheduleSelect extends StatefulWidget {
+  final List<UserModel> users;
+  final Function goSpeed;
+  final String? initiallySelectedUser;
+
+  ScheduleSelect({required this.users, this.initiallySelectedUser, required this.goSpeed});
+
+  @override
+  _ScheduleSelectState createState() => _ScheduleSelectState();
+}
+
+class _ScheduleSelectState extends State<ScheduleSelect> {
+  String? _selectedUser;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedUser = widget.initiallySelectedUser;
+  }
+
+    
+  void showErrorToast(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_LONG,
+      gravity: ToastGravity.TOP,
+      timeInSecForIosWeb: 3,
+      textColor: Colors.white,
+      backgroundColor: Colors.pink[300],
+      fontSize: 15.0,
+    );
+  }
+
+
+  void _onUserSelected(String? user) {
+    setState(() {
+      _selectedUser = user;
+    });
+  }
+
+  Future<void> _showSpeedDate() async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Date Scheduling'),
+          content: const Column(
+            children: [
+              const  Text('Starting Speed date with selected user?'),
+              TextField(
+                // controller: _passwordController,
+                decoration: const InputDecoration(
+                  labelText: 'FullName',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Dismiss the dialog
+              },
+            ),
+            TextButton(
+              child: const Text('Schedule', style: TextStyle(color: Colors.red)),
+              onPressed: () {Navigator.of(context).pop(); showErrorToast("Date is scheduled with selected user");},
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('Date Scheduling', style: TextStyle(fontSize: 15),),
+      content: SingleChildScrollView(
+        child: ListBody(
+          children: widget.users.map((user) {
+            return RadioListTile<String>(
+              activeColor:Colors.pink[400],
+              value: user.firstName,
+              groupValue: _selectedUser,
+              title: Text(user.firstName),
+              onChanged: (String? selected) {
+                _onUserSelected(selected);
+              },
+            );
+          }).toList(),
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: Text('Cancel'),
+        ),
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
             _showSpeedDate();
           },
           child: Text('Confirm'),
