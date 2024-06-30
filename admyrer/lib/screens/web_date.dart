@@ -3,6 +3,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:admyrer/services/api_service.dart';
+import 'package:admyrer/screens/reviews.dart';
 import 'dart:convert';
 
 class WebDates extends StatefulWidget {
@@ -236,6 +237,8 @@ class _WebDatesState extends State<WebDates> {
               onPressed: () {
                 _engine.leaveChannel();
                 Navigator.pop(context);
+                Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => Reviews()));
               },
             ),
             RawMaterialButton(

@@ -4,7 +4,7 @@ import 'package:admyrer/widget/gradient_button.dart';
 import 'package:admyrer/widget/normal_button.dart';
 import 'package:flutter/material.dart';
 import 'package:admyrer/screens/live.dart';
-import 'package:admyrer/screens/quiz.dart';
+import 'package:admyrer/screens/reviews.dart';
 import 'package:admyrer/screens/register.dart';
 import 'package:admyrer/screens/login.dart';
 
@@ -20,8 +20,9 @@ class _StepSceenState extends State<StepSceen> {
 
   void login() {
     Navigator.pushReplacement(
-      context, MaterialPageRoute(builder: (context) => Login()));
-    // Navigator.pushReplacementNamed(context, "/login");
+      context, MaterialPageRoute(builder: (context) => Reviews()));
+    // Navigator.pushReplacement(
+    //   context, MaterialPageRoute(builder: (context) => Login()));
   }
 
   void register() {

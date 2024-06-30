@@ -6,6 +6,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:admyrer/services/api_service.dart';
 import 'dart:convert';
 import 'dart:async';
+import 'package:admyrer/screens/tab_screen.dart';
+import 'package:admyrer/screens/reviews.dart';
 
 class SpeedDate extends StatefulWidget {
   final String username;
@@ -130,7 +132,9 @@ class _SpeedDateState extends State<SpeedDate> {
 
         if (_remainingTime == 9 * 60) {
           if (_remoteUid == 0) {
-            _dialogNoRemote();
+              showErrorToast("Disconnected: No user connecting to speed date");
+              Navigator.push(
+                context, MaterialPageRoute(builder: (context) => TabScreen()));
           }
         }
       });
@@ -393,6 +397,8 @@ class _SpeedDateState extends State<SpeedDate> {
                 onPressed: () {
                   _engine.leaveChannel();
                   Navigator.pop(context);
+                Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => Reviews()));
                 },
               ),
               RawMaterialButton(

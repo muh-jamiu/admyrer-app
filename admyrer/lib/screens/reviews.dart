@@ -2,6 +2,7 @@ import 'package:admyrer/screens/register.dart';
 import 'package:admyrer/screens/tab_screen.dart';
 import 'package:admyrer/widget/backgrounds.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class Reviews extends StatefulWidget {
   const Reviews({super.key});
@@ -15,10 +16,29 @@ class _ReviewsState extends State<Reviews> {
     Navigator.pushReplacementNamed(context, "/tab");
   }
 
+  void showErrorToast(String message) {
+    Fluttertoast.showToast(
+      msg: "$message",
+      toastLength: Toast.LENGTH_LONG,
+      gravity: ToastGravity.TOP,
+      timeInSecForIosWeb: 5,
+      textColor: Colors.white,
+      backgroundColor: Color.fromARGB(255, 98, 240, 178),
+      fontSize: 15.0,
+    );
+  }
+
+
   final Map<String, int> ratings = {
-    'Cleanliness': 0,
-    'Experience': 0,
-    'Location': 0,
+    'Communication': 0,
+    'Honesty': 0,
+    'Respect': 0,
+    'Compatibility': 0,
+    'Overall Experience': 0,
+    'Safety': 0,
+    'Authencity': 0,
+    'Effort': 0,
+    'Recommendation': 0,
   };
 
   Widget buildStarRating(String category) {
@@ -52,59 +72,119 @@ class _ReviewsState extends State<Reviews> {
             Padding(
               padding: const EdgeInsets.all(15.0),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Column(
-                    children: [
-                      const SizedBox(height: 80),
-                      Center(
-                        child: RichText(
-                          text: const TextSpan(
-                            children: [
-                              TextSpan(
-                                text: 'Make a ',
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 30,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              TextSpan(
-                                text: 'Review',
-                                style: TextStyle(
-                                    color: Colors.purple,
-                                    fontSize: 30,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      ListView(
+                  const SizedBox(height: 30),
+                  Center(
+                    child: RichText(
+                      text: const TextSpan(
                         children: [
-                          const Text(
-                            'Cleanliness',
-                            style: TextStyle(fontSize: 18),
+                          TextSpan(
+                            text: 'Make a ',
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 30,
+                                fontWeight: FontWeight.bold),
                           ),
-                          buildStarRating('Cleanliness'),
-                          SizedBox(height: 20),
-                          const Text(
-                            'Experience',
-                            style: TextStyle(fontSize: 18),
+                          TextSpan(
+                            text: 'Review',
+                            style: TextStyle(
+                                color: Colors.purple,
+                                fontSize: 30,
+                                fontWeight: FontWeight.bold),
                           ),
-                          buildStarRating('Experience'),
-                          SizedBox(height: 20),
-                          const Text(
-                            'Location',
-                            style: TextStyle(fontSize: 18),
-                          ),
-                          buildStarRating('Location'),
                         ],
-                      )
-                    ],
+                      ),
+                    ),
                   ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Expanded(
+                    child: ListView(
+                      children: [
+                        const Text(
+                          'Communication',
+                          style: TextStyle(fontSize: 18),
+                        ),
+                        buildStarRating('Communication'),
+                        Divider(color: Colors.grey[300]),
+                        const Text(
+                          'Honesty',
+                          style: TextStyle(fontSize: 18),
+                        ),
+                        buildStarRating('Honesty'),
+                        Divider(color: Colors.grey[300]),
+                        const Text(
+                          'Respect',
+                          style: TextStyle(fontSize: 18),
+                        ),
+                        buildStarRating('Respect'),
+                        Divider(color: Colors.grey[300]),
+                        const Text(
+                          'Compatibility',
+                          style: TextStyle(fontSize: 18),
+                        ),
+                        buildStarRating('Compatibility'),
+                        Divider(color: Colors.grey[300]),
+                        const Text(
+                          'Overall Experience',
+                          style: TextStyle(fontSize: 18),
+                        ),
+                        buildStarRating('Overall Experience'),
+                        Divider(color: Colors.grey[300]),
+                        const Text(
+                          'Safety',
+                          style: TextStyle(fontSize: 18),
+                        ),
+                        buildStarRating('Safety'),
+                        Divider(color: Colors.grey[300]),
+                        const Text(
+                          'Authencity',
+                          style: TextStyle(fontSize: 18),
+                        ),
+                        buildStarRating('Authencity'),
+                        Divider(color: Colors.grey[300]),
+                        const Text(
+                          'Effort',
+                          style: TextStyle(fontSize: 18),
+                        ),
+                        buildStarRating('Effort'),
+                        Divider(color: Colors.grey[300]),
+                        const Text(
+                          'Recommendation',
+                          style: TextStyle(fontSize: 18),
+                        ),
+                        buildStarRating('Recommendation'),
+                        const SizedBox(height: 30),
+                        Row(
+                          children: [
+                            TextButton(
+                              child: const Text('Cancel'),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                                Navigator.pushReplacementNamed(context, "/tab");
+                                Navigator.push(
+                                  context, MaterialPageRoute(builder: (context) => TabScreen()));
+                              },
+                            ),
+                            TextButton(
+                              child: const Text(
+                                'Submit Review',
+                                style: TextStyle(color: Colors.red),
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                                showErrorToast("Reviews Submitted");
+                                Navigator.push(
+                                  context, MaterialPageRoute(builder: (context) => TabScreen()));
+                              },
+                            )
+                          ],
+                        ),
+                        const SizedBox(height: 30),
+                      ],
+                    ),
+                  )
                 ],
               ),
             ),
