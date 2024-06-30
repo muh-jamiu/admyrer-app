@@ -29,11 +29,12 @@ class _LocationsState extends State<Locations> {
 
   Future<void> _showNotification() async {
     const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
-      'channel_id',
-      'channel_name',
+      'welcome',
+      'welcome_channel',
       channelDescription: 'channel_description',
       importance: Importance.max,
       priority: Priority.high,
+      showWhen: false,
     );
     const NotificationDetails platformDetails = NotificationDetails(android: androidDetails);
 

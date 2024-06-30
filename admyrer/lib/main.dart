@@ -10,6 +10,20 @@ import './screens/step_Sceen.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 void main() async {
+    WidgetsFlutterBinding.ensureInitialized();
+
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+
+  const AndroidInitializationSettings initializationSettingsAndroid =
+      AndroidInitializationSettings('@mipmap/ic_launcher'); // Ensure you have an app_icon in your drawable folder
+
+  const InitializationSettings initializationSettings = InitializationSettings(
+    android: initializationSettingsAndroid,
+  );
+
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  
   runApp(MyApp());
 }
 

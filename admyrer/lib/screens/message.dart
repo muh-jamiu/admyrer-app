@@ -38,7 +38,7 @@ class _MessageState extends State<Message> {
   Future<void> _showNotification(String from, String msg) async {
     const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
       'messaging',
-      'message channel',
+      'message_channel',
       channelDescription: 'this channel is for messaging in the app',
       importance: Importance.max,
       priority: Priority.high,
@@ -115,7 +115,8 @@ class _MessageState extends State<Message> {
           //   showErrorToast('Message received from $fname: $msg');
           // }
           showErrorToast('pusher event: ${event.data}');
-          _showNotification(event.data.username, "msg");
+          showErrorToast('username: ${event.data.username}');
+          _showNotification("Notification", "message");
         },
       );
 
@@ -137,13 +138,6 @@ class _MessageState extends State<Message> {
       setState(() {
         _imageFile = pickedFile;
       });
-    } else {
-      // Handle the case when the user denies the permission
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            content:
-                Text('Storage permission is required to access the gallery.')),
-      );
     }
   }
 
