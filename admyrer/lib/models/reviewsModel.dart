@@ -1,6 +1,6 @@
 class ReviewsModel {
   final int? id;
-  final int? userId;
+  final String? userId;
   final String? username;
   final String title;
   final String comment;
