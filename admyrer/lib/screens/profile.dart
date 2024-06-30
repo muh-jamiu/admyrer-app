@@ -27,7 +27,9 @@ import 'package:admyrer/widget/custom_sheet.dart';
 import 'package:admyrer/screens/search_page.dart';
 import 'package:admyrer/screens/web_date.dart';
 import 'package:admyrer/screens/club.dart';
+import 'package:flutter/material.dart';
 import 'package:admyrer/screens/speed_date.dart';
+import 'package:intl/intl.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -1192,6 +1194,8 @@ class ScheduleSelect extends StatefulWidget {
 
 class _ScheduleSelectState extends State<ScheduleSelect> {
   String? _selectedUser;
+  TextEditingController _dateController = TextEditingController();
+  TextEditingController _timeController = TextEditingController();
 
   @override
   void initState() {
@@ -1212,6 +1216,32 @@ class _ScheduleSelectState extends State<ScheduleSelect> {
     );
   }
 
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+    if (picked != null && picked != DateTime.now()) {
+      setState(() {
+        _dateController.text = DateFormat('yyyy-MM-dd').format(picked);
+      });
+    }
+  }
+
+  Future<void> _selectTime(BuildContext context) async {
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+    if (picked != null && picked != TimeOfDay.now()) {
+      setState(() {
+        _timeController.text = picked.format(context);
+      });
+    }
+  }
+
 
   void _onUserSelected(String? user) {
     setState(() {
@@ -1225,16 +1255,32 @@ class _ScheduleSelectState extends State<ScheduleSelect> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Date Scheduling'),
-          content: const Column(
+          content: Column(
             children: [
-              const  Text('Starting Speed date with selected user?'),
-              TextField(
-                // controller: _passwordController,
-                decoration: const InputDecoration(
-                  labelText: 'FullName',
-                  border: OutlineInputBorder(),
+               const Text('Starting Speed date with selected user?'),
+                TextField(
+              controller: _dateController,
+              decoration: InputDecoration(
+                hintText: 'Select date',
+                suffixIcon: IconButton(
+                  icon: const Icon(Icons.calendar_today),
+                  onPressed: () => _selectDate(context),
                 ),
               ),
+              readOnly: true,
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: _timeController,
+              decoration: InputDecoration(
+                hintText: 'Select time',
+                suffixIcon: IconButton(
+                  icon:const Icon(Icons.access_time),
+                  onPressed: () => _selectTime(context),
+                ),
+              ),
+              readOnly: true,
+            ),
             ],
           ),
           actions: <Widget>[
