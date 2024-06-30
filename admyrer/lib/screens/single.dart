@@ -63,8 +63,8 @@ class _SingleState extends State<Single> {
     });
     try {
       await _apiService.postRequest("create-review", {
-        "userId": user.id,
-        "username": loginUser.username,
+        "id": user.id,
+        "username": usernameCon.text,
         "rating": 0,
         "comment": commentCon.text,
         "title": titleCon.text,
@@ -99,6 +99,7 @@ class _SingleState extends State<Single> {
       List<ReviewsModel> reviews =
           userList.map((user) => ReviewsModel.fromJson(user)).toList();
 
+      print(reviews);
       setState(() {
         this.reviews = reviews;
       });
