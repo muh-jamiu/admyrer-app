@@ -289,33 +289,35 @@ class _MyGridListState extends State<MyGridList> {
       builder: (BuildContext context) {
         return AlertDialog(
       title: const Text('Make a review'),
-      content: Column(
-        children: [
-          TextField(
-            controller: _passwordController,
-            decoration: const InputDecoration(
-              labelText: 'FullName',
-              border: OutlineInputBorder(),
+      content: SingleChildScrollView(
+        child: ListBody(
+          children: [
+            TextField(
+              controller: _passwordController,
+              decoration: const InputDecoration(
+                labelText: 'FullName',
+                border: OutlineInputBorder(),
+              ),
             ),
-          ),
-          const SizedBox(height: 10,),
-          TextField(
-            controller: _passwordController,
-            decoration: const InputDecoration(
-              labelText: 'Review Title',
-              border: OutlineInputBorder(),
+            const SizedBox(height: 10,),
+            TextField(
+              controller: _passwordController,
+              decoration: const InputDecoration(
+                labelText: 'Review Title',
+                border: OutlineInputBorder(),
+              ),
             ),
-          ),
-          const SizedBox(height: 10,),
-          TextField(
-            maxLines: null,
-            controller: _passwordController,
-            decoration: const InputDecoration(
-              labelText: 'Review Comment',
-              border: OutlineInputBorder(),
+            const SizedBox(height: 10,),
+            TextField(
+              maxLines: 15,
+              controller: _passwordController,
+              decoration: const InputDecoration(
+                labelText: 'Review Comment',
+                border: OutlineInputBorder(),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
 
       actions: [
