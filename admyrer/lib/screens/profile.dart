@@ -1255,33 +1255,36 @@ class _ScheduleSelectState extends State<ScheduleSelect> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Date Scheduling'),
-          content: Column(
-            children: [
-               const Text('Starting Speed date with selected user?'),
-                TextField(
-              controller: _dateController,
-              decoration: InputDecoration(
-                hintText: 'Select date',
-                suffixIcon: IconButton(
-                  icon: const Icon(Icons.calendar_today),
-                  onPressed: () => _selectDate(context),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: [
+                 const Text('Select time and date to be schedule.'),
+                 const SizedBox(height: 20,),
+                  TextField(
+                controller: _dateController,
+                decoration: InputDecoration(
+                  hintText: 'Select date',
+                  suffixIcon: IconButton(
+                    icon: const Icon(Icons.calendar_today),
+                    onPressed: () => _selectDate(context),
+                  ),
                 ),
+                readOnly: true,
               ),
-              readOnly: true,
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: _timeController,
-              decoration: InputDecoration(
-                hintText: 'Select time',
-                suffixIcon: IconButton(
-                  icon:const Icon(Icons.access_time),
-                  onPressed: () => _selectTime(context),
+              const SizedBox(height: 16),
+              TextField(
+                controller: _timeController,
+                decoration: InputDecoration(
+                  hintText: 'Select time',
+                  suffixIcon: IconButton(
+                    icon:const Icon(Icons.access_time),
+                    onPressed: () => _selectTime(context),
+                  ),
                 ),
+                readOnly: true,
               ),
-              readOnly: true,
+              ],
             ),
-            ],
           ),
           actions: <Widget>[
             TextButton(

@@ -252,16 +252,18 @@ class _MyGridListState extends State<MyGridList> {
     );
   }
 
-   Future<void> _showAllReviews() async {
+  Future<void> _showAllReviews() async {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Reviews'),
-          content:ListView(
-            children: [
-              Text("reviews"),
-            ],
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: [
+                Text("reviews"),
+              ],
+            ),
           ),
           actions: <Widget>[
             TextButton(
