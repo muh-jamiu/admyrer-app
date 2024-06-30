@@ -8,8 +8,10 @@ import 'package:admyrer/services/api_service.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:convert';
 import 'package:admyrer/models/user.dart';
+import 'package:admyrer/models/reviewsModel.dart';
 import 'package:admyrer/screens/message.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Single extends StatefulWidget {
   final UserModel users;
@@ -21,8 +23,98 @@ class Single extends StatefulWidget {
 
 class _SingleState extends State<Single> {
   final ApiService _apiService = ApiService();
+  List<ReviewsModel> reviews = [];
   late UserModel user = widget.users;
+  late UserModel loginUser = widget.users;
   bool isLoading = true;
+  late String _authToken = "0";
+  final TextEditingController commentCon = TextEditingController();
+  final TextEditingController titleCon = TextEditingController();
+  final TextEditingController usernameCon = TextEditingController();
+
+   Future<void> getlogin() async {
+     SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _authToken = prefs.getString('authToken') ?? '';
+    });
+    try {
+      final response = await _apiService.postRequest("single-user", {
+        "id": _authToken,
+      });
+
+      var data = json.decode(response.body);
+      var userList = data["data"]["user"];
+      UserModel loginUser = UserModel.fromJson(userList);
+
+      setState(() {
+        this.loginUser = loginUser;
+      });
+    } catch (e) {
+      // showErrorToast('An error occurred: $e');
+      print(e);
+    }
+  }
+
+
+  Future<void> postReviews() async {
+     SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _authToken = prefs.getString('authToken') ?? '';
+    });
+    try {
+      await _apiService.postRequest("create-review", {
+        "userId": user.id,
+        "username": loginUser.username,
+        "rating": 0,
+        "comment": commentCon.text,
+        "title": titleCon.text,
+      });
+
+      showErrorToast("Review Submitted Successfully");
+
+    } catch (e) {
+      showErrorToast('An error occurred: $e');
+      print(e);
+    }
+  }
+
+  Future<void> getReviews() async {
+     SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _authToken = prefs.getString('authToken') ?? '';
+    });
+    try {
+      final response = await _apiService.postRequest("get-reviews", {
+        "id": user.id,
+      });
+
+      var data = json.decode(response.body);
+
+      if (data["data"] == null || data["data"] == null) {
+        showErrorToast('Invalid response data');
+        return;
+      }
+
+      List<dynamic> userList = data["data"];
+      List<ReviewsModel> reviews =
+          userList.map((user) => ReviewsModel.fromJson(user)).toList();
+
+      setState(() {
+        this.reviews = reviews;
+      });
+    } catch (e) {
+      showErrorToast('An error occurred: $e');
+      print(e);
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getReviews();
+    getlogin();
+  }
+
 
   void showErrorToast(String message) {
     Fluttertoast.showToast(
@@ -97,7 +189,7 @@ class _SingleState extends State<Single> {
                   const SizedBox(
                     height: 10,
                   ),
-                  const Expanded(child: MyGridList())
+                  Expanded(child: MyGridList(makeRev: postReviews, commentCon: commentCon , titleCon: titleCon, usernameCon: usernameCon,))
                 ],
               ),
             )
@@ -231,14 +323,17 @@ class _SettingsState extends State<Settings> {
 }
 
 class MyGridList extends StatefulWidget {
-  const MyGridList({super.key});
+  final Function makeRev;
+  final TextEditingController commentCon;
+  final TextEditingController titleCon;
+  final TextEditingController usernameCon;
+  const MyGridList({super.key, required this.makeRev,required this.commentCon, required this.titleCon, required this.usernameCon });
 
   @override
   State<MyGridList> createState() => _MyGridListState();
 }
 
 class _MyGridListState extends State<MyGridList> {
-  final TextEditingController _passwordController = TextEditingController();
 
   void showErrorToast(String message) {
     Fluttertoast.showToast(
@@ -295,7 +390,7 @@ class _MyGridListState extends State<MyGridList> {
         child: ListBody(
           children: [
             TextField(
-              controller: _passwordController,
+              controller: widget.usernameCon,
               decoration: const InputDecoration(
                 labelText: 'FullName',
                 border: OutlineInputBorder(),
@@ -303,7 +398,7 @@ class _MyGridListState extends State<MyGridList> {
             ),
             const SizedBox(height: 10,),
             TextField(
-              controller: _passwordController,
+              controller: widget.titleCon,
               decoration: const InputDecoration(
                 labelText: 'Review Title',
                 border: OutlineInputBorder(),
@@ -311,8 +406,8 @@ class _MyGridListState extends State<MyGridList> {
             ),
             const SizedBox(height: 10,),
             TextField(
-              maxLines: 15,
-              controller: _passwordController,
+              maxLines: 5,
+              controller: widget.commentCon,
               decoration: const InputDecoration(
                 labelText: 'Review Comment',
                 border: OutlineInputBorder(),
@@ -331,9 +426,10 @@ class _MyGridListState extends State<MyGridList> {
         ),
         TextButton(
           onPressed: () {
-            var password = _passwordController.text;
-            if(password != ""){
+            var comment = widget.commentCon.text;
+            if(comment != ""){
               Navigator.of(context).pop();
+              widget.makeRev();
             }
           },
           child: const Text('Submit review', style: TextStyle(color: Colors.red)),
