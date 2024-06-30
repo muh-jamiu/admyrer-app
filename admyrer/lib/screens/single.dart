@@ -32,8 +32,8 @@ class _SingleState extends State<Single> {
   final TextEditingController titleCon = TextEditingController();
   final TextEditingController usernameCon = TextEditingController();
 
-   Future<void> getlogin() async {
-     SharedPreferences prefs = await SharedPreferences.getInstance();
+  Future<void> getlogin() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       _authToken = prefs.getString('authToken') ?? '';
     });
@@ -55,9 +55,8 @@ class _SingleState extends State<Single> {
     }
   }
 
-
   Future<void> postReviews() async {
-     SharedPreferences prefs = await SharedPreferences.getInstance();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       _authToken = prefs.getString('authToken') ?? '';
     });
@@ -71,7 +70,6 @@ class _SingleState extends State<Single> {
       });
 
       showErrorToast("Review Submitted Successfully");
-
     } catch (e) {
       showErrorToast('An error occurred: $e');
       print(e);
@@ -79,7 +77,7 @@ class _SingleState extends State<Single> {
   }
 
   Future<void> getReviews() async {
-     SharedPreferences prefs = await SharedPreferences.getInstance();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       _authToken = prefs.getString('authToken') ?? '';
     });
@@ -116,7 +114,6 @@ class _SingleState extends State<Single> {
     getlogin();
   }
 
-
   void showErrorToast(String message) {
     Fluttertoast.showToast(
       msg: message,
@@ -129,20 +126,20 @@ class _SingleState extends State<Single> {
     );
   }
 
- void goMessage(user) {
+  void goMessage(user) {
     Navigator.push(
-      context, MaterialPageRoute(builder: (context) => Message(user: user)));
+        context, MaterialPageRoute(builder: (context) => Message(user: user)));
   }
 
   @override
   Widget build(BuildContext context) {
-      @override
-      void initState() {
-        super.initState();
-        setState(() {
-          user = widget.users;
-        });
-      }
+    @override
+    void initState() {
+      super.initState();
+      setState(() {
+        user = widget.users;
+      });
+    }
 
     return MaterialApp(
       home: Scaffold(
@@ -164,12 +161,9 @@ class _SingleState extends State<Single> {
                       Row(
                         children: [
                           InkWell(
-                            onTap: () => {
-                               Navigator.pop(context)
-                            },
-                            child: Icon(Icons.arrow_back, size: 25)
-                            ),
-                            const SizedBox(width: 15),
+                              onTap: () => {Navigator.pop(context)},
+                              child: Icon(Icons.arrow_back, size: 25)),
+                          const SizedBox(width: 15),
                           Text(
                             user.firstName,
                             style: const TextStyle(
@@ -186,11 +180,19 @@ class _SingleState extends State<Single> {
                   ),
                   const SizedBox(
                     height: 20,
-                  ), Settings(user: user, goMessage: goMessage),
+                  ),
+                  Settings(user: user, goMessage: goMessage),
                   const SizedBox(
                     height: 10,
                   ),
-                  Expanded(child: MyGridList(makeRev: postReviews, commentCon: commentCon , titleCon: titleCon, usernameCon: usernameCon,))
+                  Expanded(
+                      child: MyGridList(
+                    reviews: reviews,
+                    makeRev: postReviews,
+                    commentCon: commentCon,
+                    titleCon: titleCon,
+                    usernameCon: usernameCon,
+                  ))
                 ],
               ),
             )
@@ -203,7 +205,7 @@ class _SingleState extends State<Single> {
 
 class Settings extends StatefulWidget {
   final UserModel user;
-  final void Function(UserModel)  goMessage;
+  final void Function(UserModel) goMessage;
   const Settings({super.key, required this.user, required this.goMessage});
 
   @override
@@ -286,7 +288,7 @@ class _SettingsState extends State<Settings> {
         ),
         Center(
           child: InkWell(
-            onTap:  () => widget.goMessage(widget.user),
+            onTap: () => widget.goMessage(widget.user),
             child: Container(
               padding: const EdgeInsets.all(10),
               width: 190,
@@ -325,17 +327,23 @@ class _SettingsState extends State<Settings> {
 
 class MyGridList extends StatefulWidget {
   final Function makeRev;
+  final List<ReviewsModel> reviews;
   final TextEditingController commentCon;
   final TextEditingController titleCon;
   final TextEditingController usernameCon;
-  const MyGridList({super.key, required this.makeRev,required this.commentCon, required this.titleCon, required this.usernameCon });
+  const MyGridList(
+      {super.key,
+      required this.makeRev,
+      required this.commentCon,
+      required this.titleCon,
+      required this.usernameCon,
+      required this.reviews});
 
   @override
   State<MyGridList> createState() => _MyGridListState();
 }
 
 class _MyGridListState extends State<MyGridList> {
-
   void showErrorToast(String message) {
     Fluttertoast.showToast(
       msg: message,
@@ -349,16 +357,39 @@ class _MyGridListState extends State<MyGridList> {
   }
 
   Future<void> _showAllReviews() async {
+    var reviews = widget.reviews;
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Reviews'),
-          content: SingleChildScrollView(
+          content: reviews.length == 0 ? 
+            const SingleChildScrollView(
+              child:ListBody(
+                children: [
+                  Center(child: Text("Empty", style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w900),)),
+                  Center(child: Text("This user does not have any reviews at the moment", style: const TextStyle(fontSize: 16,),)),
+                ],
+              ),
+              )
+          :
+          SingleChildScrollView(
             child: ListBody(
-              children: [
-                Text("reviews"),
-              ],
+              children: reviews.map((user) {
+                return Card(
+                    margin: const EdgeInsets.all(5.0),
+                    child: ListTile(
+                      title: Text(user.username ?? ""),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(user.title, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w900),),
+                          const SizedBox(height: 5),
+                          Text(user.comment, style:  const TextStyle(fontSize: 16, color: Color.fromARGB(255, 75, 75, 75)),),
+                        ],
+                      ),
+                    ));
+              }).toList(),
             ),
           ),
           actions: <Widget>[
@@ -380,75 +411,78 @@ class _MyGridListState extends State<MyGridList> {
     );
   }
 
-
   Future<void> _makeReview() async {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-      title: const Text('Make a review'),
-      content: SingleChildScrollView(
-        child: ListBody(
-          children: [
-            TextField(
-              controller: widget.usernameCon,
-              decoration: const InputDecoration(
-                labelText: 'FullName',
-                border: OutlineInputBorder(),
-              ),
+          title: const Text('Make a review'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: [
+                TextField(
+                  controller: widget.usernameCon,
+                  decoration: const InputDecoration(
+                    labelText: 'FullName',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                TextField(
+                  controller: widget.titleCon,
+                  decoration: const InputDecoration(
+                    labelText: 'Review Title',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                TextField(
+                  maxLines: 5,
+                  controller: widget.commentCon,
+                  decoration: const InputDecoration(
+                    labelText: 'Review Comment',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 10,),
-            TextField(
-              controller: widget.titleCon,
-              decoration: const InputDecoration(
-                labelText: 'Review Title',
-                border: OutlineInputBorder(),
-              ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
             ),
-            const SizedBox(height: 10,),
-            TextField(
-              maxLines: 5,
-              controller: widget.commentCon,
-              decoration: const InputDecoration(
-                labelText: 'Review Comment',
-                border: OutlineInputBorder(),
-              ),
+            TextButton(
+              onPressed: () {
+                var comment = widget.commentCon.text;
+                if (comment != "") {
+                  Navigator.of(context).pop();
+                  widget.makeRev();
+                }
+              },
+              child: const Text('Submit review',
+                  style: TextStyle(color: Colors.red)),
             ),
           ],
-        ),
-      ),
-
-      actions: [
-        TextButton(
-          onPressed: () {
-            Navigator.of(context).pop(); 
-          },
-          child: const Text('Cancel'),
-        ),
-        TextButton(
-          onPressed: () {
-            var comment = widget.commentCon.text;
-            if(comment != ""){
-              Navigator.of(context).pop();
-              widget.makeRev();
-            }
-          },
-          child: const Text('Submit review', style: TextStyle(color: Colors.red)),
-        ),
-      ],
-    );
- 
+        );
       },
     );
   }
 
- Future<void> _showStartVC() async {
+  Future<void> _showStartVC() async {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Video Call Confirmation'),
-          content:const  Text('Are you sure you want to start video call with this user?'),
+          content: const Text(
+              'Are you sure you want to start video call with this user?'),
           actions: <Widget>[
             TextButton(
               child: const Text('Cancel'),
@@ -459,7 +493,7 @@ class _MyGridListState extends State<MyGridList> {
             TextButton(
               child: const Text('Start', style: TextStyle(color: Colors.red)),
               onPressed: () {
-                Navigator.of(context).pop();// Proceed with logout
+                Navigator.of(context).pop(); // Proceed with logout
               },
             ),
           ],
@@ -476,7 +510,7 @@ class _MyGridListState extends State<MyGridList> {
       childAspectRatio: 3 / 3,
       mainAxisSpacing: 10,
       children: [
-         InkWell(
+        InkWell(
           onTap: _showStartVC,
           child: Container(
             width: 100,
@@ -572,7 +606,6 @@ class _MyGridListState extends State<MyGridList> {
             ),
           ),
         ),
-        
         InkWell(
           onTap: _makeReview,
           child: Container(
@@ -597,7 +630,6 @@ class _MyGridListState extends State<MyGridList> {
             ),
           ),
         ),
-       
         InkWell(
           onTap: _showAllReviews,
           child: Container(
@@ -622,8 +654,7 @@ class _MyGridListState extends State<MyGridList> {
             ),
           ),
         ),
-       
-       ],
+      ],
     );
   }
 }
