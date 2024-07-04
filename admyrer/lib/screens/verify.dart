@@ -5,6 +5,7 @@ import 'package:admyrer/services/api_service.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:admyrer/screens/update.dart';
+import 'package:admyrer/screens/upload_image.dart';
 
 class Verify extends StatefulWidget {
   const Verify({super.key});
@@ -67,7 +68,7 @@ class _VerifyState extends State<Verify> {
             const Color.fromARGB(255, 100, 246, 190));
         Future.delayed(const Duration(seconds: 2), () {
         Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => Update()));
+          context, MaterialPageRoute(builder: (context) => UploadImage()));
         });
       }
     }

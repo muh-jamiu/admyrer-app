@@ -2,6 +2,11 @@ import 'package:admyrer/widget/backgrounds.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
+import 'package:admyrer/services/api_service.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:admyrer/screens/update.dart';
 
 class UploadImage extends StatefulWidget {
   const UploadImage({super.key});
@@ -12,9 +17,63 @@ class UploadImage extends StatefulWidget {
 
 class _UploadImageState extends State<UploadImage> {
 
-    File? _image;
-
+  final ApiService _apiService = ApiService();
+  File? _image;
+  bool isLoading = false;
+  late String _authToken;
   final ImagePicker _picker = ImagePicker();
+
+  
+  void showErrorToast(String message, Color color) {
+    Fluttertoast.showToast(
+      msg: "$message",
+      toastLength: Toast.LENGTH_LONG,
+      gravity: ToastGravity.TOP,
+      timeInSecForIosWeb: 5,
+      textColor: Colors.white,
+      backgroundColor: Colors.pink[300],
+      fontSize: 15.0,
+    );
+  }
+
+
+  
+  void _upload_() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _authToken = prefs.getString('authToken') ?? '';
+    });
+
+    if (true) {
+      setState(() {
+        isLoading = true;
+      });
+
+      final user = await _apiService.postRequest("update-user", {
+        "image": _image,
+        "id": _authToken ?? "0",
+      });
+
+      if (user.statusCode != 200) {
+        showErrorToast("Something went wrong, Please try again",
+            const Color.fromARGB(255, 238, 71, 126));
+        setState(() {
+          isLoading = false;
+        });
+        Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => Update()));
+        return;
+      } else {
+        showErrorToast("Image uploaded successfully",
+            const Color.fromARGB(255, 100, 246, 190));
+        Future.delayed(const Duration(seconds: 2), () {
+        Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => Update()));
+        });
+      }
+    }
+  }
+
 
   Future<void> _pickImage() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
@@ -92,8 +151,14 @@ class _UploadImageState extends State<UploadImage> {
                     child: const Text('Change', style: TextStyle(color: Colors.red),),
                   ),
                   const SizedBox(width: 15,),
+                  isLoading
+                      ? SpinKitThreeBounce(
+                          color: Colors.pink[400],
+                          size: 25.0,
+                        )
+                      : 
                   TextButton(
-                    onPressed: (){},
+                    onPressed: _upload_,
                     child: const Text('Upload'),
                   ),
                 ],
