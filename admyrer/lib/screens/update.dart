@@ -17,7 +17,6 @@ class _UpdateState extends State<Update> {
   late Future<dynamic> data;
   final TextEditingController _state = TextEditingController();
   final TextEditingController _city = TextEditingController();
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool isLoading = false;
   late String _authToken;
 
@@ -38,6 +37,7 @@ class _UpdateState extends State<Update> {
     setState(() {
       _authToken = prefs.getString('authToken') ?? '';
     });
+
     if (true) {
       setState(() {
         isLoading = true;

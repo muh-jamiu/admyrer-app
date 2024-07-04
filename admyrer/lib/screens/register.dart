@@ -55,7 +55,7 @@ class _LoginState extends State<Register> {
         }else{
           showErrorToast("Account signup successfully", const Color.fromARGB(255, 100, 246, 190));
           SharedPreferences prefs = await SharedPreferences.getInstance();
-          // await prefs.setString('authToken', user.body);
+          await prefs.setString('authToken', user.body);
           Future.delayed( const Duration(seconds:2), () {
             Navigator.pushReplacementNamed(context, "/verify");
           });
