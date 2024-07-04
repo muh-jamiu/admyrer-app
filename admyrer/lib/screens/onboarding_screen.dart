@@ -31,9 +31,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         seconds: 5
       ),
       (){
-        //  Navigator.pushReplacementNamed(context, "/step");
-    Navigator.push(
-      context, MaterialPageRoute(builder: (context) => Verify()));
+         Navigator.pushReplacementNamed(context, "/step");
+    // Navigator.push(
+    //   context, MaterialPageRoute(builder: (context) => Verify()));
       });
     }
   }
