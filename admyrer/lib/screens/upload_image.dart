@@ -7,6 +7,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:admyrer/screens/update.dart';
+import 'package:http/http.dart' as http;
 
 class UploadImage extends StatefulWidget {
   const UploadImage({super.key});
@@ -17,7 +18,6 @@ class UploadImage extends StatefulWidget {
 
 class _UploadImageState extends State<UploadImage> {
 
-  final ApiService _apiService = ApiService();
   File? _image;
   bool isLoading = false;
   late String _authToken;
@@ -36,26 +36,32 @@ class _UploadImageState extends State<UploadImage> {
     );
   }
 
-
-  
-  void _upload_() async {
+  Future<void> _upload_() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       _authToken = prefs.getString('authToken') ?? '';
     });
 
-    if (true) {
-      setState(() {
-        isLoading = true;
-      });
+    if (_image == null) return;
 
-      final user = await _apiService.postRequest("update-user", {
-        "image": _image,
-        "id": _authToken ?? "0",
-      });
+    final request = http.MultipartRequest(
+      'POST',
+      Uri.parse('https://admyrer.com/api/update-user'),
+    );
 
-      if (user.statusCode != 200) {
-        showErrorToast("Something went wrong, Please try again",
+    request.fields['id'] =  _authToken;
+    request.files.add(await http.MultipartFile.fromPath('image', _image!.path));
+    final response = await request.send();
+
+    if (response.statusCode == 200) {
+      showErrorToast("Image uploaded successfully",
+            const Color.fromARGB(255, 100, 246, 190));
+        Future.delayed(const Duration(seconds: 2), () {
+        Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => Update()));
+        });
+    } else {
+       showErrorToast("Something went wrong, Please try again",
             const Color.fromARGB(255, 238, 71, 126));
         setState(() {
           isLoading = false;
@@ -63,16 +69,45 @@ class _UploadImageState extends State<UploadImage> {
         Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => Update()));
         return;
-      } else {
-        showErrorToast("Image uploaded successfully",
-            const Color.fromARGB(255, 100, 246, 190));
-        Future.delayed(const Duration(seconds: 2), () {
-        Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => Update()));
-        });
-      }
     }
   }
+
+  
+  // void _upload_() async {
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
+    // setState(() {
+    //   _authToken = prefs.getString('authToken') ?? '';
+    // });
+
+  //   if (true) {
+  //     setState(() {
+  //       isLoading = true;
+  //     });
+
+  //     final user = await _apiService.postRequest("update-user", {
+  //       "image": _image,
+  //       "id": _authToken ?? "0",
+  //     });
+
+  //     if (user.statusCode != 200) {
+        // showErrorToast("Something went wrong, Please try again",
+        //     const Color.fromARGB(255, 238, 71, 126));
+        // setState(() {
+        //   isLoading = false;
+        // });
+        // Navigator.pushReplacement(
+        //   context, MaterialPageRoute(builder: (context) => Update()));
+        // return;
+  //     } else {
+        // showErrorToast("Image uploaded successfully",
+        //     const Color.fromARGB(255, 100, 246, 190));
+        // Future.delayed(const Duration(seconds: 2), () {
+        // Navigator.pushReplacement(
+        //   context, MaterialPageRoute(builder: (context) => Update()));
+        // });
+  //     }
+  //   }
+  // }
 
 
   Future<void> _pickImage() async {
