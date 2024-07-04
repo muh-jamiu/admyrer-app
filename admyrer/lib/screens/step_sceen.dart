@@ -20,16 +20,12 @@ class _StepSceenState extends State<StepSceen> {
 
   void login() {    
     Navigator.pushReplacement(
-      context, MaterialPageRoute(builder: (context) => UploadImage()));
-    // Navigator.pushReplacement(
-    //   context, MaterialPageRoute(builder: (context) => Login()));
+      context, MaterialPageRoute(builder: (context) => Login()));
   }
 
   void register() {
     Navigator.pushReplacement(
-      context, MaterialPageRoute(builder: (context) => Update()));
-    // Navigator.pushReplacement(
-    //   context, MaterialPageRoute(builder: (context) => Register()));
+      context, MaterialPageRoute(builder: (context) => Register()));
   }
 
   @override
