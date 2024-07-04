@@ -1,4 +1,5 @@
 import 'package:admyrer/screens/update.dart';
+import 'package:admyrer/screens/verify.dart';
 import 'package:admyrer/widget/background.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -30,9 +31,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         seconds: 5
       ),
       (){
-         Navigator.pushReplacementNamed(context, "/step");
-    // Navigator.push(
-    //   context, MaterialPageRoute(builder: (context) => Update()));
+        //  Navigator.pushReplacementNamed(context, "/step");
+    Navigator.push(
+      context, MaterialPageRoute(builder: (context) => Verify()));
       });
     }
   }

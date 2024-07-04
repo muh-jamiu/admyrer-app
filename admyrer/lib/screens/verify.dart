@@ -35,13 +35,17 @@ class _VerifyState extends State<Verify> {
   }
 
   void verifyCode() async {
+      var first =_codeControllers[0].text;
+      var sec =_codeControllers[1].text;
+      var third =_codeControllers[2].text;
+      var fourth =_codeControllers[3].text;
     List<String> code = [
       _codeControllers[0].text,
       _codeControllers[1].text,
       _codeControllers[2].text,
       _codeControllers[3].text,
     ];
-    var _code = code;
+    var _code = '$first$sec$third$fourth';
      SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       _authToken = prefs.getString('authToken') ?? '';
