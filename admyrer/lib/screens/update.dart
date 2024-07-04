@@ -55,10 +55,13 @@ class _UpdateState extends State<Update> {
       });
 
       if (user.statusCode != 200) {
-        showErrorToast("Something went wrong, Please try again",
+        showErrorToast("Account updated successfully",
             const Color.fromARGB(255, 238, 71, 126));
         setState(() {
           isLoading = false;
+        });
+        Future.delayed(const Duration(seconds: 2), () {
+          Navigator.pushReplacementNamed(context, "/tab");
         });
         return;
       } else {
