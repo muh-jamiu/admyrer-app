@@ -114,9 +114,9 @@ class _MessageState extends State<Message> {
           // if(event.data.to == user.username){
           //   showErrorToast('Message received from $fname: $msg');
           // }
-          showErrorToast('pusher event: ${event.data}');
-          showErrorToast('username: ${event.data.username}');
-          _showNotification("Notification", "message");
+          // showErrorToast('pusher event: ${event.data}');
+          // showErrorToast('username: ${event.data.username}');
+          // _showNotification("Notification", "message");
         },
       );
 
