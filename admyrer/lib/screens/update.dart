@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:admyrer/services/api_service.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Update extends StatefulWidget {
   const Update({super.key});
@@ -18,6 +19,7 @@ class _UpdateState extends State<Update> {
   final TextEditingController _city = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool isLoading = false;
+  late String _authToken;
 
   void showErrorToast(String message, Color color) {
     Fluttertoast.showToast(
@@ -31,39 +33,43 @@ class _UpdateState extends State<Update> {
     );
   }
 
-
   void _update_() async {
-      if (_formKey.currentState!.validate()) {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _authToken = prefs.getString('authToken') ?? '';
+    });
+    if (true) {
+      setState(() {
+        isLoading = true;
+      });
+
+      final user = await _apiService.postRequest("update-user", {
+        "state": _state.text,
+        "city": _city.text,
+        "gender": _selectedGender,
+        "relationship": _slsectedRelation,
+        "country": _selectedCountry,
+        "work_status": _selectedEmploy,
+        "height": _selectheight,
+        "id": _authToken ?? "0",
+      });
+
+      if (user.statusCode != 200) {
+        showErrorToast("Something went wrong, Please try again",
+            const Color.fromARGB(255, 238, 71, 126));
         setState(() {
-          isLoading = true;
+          isLoading = false;
         });
-
-        final user = await _apiService.postRequest("/lolade", {
-          "state": _state.text,
-          "city": _city.text,
-          "gender": _selectedGender,
-          "relationship": _slsectedRelation,
-          "country": _selectedCountry,
-          "employ": _selectedEmploy,
-          "height": _selectheight,
+        return;
+      } else {
+        showErrorToast("Account updated successfully",
+            const Color.fromARGB(255, 100, 246, 190));
+        Future.delayed(const Duration(seconds: 2), () {
+          Navigator.pushReplacementNamed(context, "/tab");
         });
-        
-        if(user.statusCode != 200){
-           showErrorToast("Something went wrong, Please try again", const Color.fromARGB(255, 238, 71, 126));
-           setState(() {
-            isLoading = false;
-          });
-           return;
-        }else{
-          showErrorToast("Account updated successfully", const Color.fromARGB(255, 100, 246, 190));
-          // Future.delayed( const Duration(seconds:2), () {
-          //   Navigator.pushReplacementNamed(context, "/verify");
-          // });
-        }
- 
       }
+    }
   }
-
 
   String? _selectedCountry;
   final List<String> _countries = [
@@ -315,57 +321,32 @@ class _UpdateState extends State<Update> {
                   const SizedBox(
                     height: 20,
                   ),
-                  const Center(child: Text("Complete your profile")),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 16.0),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(4.0),
-                    ),
-                    child: DropdownButton<String>(
-                      hint: const Text('Select a country'),
-                      value: _selectedCountry,
-                      icon: Icon(Icons.arrow_downward),
-                      iconSize: 24,
-                      elevation: 16,
-                      style: TextStyle(color: Colors.deepPurple),
-                      underline: Container(
-                        height: 2,
-                        color: Colors.deepPurpleAccent,
-                      ),
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          _selectedCountry = newValue;
-                        });
-                      },
-                      items: _countries
-                          .map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                    ),
-                  ),
+                  const Center(
+                      child: Text(
+                    "Complete your profile",
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  )),
                   const SizedBox(
-                    height: 20,
+                    height: 50,
                   ),
-                  TextField(
-                    controller: _state,
-                    decoration: const InputDecoration(
-                      labelText: 'State',
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  TextField(
-                    controller: _city,
-                    decoration: const InputDecoration(
-                      labelText: 'City',
-                      border: OutlineInputBorder(),
-                    ),
+                  DropdownButton<String>(
+                    hint: const Text('Select a country'),
+                    value: _selectedCountry,
+                    icon: null,
+                    iconSize: 0,
+                    elevation: 16,
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        _selectedCountry = newValue;
+                      });
+                    },
+                    items: _countries
+                        .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
                   ),
                   const SizedBox(
                     height: 20,
@@ -373,6 +354,8 @@ class _UpdateState extends State<Update> {
                   DropdownButton<String>(
                     hint: const Text('Select gender'),
                     value: _selectedGender,
+                    icon: null,
+                    iconSize: 0,
                     onChanged: (String? newValue) {
                       setState(() {
                         _selectedGender = newValue;
@@ -392,6 +375,8 @@ class _UpdateState extends State<Update> {
                   DropdownButton<String>(
                     hint: const Text('Relationship Status'),
                     value: _slsectedRelation,
+                    icon: null,
+                    iconSize: 0,
                     onChanged: (String? newValue) {
                       setState(() {
                         _slsectedRelation = newValue;
@@ -411,6 +396,8 @@ class _UpdateState extends State<Update> {
                   DropdownButton<String>(
                     hint: const Text('Employment'),
                     value: _selectedEmploy,
+                    icon: null,
+                    iconSize: 0,
                     onChanged: (String? newValue) {
                       setState(() {
                         _selectedEmploy = newValue;
@@ -430,6 +417,8 @@ class _UpdateState extends State<Update> {
                   DropdownButton<String>(
                     hint: const Text('Height'),
                     value: _selectheight,
+                    icon: null,
+                    iconSize: 0,
                     onChanged: (String? newValue) {
                       setState(() {
                         _selectheight = newValue;
@@ -444,20 +433,39 @@ class _UpdateState extends State<Update> {
                     }).toList(),
                   ),
                   const SizedBox(
+                    height: 20,
+                  ),
+                  TextField(
+                    controller: _state,
+                    decoration: const InputDecoration(
+                      labelText: 'State',
+                      // border: OutlineInputBorder(),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  TextField(
+                    controller: _city,
+                    decoration: const InputDecoration(
+                      labelText: 'City',
+                      // border: OutlineInputBorder(),
+                    ),
+                  ),
+                  const SizedBox(
                     height: 40,
                   ),
-                   isLoading
-                    ? SpinKitThreeBounce(
-                        color: Colors.pink[400],
-                        size: 25.0,
-                      )
-                    :
-                  TextButton(
-                      onPressed: _update_,
-                      child: const Text(
-                        "Submit",
-                        style: TextStyle(color: Colors.red),
-                      ))
+                  isLoading
+                      ? SpinKitThreeBounce(
+                          color: Colors.pink[400],
+                          size: 25.0,
+                        )
+                      : TextButton(
+                          onPressed: _update_,
+                          child: const Text(
+                            "Continue",
+                            style: TextStyle(color: Colors.red, fontSize: 20),
+                          ))
                 ],
               ),
             ),
