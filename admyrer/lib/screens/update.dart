@@ -1,6 +1,8 @@
 import 'package:admyrer/widget/backgrounds.dart';
 import 'package:flutter/material.dart';
 import 'package:admyrer/services/api_service.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class Update extends StatefulWidget {
   const Update({super.key});
@@ -12,12 +14,56 @@ class Update extends StatefulWidget {
 class _UpdateState extends State<Update> {
   final ApiService _apiService = ApiService();
   late Future<dynamic> data;
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _username = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _firstname = TextEditingController();
-  final TextEditingController _lastname = TextEditingController();
+  final TextEditingController _state = TextEditingController();
+  final TextEditingController _city = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  bool isLoading = false;
+
+  void showErrorToast(String message, Color color) {
+    Fluttertoast.showToast(
+      msg: "$message",
+      toastLength: Toast.LENGTH_LONG,
+      gravity: ToastGravity.TOP,
+      timeInSecForIosWeb: 5,
+      textColor: Colors.white,
+      backgroundColor: Colors.pink[300],
+      fontSize: 15.0,
+    );
+  }
+
+
+  void _update_() async {
+      if (_formKey.currentState!.validate()) {
+        setState(() {
+          isLoading = true;
+        });
+
+        final user = await _apiService.postRequest("/lolade", {
+          "state": _state.text,
+          "city": _city.text,
+          "gender": _selectedGender,
+          "relationship": _slsectedRelation,
+          "country": _selectedCountry,
+          "employ": _selectedEmploy,
+          "height": _selectheight,
+        });
+        
+        if(user.statusCode != 200){
+           showErrorToast("Something went wrong, Please try again", const Color.fromARGB(255, 238, 71, 126));
+           setState(() {
+            isLoading = false;
+          });
+           return;
+        }else{
+          showErrorToast("Account updated successfully", const Color.fromARGB(255, 100, 246, 190));
+          // Future.delayed( const Duration(seconds:2), () {
+          //   Navigator.pushReplacementNamed(context, "/verify");
+          // });
+        }
+ 
+      }
+  }
+
 
   String? _selectedCountry;
   final List<String> _countries = [
@@ -219,6 +265,41 @@ class _UpdateState extends State<Update> {
     "Zimbabwe"
   ];
 
+  String? _slsectedRelation;
+  final List<String> _relationship = [
+    "Single",
+    "Married",
+    "Divorce",
+    "Prefer not to say"
+  ];
+
+  String? _selectedGender;
+  final List<String> _gender = [
+    "Male",
+    "Female",
+    "Transgender",
+    "Prefer not to say"
+  ];
+
+  String? _selectedEmploy;
+  final List<String> _employ = [
+    "Employed",
+    "Self-Employ",
+    "Student",
+    "Prefer not to say",
+    "Not Employ"
+  ];
+
+  String? _selectheight;
+  final List<String> _height = [
+    "70m- 100 cm",
+    "100 - 120 cm",
+    "120 - 150 cm",
+    "150 - 180 cm",
+    "180 - 200 cm",
+    "200 - 220 cm"
+  ];
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -229,105 +310,154 @@ class _UpdateState extends State<Update> {
             const Backgrounds(),
             Padding(
               padding: const EdgeInsets.all(15.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              child: ListView(
                 children: [
-                  DropdownButton<String>(
-                    hint: const Text('Select a country'),
-                    value: _selectedCountry,
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        _selectedCountry = newValue;
-                      });
-                    },
-                    items: _countries
-                        .map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                  ),                  
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  const Center(child: Text("Complete your profile")),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 16.0),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(4.0),
+                    ),
+                    child: DropdownButton<String>(
+                      hint: const Text('Select a country'),
+                      value: _selectedCountry,
+                      icon: Icon(Icons.arrow_downward),
+                      iconSize: 24,
+                      elevation: 16,
+                      style: TextStyle(color: Colors.deepPurple),
+                      underline: Container(
+                        height: 2,
+                        color: Colors.deepPurpleAccent,
+                      ),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          _selectedCountry = newValue;
+                        });
+                      },
+                      items: _countries
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
                   TextField(
-                    // controller: _email,
+                    controller: _state,
                     decoration: const InputDecoration(
                       labelText: 'State',
                       border: OutlineInputBorder(),
                     ),
-                  ),                  
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
                   TextField(
-                    // controller: _email,
+                    controller: _city,
                     decoration: const InputDecoration(
                       labelText: 'City',
                       border: OutlineInputBorder(),
                     ),
                   ),
+                  const SizedBox(
+                    height: 20,
+                  ),
                   DropdownButton<String>(
                     hint: const Text('Select gender'),
-                    value: _selectedCountry,
+                    value: _selectedGender,
                     onChanged: (String? newValue) {
                       setState(() {
-                        _selectedCountry = newValue;
+                        _selectedGender = newValue;
                       });
                     },
-                    items: _countries
-                        .map<DropdownMenuItem<String>>((String value) {
+                    items:
+                        _gender.map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
                         child: Text(value),
                       );
                     }).toList(),
+                  ),
+                  const SizedBox(
+                    height: 20,
                   ),
                   DropdownButton<String>(
                     hint: const Text('Relationship Status'),
-                    value: _selectedCountry,
+                    value: _slsectedRelation,
                     onChanged: (String? newValue) {
                       setState(() {
-                        _selectedCountry = newValue;
+                        _slsectedRelation = newValue;
                       });
                     },
-                    items: _countries
+                    items: _relationship
                         .map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
                         child: Text(value),
                       );
                     }).toList(),
+                  ),
+                  const SizedBox(
+                    height: 20,
                   ),
                   DropdownButton<String>(
                     hint: const Text('Employment'),
-                    value: _selectedCountry,
+                    value: _selectedEmploy,
                     onChanged: (String? newValue) {
                       setState(() {
-                        _selectedCountry = newValue;
+                        _selectedEmploy = newValue;
                       });
                     },
-                    items: _countries
-                        .map<DropdownMenuItem<String>>((String value) {
+                    items:
+                        _employ.map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
                         child: Text(value),
                       );
                     }).toList(),
                   ),
-                
+                  const SizedBox(
+                    height: 20,
+                  ),
                   DropdownButton<String>(
                     hint: const Text('Height'),
-                    value: _selectedCountry,
+                    value: _selectheight,
                     onChanged: (String? newValue) {
                       setState(() {
-                        _selectedCountry = newValue;
+                        _selectheight = newValue;
                       });
                     },
-                    items: _countries
-                        .map<DropdownMenuItem<String>>((String value) {
+                    items:
+                        _height.map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
                         child: Text(value),
                       );
                     }).toList(),
                   ),
-                
+                  const SizedBox(
+                    height: 40,
+                  ),
+                   isLoading
+                    ? SpinKitThreeBounce(
+                        color: Colors.pink[400],
+                        size: 25.0,
+                      )
+                    :
+                  TextButton(
+                      onPressed: _update_,
+                      child: const Text(
+                        "Submit",
+                        style: TextStyle(color: Colors.red),
+                      ))
                 ],
               ),
             ),

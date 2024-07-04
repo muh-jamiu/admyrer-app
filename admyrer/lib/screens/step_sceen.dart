@@ -3,8 +3,8 @@ import 'package:admyrer/widget/backgrounds.dart';
 import 'package:admyrer/widget/gradient_button.dart';
 import 'package:admyrer/widget/normal_button.dart';
 import 'package:flutter/material.dart';
-import 'package:admyrer/screens/live.dart';
-import 'package:admyrer/screens/reviews.dart';
+import 'package:admyrer/screens/upload_image.dart';
+import 'package:admyrer/screens/update.dart';
 import 'package:admyrer/screens/register.dart';
 import 'package:admyrer/screens/login.dart';
 
@@ -18,14 +18,18 @@ class StepSceen extends StatefulWidget {
 class _StepSceenState extends State<StepSceen> {
   bool isLoading = false;
 
-  void login() {
+  void login() {    
     Navigator.pushReplacement(
-      context, MaterialPageRoute(builder: (context) => Login()));
+      context, MaterialPageRoute(builder: (context) => UploadImage()));
+    // Navigator.pushReplacement(
+    //   context, MaterialPageRoute(builder: (context) => Login()));
   }
 
   void register() {
     Navigator.pushReplacement(
-      context, MaterialPageRoute(builder: (context) => Register()));
+      context, MaterialPageRoute(builder: (context) => Update()));
+    // Navigator.pushReplacement(
+    //   context, MaterialPageRoute(builder: (context) => Register()));
   }
 
   @override
