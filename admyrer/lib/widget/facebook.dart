@@ -27,7 +27,7 @@ class Facebook extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Image.asset(
-              'images/drawable/facebook.png', // Make sure the Google logo image is in your assets folder
+              'assets/images/facebook.png', // Make sure the Google logo image is in your assets folder
               height: 24.0,
               width: 24.0,
             ),

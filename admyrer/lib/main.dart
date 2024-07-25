@@ -7,18 +7,42 @@ import 'package:flutter/material.dart';
 import './screens/onboarding_screen.dart';
 import './screens/home.dart';
 import './screens/step_Sceen.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+    WidgetsFlutterBinding.ensureInitialized();
+
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+
+  const AndroidInitializationSettings initializationSettingsAndroid =
+      AndroidInitializationSettings('@mipmap/ic_launcher'); // Ensure you have an app_icon in your drawable folder
+
+  const InitializationSettings initializationSettings = InitializationSettings(
+    android: initializationSettingsAndroid,
+  );
+
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  // const MyApp({super.key});
+
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
+  MyApp() {
+    const InitializationSettings initializationSettings =   InitializationSettings(
+      android: AndroidInitializationSettings('@mipmap/ic_launcher'),
+    );
+    flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Admyrer',
       initialRoute: '/',
        onGenerateRoute: (settings) {
         switch (settings.name) {
@@ -62,6 +86,6 @@ Route _createRoute(Widget page) {
         child: child,
       );
     },
-      transitionDuration: const Duration(milliseconds: 600)
+      transitionDuration: const Duration(milliseconds: 300)
   );
 }

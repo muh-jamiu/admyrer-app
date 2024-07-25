@@ -34,7 +34,13 @@ class BootstrapTextField extends StatelessWidget {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: TextField(
+              child: TextFormField(
+                 validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'This field is required';
+                  }
+                  return null;
+                },
                 controller: controller,
                 decoration: InputDecoration(
                   border: InputBorder.none,

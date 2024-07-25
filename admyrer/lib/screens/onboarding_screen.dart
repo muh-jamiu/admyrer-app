@@ -1,9 +1,49 @@
+import 'package:admyrer/screens/update.dart';
+import 'package:admyrer/screens/verify.dart';
 import 'package:admyrer/widget/background.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'dart:async';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class OnboardingScreen extends StatelessWidget {
+class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
+
+  @override
+  State<OnboardingScreen> createState() => _OnboardingScreenState();
+}
+
+class _OnboardingScreenState extends State<OnboardingScreen> {
+  Future<void> _checkOnboardingAndTokenStatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('authToken');
+    if (token != null) {
+      Timer(
+      const Duration(
+        seconds: 5
+      ),
+      (){
+         Navigator.pushReplacementNamed(context, "/tab");
+      });
+    }else{
+      Timer(
+      const Duration(
+        seconds: 5
+      ),
+      (){
+         Navigator.pushReplacementNamed(context, "/step");
+    // Navigator.push(
+    //   context, MaterialPageRoute(builder: (context) => Verify()));
+      });
+    }
+  }
+
+  @override
+  void initState() { 
+    super.initState();
+    _checkOnboardingAndTokenStatus(); 
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -17,13 +57,14 @@ class OnboardingScreen extends StatelessWidget {
             ),
           ],
         ),
-        floatingActionButton: FloatingActionButton(
-        onPressed: () => {
-          Navigator.pushNamed(context, "/step")
-        },
-        backgroundColor: Colors.pink[400],
-        child: const Icon(Icons.arrow_forward, color: Colors.white,),
-      ),
+      //   floatingActionButton: FloatingActionButton(
+      //   onPressed: () => {
+      //     // Navigator.pushNamed(context, "/step")
+      //     Navigator.pushNamed(context, "/step")
+      //   },
+      //   backgroundColor: Colors.pink[400],
+      //   child: const Icon(Icons.arrow_forward, color: Colors.white,),
+      // ),
       // back
       ),
     );
