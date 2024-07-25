@@ -1,4 +1,4 @@
-package com.example.admyrer
+package com.admyrer.admyrer
 
 import io.flutter.embedding.android.FlutterActivity
 
