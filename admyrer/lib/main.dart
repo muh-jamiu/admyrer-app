@@ -10,30 +10,40 @@ import './screens/step_Sceen.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 void main() async {
-    WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();
 
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
   const AndroidInitializationSettings initializationSettingsAndroid =
-      AndroidInitializationSettings('@mipmap/ic_launcher'); // Ensure you have an app_icon in your drawable folder
+      AndroidInitializationSettings(
+          '@mipmap/ic_launcher'); 
+  const DarwinInitializationSettings initializationSettingsDarwin =
+      DarwinInitializationSettings(
+    requestAlertPermission: false,
+    requestBadgePermission: false,
+    requestSoundPermission: false,
+  );
 
-  const InitializationSettings initializationSettings = InitializationSettings(
+  InitializationSettings initializationSettings = const InitializationSettings(
     android: initializationSettingsAndroid,
+    iOS: initializationSettingsDarwin,
   );
 
   await flutterLocalNotificationsPlugin.initialize(initializationSettings);
-  
+
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
   // const MyApp({super.key});
 
-  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
 
-  MyApp() {
-    const InitializationSettings initializationSettings =   InitializationSettings(
+  MyApp({super.key}) {
+    const InitializationSettings initializationSettings =
+        InitializationSettings(
       android: AndroidInitializationSettings('@mipmap/ic_launcher'),
     );
     flutterLocalNotificationsPlugin.initialize(initializationSettings);
@@ -43,8 +53,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Admyrer',
+      debugShowCheckedModeBanner: false,
       initialRoute: '/',
-       onGenerateRoute: (settings) {
+      onGenerateRoute: (settings) {
         switch (settings.name) {
           case '/':
             return _createRoute(const OnboardingScreen());
@@ -73,19 +84,19 @@ class MyApp extends StatelessWidget {
 
 Route _createRoute(Widget page) {
   return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => page,
-    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(1.0, 0.0);
-      var end = Offset.zero;
-      var curve = Curves.ease;
+      pageBuilder: (context, animation, secondaryAnimation) => page,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        var begin = const Offset(1.0, 0.0);
+        var end = Offset.zero;
+        var curve = Curves.ease;
 
-      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+        var tween =
+            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
 
-      return SlideTransition(
-        position: animation.drive(tween),
-        child: child,
-      );
-    },
-      transitionDuration: const Duration(milliseconds: 300)
-  );
+        return SlideTransition(
+          position: animation.drive(tween),
+          child: child,
+        );
+      },
+      transitionDuration: const Duration(milliseconds: 300));
 }
