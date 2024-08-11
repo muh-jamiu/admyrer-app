@@ -69,7 +69,7 @@ class _PollsState extends State<Polls> {
       });
 
     } catch (e) {
-      showErrorToast('An error occurred: $e');
+      // showErrorToast('An error occurred: $e');
       setState(() {
         isLoading = false;
       });

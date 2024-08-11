@@ -166,8 +166,8 @@ class _SpeedDateState extends State<SpeedDate> {
         this.lname = lname;
         isLoading = false;
       });
-      showErrorToast('Speed Date connect you to $fname $lname');
-      _startCountdown();
+      // showErrorToast('Speed Date connect you to $fname $lname');
+      // _startCountdown();
     } catch (e) {
       showErrorToast('An error occurred: $e');
       print(e);
@@ -245,6 +245,8 @@ class _SpeedDateState extends State<SpeedDate> {
           showErrorToast("User join with ID: $remoteUid");
           setState(() {
             _remoteUid = remoteUid;
+            showErrorToast('Speed Date connected');
+            _startCountdown();
           });
         },
         onUserOffline: (RtcConnection connection, int remoteUid,
@@ -473,7 +475,11 @@ class _LocalVideoWidgetState extends State<LocalVideoWidget> {
     if (widget.isRemote == 0) {
       if (widget.localUserJoined) {
         if (widget.isCam) {
-          return const Center(child: Text('You turn off camera'));
+          return Center(child: Container(
+            color: Colors.black,
+            padding: const EdgeInsets.all(20.0),
+            height: 150,
+            child: const Center(child: Text('You turn off camera', style: TextStyle(color: Colors.red),))));
         } else {
           return Align(
             alignment: Alignment.center,
