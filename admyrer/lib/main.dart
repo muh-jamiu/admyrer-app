@@ -98,5 +98,5 @@ Route _createRoute(Widget page) {
           child: child,
         );
       },
-      transitionDuration: const Duration(milliseconds: 300));
+      transitionDuration: const Duration(milliseconds: 300),);
 }
